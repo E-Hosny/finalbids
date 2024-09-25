@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Models\Appnotification;
 
-
+use Illuminate\Support\Facades\Log;
 
 
 class HomepageController extends Controller
@@ -491,7 +491,7 @@ class HomepageController extends Controller
            
             if ($previousUrl) {
                 Session::forget('previousUrl');
-                return redirect()->to($previousUrl);
+                // return redirect()->to($previousUrl);
             }
             return redirect()->intended('/');
         }
@@ -545,14 +545,15 @@ class HomepageController extends Controller
 
             $user->save();
             $msg = $otp . ' is your Verification code for Bids.Sa ';
-            Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
+            // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
             $first_name = $request->input('first_name');
             
         
             Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
 
+            Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
 
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Registration successfull',

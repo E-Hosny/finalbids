@@ -46,11 +46,17 @@
 $cat = App\Models\Category::where('status',1)->orderBy('name','ASC')->get();
 $logo = App\Models\Setting::where('is_static', 2)->orderBy('title', 'ASC')->first();
 @endphp
-
 @php
-$not = App\Models\Appnotification::orderBy('id','desc')->get();
-
-$notcount = App\Models\Appnotification::where('is_read',0)->count();
+if (Auth::check()) {
+    $user = Auth::user();
+    $not = App\Models\Appnotification::orderBy('id', 'desc')->get();
+    $notcount = App\Models\Appnotification::where('is_read', 0)
+                 ->where('user_id', $user->id)
+                 ->count();
+} else {
+    $not = [];
+    $notcount = 0;
+}
 @endphp
 
 @php
@@ -204,10 +210,17 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
                                     </a>
                                     
                                     <?php
+                                        // $created_at = $notification->created_at;
+
+                                        // $formatted_date = date('j M g:i a', strtotime($created_at));
                                         $created_at = $notification->created_at;
 
-                                        // $formatted_date = date('jM g:ia', strtotime($created_at));
-                                        $formatted_date = date('j M g:i a', strtotime($created_at));
+                                            $dateTime = new DateTime($created_at, new DateTimeZone('UTC'));
+                                            // $dateTime->setTimezone(new DateTimeZone('Asia/Riyadh')); 
+                                            $dateTime->setTimezone(new DateTimeZone('Asia/Kolkata'));
+
+
+                                            $formatted_date = $dateTime->format('j M g:i a');
 
                                        
                                         ?>

@@ -109,7 +109,7 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::get('/userdashboard', [DashboardController::class, 'userdashboard'])->name('userdashboard');
     Route::post('/profileupdate',[DashboardController::class,'profileupdate'])->name('profileupdate');
-    Route::get('/logout',[DashboardController::class,'logout']);
+    Route::get('/logout',[DashboardController::class,'logout'])->name('logouts');
     Route::get('/changepassword',[DashboardController::class,'changepassword']);
     Route::post('/change-password',[DashboardController::class,'changePass'])->name('change-password');
     Route::get('/useraddress',[DashboardController::class,'useraddress'])->name('useraddress');

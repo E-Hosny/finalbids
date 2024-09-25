@@ -9,10 +9,5 @@
     </form>
 </div>
 
-<!-- admin/bidrequests/actions.blade.php -->
-@if($status)
-    <button class="btn btn-sm btn-success change-status" data-id="{{ $id }}" data-status="0">Approved</button>
-@else
-    <button class="btn btn-sm btn-danger change-status" data-id="{{ $id }}" data-status="1">Decline</button>
-@endif
+
 

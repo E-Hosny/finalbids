@@ -21,7 +21,7 @@
                 <!-- <li><a href="#">My Orders</a></li> -->
                 <li><a href="{{route('useraddress')}}">Manage Address </a></li>
                 <li><a href="{{route('auction')}}">Auctions</a></li>
-                <li><a href="{{route('logout')}}">Logout</a></li>
+                <li><a href="{{route('logouts')}}">Logout</a></li>
             </ul>
         @elseif(session('locale') === 'ar')
              <ul class="menu-ul">
@@ -29,7 +29,7 @@
                 <!-- <li><a href="#">My Orders</a></li> -->
                 <li><a href="{{route('useraddress')}}">إدارة العنوان </a></li>
                 <li><a href="{{route('auction')}}">المزادات</a></li>
-                <li><a href="{{route('logout')}}">الخروج</a></li>
+                <li><a href="{{route('logouts')}}">الخروج</a></li>
             </ul>
 
         @else
@@ -38,7 +38,7 @@
                 <!-- <li><a href="#">My Orders</a></li> -->
                 <li><a href="{{route('useraddress')}}">Manage Address </a></li>
                 <li><a href="{{route('auction')}}">Auctions</a></li>
-                <li><a href="{{route('logout')}}">Logout</a></li>
+                <li><a href="{{route('logouts')}}">Logout</a></li>
             </ul>
         @endif
         </div>

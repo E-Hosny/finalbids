@@ -77,12 +77,14 @@ class DemoCron extends Command
         }
 
         $projects = Project::where('auction_type_id', 2)->get();
+        // Log::info("StartBid match : " . $projects->pluck('name', 'id')->toJson() . " project data.");
 
         foreach ($projects as $project) {
 
-            // Check if the project start date is in the past
-            if (now() == $project->start_date_time) {
+            // Check if the project start date is started
+            // if (time() == strtotime($project->start_date_time)) {
                 $startBid = StartBid::where('project_id', $project->id)->first();
+                Log::info("StartBid : " . $projects->pluck('name', 'id')->toJson() . " project.");
 
                 // If start bid doesn't exist, create a new one
                 $product = Product::where('project_id', $project->id)
@@ -92,16 +94,30 @@ class DemoCron extends Command
                         })
                         ->orWhereDoesntHave('bidPlace');
                     })
-                    ->first();
-                if(!empty($product))
-                {
-                    StartBid::create([
-                        'product_id' => $product->id,
-                        'project_id' => $project->id,
-                        'status' => 1,
-                    ]);
+                    ->get();
+                // if(!empty($product))
+                // {
+                //     StartBid::create([
+                //         'product_id' => $product->id,
+                //         'project_id' => $project->id,
+                //         'status' => 1,
+                //     ]);
+                // }
+                foreach ($product as $product) {
+                    $startBid = StartBid::where('project_id', $project->id)
+                                        ->where('product_id', $product->id)
+                                        ->first();
+        
+                   
+                    if (!$startBid) {
+                        StartBid::create([
+                            'product_id' => $product->id,
+                            'project_id' => $project->id,
+                            'status' => 1,  
+                        ]);
+                    }
                 }
-            }
+            // }
             if(now() == $project->end_date_time)
             {
                 StartBid::where('project_id', $project->id)->update(['status' => 0]);

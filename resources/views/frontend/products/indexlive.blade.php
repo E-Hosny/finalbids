@@ -418,6 +418,12 @@
                     </div>
                 </form>
                 @endif
+                <!-- change 25th sept -->
+                @elseif ($bidRequest && $bidRequest->status == 0 && $projects->auctionType->name == 'Live')
+                            <button class="btn btn-primary btn-with-padding-right" >            
+                              {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }} 
+                            </button>
+                <!--  -->
                 @else
                 <div class="btn-container">
                 <button  class="btn btn-primary btn-with-padding-right"  onclick="requestBid('{{ $projects->name }}', '{{ $projects->id }}', '{{ $projects->auction_type_id }}', '{{ $projects->deposit_amount }}')">

@@ -75,8 +75,6 @@ class BidrequestController extends Controller
         } else {
             return response()->json(['message' => 'BidRequest not found'], 404);
         }
-        // $bidRequest->delete();
-        // return redirect()->back()->with('success', 'Bid request deleted successfully.');
 
     }
 
@@ -114,7 +112,7 @@ class BidrequestController extends Controller
 
                 $appnotification = new Appnotification();
                 $appnotification->title = 'Approve Bid Request From admin';
-                $appnotification->user_id = auth()->id();
+                $appnotification->user_id = $bidRequest->user_id;
                 $appnotification->message = $notification_msg;
                 $appnotification->project_id =$bidRequest->project_id;
                 $appnotification->save();

@@ -86,7 +86,7 @@
                     <div class="col-lg-12 col-md-12">
                       <div class="form-group">
                         <label for="">Phone Number <span class="star">*</span> </label>
-                       <input type="number"  placeholder="Phone Number" name="phone" id="phone">
+                       <input type="tel"  placeholder="Phone Number" name="phone" id="phone" maxlength=10>
                        
                       </div>
                     </div>

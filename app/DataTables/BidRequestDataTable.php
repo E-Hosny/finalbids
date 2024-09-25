@@ -31,6 +31,13 @@ class BidRequestDataTable extends DataTable
     
                 })
             ->addColumn('action', 'admin.bidrequest.action')
+            ->addColumn('status', function ($row) {
+                return view('admin.bidrequest.status', ['status' => $row->status, 'id' => $row->id]);
+            })
+            
+            // ->addColumn('status', function ($row) {
+            //     return view('admin.bidrequest.status', ['status' => $row->status]);
+            // })
             ->setRowId('id');
     }
 
@@ -96,7 +103,8 @@ class BidRequestDataTable extends DataTable
                     ->data('auctiontype.name') 
                     ->title('Auctiontype'),
             Column::make('deposit_amount')->title('Deposit Amount'),
-            Column::make('status')->render('full[\'status\'] ? \'Approved\' : \'Decline\'')->addClass('text-center'),
+            Column::computed('status')
+              ->title('Status'), 
             Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
