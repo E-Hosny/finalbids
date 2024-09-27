@@ -438,119 +438,127 @@
 
 <section class="most-bid">
     <div class="container">
-      <div class="section-heading">
-      <h2>{{ session('locale') === 'en' ? 'Most Bids' : (session('locale') === 'ar' ? 'الاكثر مزايدة' : 'Most Bids') }}</h2>
-      </div>
-      <div class="row">
-      @foreach($mostRecentBids as $productId => $mostRecentBid)
-      @php
-      $loggedInUserId = Auth::id();
-
-      if (isset($mostRecentBid->product)) {
-          $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)
-                          ->where('project_id', $mostRecentBid->product->project_id)
-                          ->where('status',1)
-                          ->first();
-      } else {
-          $bidRequest = null;
-      }
-  @endphp
-        <div class="col-lg-4 col-md-6">
-          <div class="bid-box">
-            <div class="heat-like">
-              <input type="checkbox" name="" id="">
-              <img src="{{asset('frontend/images/heart.png')}}" alt="">
-            </div>
-            <div class="box-img">
-            @php
-                        $galleries = \App\Models\Gallery::where('lot_no', $mostRecentBid->product->lot_no)->get();
-                    @endphp
-                    @if ($galleries)
-                    @if($bidRequest && $bidRequest->status == 1)
-                        <a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}"><img
-                                src="{{ asset($galleries->first()->image_path) }}" alt=""> </a>
-                    @else
-                        @php
-                            $projectSlug = $mostRecentBid->product->project->slug;
-                        @endphp
-                        <a href="{{ url('products', $projectSlug) }}" onclick="return showPopup(event)"><img
-                                src="{{ asset($galleries->first()->image_path) }}" alt=""> </a>
-                    @endif
-                @else
-                    <img src="{{asset('frontend/images/default-product-image.png')}}" alt="Default Image">
-                @endif
-            </div>
-            <div>
-
-               @php
-                        $lastBid =  \App\Models\BidPlaced::where('product_id', $mostRecentBid->product->id)
-                                        ->orderBy('created_at', 'desc')
-                                        ->first();
-               @endphp
-               <!-- for Timed and Private auction -->
-               @if ($mostRecentBid->product->auctionType->name == 'Private' || $mostRecentBid->product->auctionType->name == 'Timed')
-                    @if (strtotime($mostRecentBid->product->auction_end_date) > strtotime('now'))
-                        <div class="countdown-time thisisdemoclass" data-id='{{ $mostRecentBid->product->id }}' data-date='{{ $mostRecentBid->product->auction_end_date }}' id="countdown-{{ $mostRecentBid->product->id }}">
-                            <ul>
-                                @if ($mostRecentBid->product->auctionType->name == 'Private' || $mostRecentBid->product->auctionType->name == 'Timed')
-                                    <li class="days-wrapper"><span class="days"></span>days</li>
-                                @endif
-                                <li><span class="hours"></span>Hours</li>
-                                <li><span class="minutes"></span>Minutes</li>
-                                <li><span class="seconds"></span>Seconds</li>
-                            </ul>
-                        </div>
-                    @else
-                        <p><strong><span style="color: red;">Lot closed</span></strong></p>
-                    @endif
-                @endif
-                <!-- Live Auction -->
-                @if ($mostRecentBid->product->auctionType->name == 'Live' && $lastBid && $lastBid->bid_amount < $mostRecentBid->product->minsellingprice)
-                    <p><span style="color: #3E0269;">Auction is in progress</span></p>
-                @elseif ($mostRecentBid->product->auctionType->name == 'Live' && $lastBid && $lastBid->bid_amount >= $mostRecentBid->product->minsellingprice)
-                    <p><span style="color: red;">Bid Closed</span></p>
-                @endif
-
-
-              <div class="bid-box-status">
-                <div class="bid-box-status-ic">
-                @php
-                                    $auctionTypeName =  $mostRecentBid->product->auctionType->name;
-                                    $auctionTypeIcon = '';
-
-                                    if ($auctionTypeName === 'Private') {
-                                        $auctionTypeIcon = asset('auctionicon/private_icon.png');
-                                    } elseif ($auctionTypeName === 'Timed') {
-                                        $auctionTypeIcon = asset('auctionicon/time.png');
-                                    } elseif ($auctionTypeName === 'Live') {
-                                        $auctionTypeIcon = asset('auctionicon/live.png');
-                                    }
-                                @endphp
-                                <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon"">
-                                @if(session('locale') === 'en')
-                                      <span>{{ $mostRecentBid->product->auctionType->name }}</span>
-                                @elseif(session('locale') === 'ar')
-                                      <span>{{ $mostRecentBid->product->auctionType->name_ar }}</span>
-                                @else
-                                      <span>{{ $mostRecentBid->product->auctionType->name }}</span>
-                                @endif
-                </div>
-              </div>
-                       @if(session('locale') === 'en')
-                          <h3><a href="{{ url('productsdetail',$mostRecentBid->product->slug) }}">{{ $mostRecentBid->product->lot_no }}: {{ $mostRecentBid->product->title }}</a></h3>
-                        @elseif(session('locale') === 'ar')
-                         <h3><a href="{{ url('productsdetail',$mostRecentBid->product->slug) }}">{{ $mostRecentBid->product->lot_no }}: {{ $mostRecentBid->product->title_ar }}</a></h3>
-                        @else
-                         <h3><a href="{{ url('productsdetail',$mostRecentBid->product->slug) }}">{{ $mostRecentBid->product->lot_no }}: {{ $mostRecentBid->product->title }}</a></h3>
-                        @endif
-                        <p>{{ formatPrice($mostRecentBid->max_bid_amount, session()->get('currency')) }} {{$currency}} <span>{{ $mostRecentBid->bid_count}} bids</span></p>
-            </div>
-          </div>
+        <div class="section-heading">
+            <h2>{{ session('locale') === 'en' ? 'Most Bids' : (session('locale') === 'ar' ? 'الاكثر مزايدة' : 'Most Bids') }}</h2>
         </div>
-        @endforeach
-      </div>
+        <div class="row">
+            @foreach($mostRecentBids as $productId => $mostRecentBid)
+                @php
+                    $loggedInUserId = Auth::id();
+                    $bidRequest = null;
+                    $galleries = null;
+
+                    if (isset($mostRecentBid->product)) {
+                        $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)
+                                        ->where('project_id', $mostRecentBid->product->project_id)
+                                        ->where('status', 1)
+                                        ->first();
+
+                        $galleries = \App\Models\Gallery::where('lot_no', $mostRecentBid->product->lot_no)->get();
+                    }
+                @endphp
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="bid-box">
+                        <div class="heat-like">
+                            <input type="checkbox" name="" id="">
+                            <img src="{{ asset('frontend/images/heart.png') }}" alt="">
+                        </div>
+                        <div class="box-img">
+                            @if ($galleries && $galleries->count() > 0)
+                                @if ($bidRequest && $bidRequest->status == 1)
+                                    <a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}">
+                                        <img src="{{ asset($galleries->first()->image_path) }}" alt="">
+                                    </a>
+                                @else
+                                    @php
+                                        $projectSlug = $mostRecentBid->product->project->slug;
+                                    @endphp
+                                    <a href="{{ url('products', $projectSlug) }}" onclick="return showPopup(event)">
+                                        <img src="{{ asset($galleries->first()->image_path) }}" alt="">
+                                    </a>
+                                @endif
+                            @else
+                                <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image">
+                            @endif
+                        </div>
+                        <div>
+                            @php
+                                $lastBid = \App\Models\BidPlaced::where('product_id', $mostRecentBid->product->id)
+                                                ->orderBy('created_at', 'desc')
+                                                ->first();
+                            @endphp
+
+                            <!-- for Timed and Private auction -->
+                            @if (isset($mostRecentBid->product->auctionType))
+                                @if ($mostRecentBid->product->auctionType->name == 'Private' || $mostRecentBid->product->auctionType->name == 'Timed')
+                                    @if (strtotime($mostRecentBid->product->auction_end_date) > strtotime('now'))
+                                        <div class="countdown-time thisisdemoclass" data-id='{{ $mostRecentBid->product->id }}' data-date='{{ $mostRecentBid->product->auction_end_date }}' id="countdown-{{ $mostRecentBid->product->id }}">
+                                            <ul>
+                                                <li class="days-wrapper"><span class="days"></span> days</li>
+                                                <li><span class="hours"></span> Hours</li>
+                                                <li><span class="minutes"></span> Minutes</li>
+                                                <li><span class="seconds"></span> Seconds</li>
+                                            </ul>
+                                        </div>
+                                    @else
+                                        <p><strong><span style="color: red;">Lot closed</span></strong></p>
+                                    @endif
+                                @endif
+
+                                <!-- Live Auction -->
+                                @if ($mostRecentBid->product->auctionType->name == 'Live')
+                                    @if ($lastBid && $lastBid->bid_amount < $mostRecentBid->product->minsellingprice)
+                                        <p><span style="color: #3E0269;">Auction is in progress</span></p>
+                                    @elseif ($lastBid && $lastBid->bid_amount >= $mostRecentBid->product->minsellingprice)
+                                        <p><span style="color: red;">Bid Closed</span></p>
+                                    @endif
+                                @endif
+                            @endif
+
+                            <div class="bid-box-status">
+                                <div class="bid-box-status-ic">
+                                    @php
+                                        $auctionTypeName = isset($mostRecentBid->product->auctionType) ? $mostRecentBid->product->auctionType->name : '';
+                                        $auctionTypeIcon = '';
+
+                                        if ($auctionTypeName === 'Private') {
+                                            $auctionTypeIcon = asset('auctionicon/private_icon.png');
+                                        } elseif ($auctionTypeName === 'Timed') {
+                                            $auctionTypeIcon = asset('auctionicon/time.png');
+                                        } elseif ($auctionTypeName === 'Live') {
+                                            $auctionTypeIcon = asset('auctionicon/live.png');
+                                        }
+                                    @endphp
+                                    <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
+                                    @if(session('locale') === 'en')
+                                        <span>{{ $auctionTypeName }}</span>
+                                    @elseif(session('locale') === 'ar')
+                                        <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span>
+                                    @else
+                                        <span>{{ $auctionTypeName }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @if (isset($mostRecentBid->product->slug))
+                                @if(session('locale') === 'en')
+                                    <h3><a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}">{{ $mostRecentBid->product->lot_no }}: {{ $mostRecentBid->product->title }}</a></h3>
+                                @elseif(session('locale') === 'ar')
+                                    <h3><a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}">{{ $mostRecentBid->product->lot_no }}: {{ $mostRecentBid->product->title_ar }}</a></h3>
+                                @else
+                                    <h3><a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}">{{ $mostRecentBid->product->lot_no }}: {{ $mostRecentBid->product->title }}</a></h3>
+                                @endif
+                                <p>{{ formatPrice($mostRecentBid->max_bid_amount, session()->get('currency')) }} {{$currency}} <span>{{ $mostRecentBid->bid_count }} bids</span></p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
-  </section>
+</section>
+
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
