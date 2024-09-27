@@ -245,14 +245,13 @@
 
 <div class="item">
     <div class="popular_slider_item card-most-product">
-
         <div class="img-card">
             @php
                 $galleries = \App\Models\Gallery::where('lot_no', $product->lot_no)->get();
             @endphp
 
             @if ($galleries->isNotEmpty())
-                @if ($bidRequest && $bidRequest->status == 1)
+                @if($bidRequest && $bidRequest->status == 1)
                     <a href="{{ url('productsdetail', $product->slug) }}">
                         <img src="{{ asset($galleries->first()->image_path) }}" alt="">
                     </a>
@@ -271,37 +270,40 @@
                     <img src="{{ asset('frontend/images/heart.png') }}" alt="">
                 </div>
             @else
-                <a href="{{ route('signin') }}"><i class="fa fa-heart-o "></i></a>
+                <a href="{{ route('signin') }}">
+                    <i class="fa fa-heart-o "></i>
+                </a>
             @endauth
 
             <div class="bid-box-status">
                 <div class="bid-box-status-ic">
                     @php
-                        $auctionTypeName = optional($auctionType)->name;
+                        $auctionTypeName = '';
                         $auctionTypeIcon = '';
 
-                        if ($auctionTypeName === 'Private') {
-                            $auctionTypeIcon = asset('auctionicon/private_icon.png');
-                        } elseif ($auctionTypeName === 'Timed') {
-                            $auctionTypeIcon = asset('auctionicon/time.png');
-                        } elseif ($auctionTypeName === 'Live') {
-                            $auctionTypeIcon = asset('auctionicon/live.png');
+                        if (isset($mostRecentBid) && isset($mostRecentBid->product)) {
+                            $auctionTypeName = optional($mostRecentBid->product->auctionType)->name;
+
+                            if ($auctionTypeName === 'Private') {
+                                $auctionTypeIcon = asset('auctionicon/private_icon.png');
+                            } elseif ($auctionTypeName === 'Timed') {
+                                $auctionTypeIcon = asset('auctionicon/time.png');
+                            } elseif ($auctionTypeName === 'Live') {
+                                $auctionTypeIcon = asset('auctionicon/live.png');
+                            }
                         }
                     @endphp
 
                     <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
-                    <span>
-                        @if(session('locale') === 'en')
-                            {{ $auctionTypeName }}
-                        @elseif(session('locale') === 'ar')
-                            {{ optional($auctionType)->name_ar }}
-                        @else
-                            {{ $auctionTypeName }}
-                        @endif
-                    </span>
+                    @if(session('locale') === 'en')
+                        <span>{{ $auctionTypeName }}</span>
+                    @elseif(session('locale') === 'ar')
+                        <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span>
+                    @else
+                        <span>{{ $auctionTypeName }}</span>
+                    @endif
                 </div>
             </div>
-
         </div>
 
         @php
@@ -312,15 +314,17 @@
 
         <div class="popular_lnt">
             <span>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</span>
+
             @if ($auctionTypeName == 'Private' || $auctionTypeName == 'Timed')
                 @if(strtotime($product->auction_end_date) > strtotime('now'))
-                    <div class="countdown-time thisisdemoclass" data-id='{{ $product->id }}'
-                        data-date='{{ $product->auction_end_date }}' id="countdown-{{ $product->id }}">
+                    <div class="countdown-time thisisdemoclass" data-id='{{ $product->id }}' data-date='{{ $product->auction_end_date }}' id="countdown-{{ $product->id }}">
                         <ul>
-                            <li class="days-wrapper"><span class="days"></span> days</li>
-                            <li><span class="hours"></span> Hours</li>
-                            <li><span class="minutes"></span> Minutes</li>
-                            <li><span class="seconds"></span> Seconds</li>
+                            @if ($auctionTypeName == 'Private' || $auctionTypeName == 'Timed')
+                                <li class="days-wrapper"><span class="days"></span>days</li>
+                            @endif
+                            <li><span class="hours"></span>Hours</li>
+                            <li><span class="minutes"></span>Minutes</li>
+                            <li><span class="seconds"></span>Seconds </li>
                         </ul>
                     </div>
                 @else
@@ -328,16 +332,14 @@
                 @endif
             @endif
 
-            @if ($auctionTypeName == 'Live')
-                @if ($lastBids && $lastBids->bid_amount < $product->minsellingprice)
-                    <p><span style="color: #3E0269;">Auction is in progress</span></p>
-                @elseif ($lastBids && $lastBids->bid_amount >= $product->minsellingprice)
-                    <p><span style="color: red;">Bid Closed</span></p>
-                @endif
+            @if ($auctionTypeName == 'Live' && $lastBids && $lastBids->bid_amount < $product->minsellingprice)
+                <p><span style="color: #3E0269;">Auction is in progress</span></p>
+            @elseif ($auctionTypeName == 'Live' && $lastBids && $lastBids->bid_amount >= $product->minsellingprice)
+                <p><span style="color: red;">Bid Closed</span></p>
             @endif
         </div>
 
-        @if ($bidRequest && $bidRequest->status == 1)
+        @if($bidRequest && $bidRequest->status == 1)
             <a href="{{ url('productsdetail', $product->slug) }}" class="pop-link">
                 <h3>
                     {{ session('locale') === 'en' ? $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '') :
@@ -355,15 +357,22 @@
             </a>
         @endif
 
-        <p>
-            @if(session('locale') === 'en')
-                {{ substr(strip_tags($product->description), 0, 100) }} {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
-            @elseif(session('locale') === 'ar')
-                {{ substr(strip_tags($product->description_ar), 0, 100) }} {{ strlen(strip_tags($product->description_ar)) > 100 ? '...' : '' }}
-            @else
-                {{ substr(strip_tags($product->description), 0, 100) }} {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
-            @endif
-        </p>
+        @if(session('locale') === 'en')
+            <p>
+                {{ substr(strip_tags($product->description), 0, 100) }}
+                {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
+            </p>
+        @elseif(session('locale') === 'ar')
+            <p>
+                {{ substr(strip_tags($product->description_ar), 0, 100) }}
+                {{ strlen(strip_tags($product->description_ar)) > 100 ? '...' : '' }}
+            </p>
+        @else
+            <p>
+                {{ substr(strip_tags($product->description), 0, 100) }}
+                {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
+            </p>
+        @endif
 
         @php
             $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
@@ -390,6 +399,7 @@
         <a href="#" class="next-btn-img"><img src="{{ asset('frontend/images/next-btn.svg') }}" alt=""></a>
     </div>
 </div>
+
 
             @endforeach
             @endif
