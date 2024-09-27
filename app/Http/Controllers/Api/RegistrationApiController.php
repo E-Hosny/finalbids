@@ -228,6 +228,8 @@ class RegistrationApiController extends Controller
     //register without otp
     public function register(Request $request)
 {
+    dd("here");
+
     try {
         $rules = [
             'name' => 'required|string',

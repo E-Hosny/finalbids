@@ -18,7 +18,7 @@
     bottom: 20px;
 }
 .form-check{
-  
+
   margin-top: 2.125rem;
 }
 .star {
@@ -54,21 +54,21 @@
                       <div class="form-group">
                         <label for="">First Name <span class="star">*</span></label>
                         <input type="text" name="first_name" id="first_name">
-                      
+
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">Last Name <span class="star">*</span></label>
                         <input type="text" name="last_name" id="last_name">
-                      
+
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
                         <label for="">Email Address <span class="star">*</span></label>
                         <input type="text" name="email" id="email">
-                     
+
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -80,21 +80,21 @@
                           <option value="+{{ $at->phonecode }}">{{ $at->name }}</option>
                           @endforeach
                       </select>
-                     
+
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12">
                       <div class="form-group">
                         <label for="">Phone Number <span class="star">*</span> </label>
                        <input type="tel"  placeholder="Phone Number" name="phone" id="phone" maxlength=10>
-                       
+
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
                         <label for="">Address <span class="star">*</span></label>
                         <input type="text" name="address" id="address">
-                      
+
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -102,7 +102,7 @@
                             <label for="">Password <span class="star">*</span></label>
                             <input class="pe-5" type="password" name="password" id="password">
                             <i class="fa fa-eye-slash input-icon" id="password-toggle"></i>
-                           
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -116,13 +116,13 @@
                       <div class="form-group d-flex gap-2 align-items-center">
                        <div class="form-check register_check">
                         <input class="form-check-label" type="checkbox" name="is_term" id="is_term" value="1">
-                        <label for="is_term">Accept <a href="{{route('terms-conditions')}}" class="text-btn text-capitalize">Terms & Conditions.</a></label> 
+                        <label for="is_term">Accept <a href="{{route('terms-conditions')}}" class="text-btn text-capitalize">Terms & Conditions.</a></label>
                       </div>
                       </div>
                     </div>
                   </div>
                     <button class="btn btn-secondary login-btn font-bld"  title="Submit"> Sign Up</button>
-                                      
+
                 </form>
                 <span class="sign-tag-line">if you have an account? <a href="{{route('signin')}}" class="text-btn">Login</a></span>
             </div>
@@ -134,7 +134,7 @@
   <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        
+
         <div class="modal-body">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="login-mdl text-center">
@@ -151,20 +151,20 @@
               <!-- <p>Didn’t Receive the Code? <a href="" class="text-btn edit-number">Resend</a></p> -->
               <p>Didn’t Receive the Code? <a href="#" class="text-btn edit-number" id="resend-code">Resend</a></p>
 
-             
+
               <button type="button" name="verify-otp" class="mt-4 btn btn-secondary px-5 btn-verify-otp">Verify</button>
           </div>
         </div>
-         
+
       </div>
     </div>
   </div>
 
-    <script src="{{asset('frontend/js/jquery.min.js')}}"></script> 
-    <script src="{{asset('frontend/js/bootstrap.js')}}"></script> 
-    <script src="{{asset('frontend/js/main.js')}}"></script> 
+    <script src="{{asset('frontend/js/jquery.min.js')}}"></script>
+    <script src="{{asset('frontend/js/bootstrap.js')}}"></script>
+    <script src="{{asset('frontend/js/main.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"> </script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"> </script>
     <script>
     function focusOnNextInput(currentInput, nextInputId) {
@@ -180,7 +180,7 @@ $(document).ready(function () {
         event.preventDefault();
         $(".error-message").remove();
         var valid = true;
-      
+
         var validationRules = {
             first_name: {
                 required: true,
@@ -224,7 +224,7 @@ $(document).ready(function () {
             is_term: {
                 required: true,
             },
-            
+
         };
 
         $.each(validationRules, function (elementId, rules) {
@@ -254,7 +254,7 @@ $(document).ready(function () {
                 $("#" + elementId).after('<div class="error-message">Please accept the Terms & Conditions.</div>');
                 valid = false;
             }
-         
+
             // Input event to remove error message on change
             element.on("input", function () {
                 $(this).next(".error-message").remove();
@@ -273,10 +273,10 @@ $(document).ready(function () {
                         $("#email").after('<div class="error-message">' + response.error + '</div>');
                   } else {
                      // Set spinner and disable button
-                     $('.login-btn').html('<i class="fa fa-spinner fa-spin"></i> Sending OTP...').prop('disabled', true);
-                    $('.numberTag').text(" "+ ' '+$('#email').val().toLowerCase());
-                    openOtpVerificationModal();
-                  }                    
+                    //  $('.login-btn').html('<i class="fa fa-spinner fa-spin"></i> Sending OTP...').prop('disabled', true);
+                    // $('.numberTag').text(" "+ ' '+$('#email').val().toLowerCase());
+                    // openOtpVerificationModal();
+                  }
                 },
                 error: function() {
                    alert('Error in request!');
@@ -284,7 +284,7 @@ $(document).ready(function () {
             });
         }
     });
-  
+
     // Function to validate email format
     function isValidEmail(email) {
         var emailRegex = /\S+@\S+\.\S+/;
@@ -292,9 +292,9 @@ $(document).ready(function () {
     }
 
     // Function to open modal
-    function openOtpVerificationModal() {
-        $("#exampleModalToggle").modal("show");
-    }
+    // function openOtpVerificationModal() {
+    //     $("#exampleModalToggle").modal("show");
+    // }
 
     // Initialize intlTelInput for mobile code
     $("#mobile_code-login").intlTelInput({
@@ -334,10 +334,10 @@ $(document).ready(function() {
 
 <script>
 
-$(document).ready(function() {
-    $('body').on('click','.btn-verify-otp', function(){
-      verifyOTP();
-    });
+// $(document).ready(function() {
+//     $('body').on('click','.btn-verify-otp', function(){
+//       verifyOTP();
+//     });
 
     function verifyOTP() {
       const otpValue = $('#first').val() + $('#second').val() + $('#third').val() + $('#fourth').val();
@@ -382,7 +382,7 @@ function moveToNextInput(currentInput, nextInputId) {
 
     function restrictInput(currentInput) {
         var maxLength = parseInt(currentInput.getAttribute('maxlength'));
-    
+
         if (currentInput.value.length > 1) {
             // If more than one character is entered, keep only the first character
             currentInput.value = currentInput.value.charAt(0);
@@ -400,7 +400,7 @@ function moveToNextInput(currentInput, nextInputId) {
         restrictInput(this);
         moveToNextInput(this, $(this).data('next'));
     });
-    
+
     $('.otpValue').on('keydown', function(event) {
         moveToPreviousInput(this, $(this).data('prev'));
     });
@@ -413,7 +413,7 @@ function moveToNextInput(currentInput, nextInputId) {
         });
 
         function resendCode() {
-            let email = $('#email').val(); 
+            let email = $('#email').val();
 
             $.ajax({
                 type: "POST",
