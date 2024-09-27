@@ -52,7 +52,7 @@
                   <div class="row">
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">{{__('message.first-name')  }}<span class="star">*</span></label>
+                        <label for="">First Name<span class="star">*</span></label>
                         <input type="text" name="first_name" id="first_name">
 
                       </div>
