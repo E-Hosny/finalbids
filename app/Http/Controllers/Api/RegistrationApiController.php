@@ -99,7 +99,7 @@ class RegistrationApiController extends Controller
 // deleteaccount
     public function deleteAccount(Request $request)
     {
-        $userId = auth()->id(); 
+        $userId = auth()->id();
         $user = User::find($userId);
 
         if ($user) {
@@ -139,90 +139,161 @@ class RegistrationApiController extends Controller
         ]);
     }
 
-    // register api.
+    // register api with otp
+    // public function register(Request $request)
+    // {
+    //     try {
+
+    //         $rules = [
+    //             'name' => 'required|string',
+    //             'last_name' => 'required|string',
+    //             'phone' => 'required',
+    //             'email' => 'required|string|email|max:255|unique:users',
+    //             'device_token' => '',
+    //             'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*])[A-Za-z\d!@#$&*]{8,}$/'],
+    //             'confirm_password' => 'required|same:password',
+    //             'country_code' => 'required',
+    //             'is_term' => 'required|boolean',
+    //         ];
+
+    //         $customMessages = [
+    //             'password.regex' => 'Password must be at least 8 characters 1 uppercase 1 lowercase and 1 number.',
+    //         ];
+
+    //         // $validator = Validator::make($request->all(), $rules);
+    //         $validator = Validator::make($request->all(), $rules, $customMessages);
+
+    //         if ($validator->fails()) {
+    //             $firstErrorMessage = $validator->errors()->first();
+    //             return response()->json([
+    //                 'ResponseCode' => 422,
+    //                 'Status' => 'False',
+    //                 'Message' => $firstErrorMessage,
+    //             ], 422);
+    //         }
+    //         // Password must be at least 8 characters 1 uppercase 1 lowercase and 1 number
+    //         $otp = rand(1000, 9999);
+    //         $user = new TempUsers([
+    //             'first_name' => $request->input('name'),
+    //             'last_name' => $request->input('last_name'),
+    //             'phone' => $request->input('phone'),
+    //             'email' => $request->input('email'),
+    //             'device_token' => $request->input('device_token'),
+    //             'password' => bcrypt($request->input('password')),
+    //             'otp' => $otp,
+    //             'country_code' => $request->input('country_code'),
+    //             'is_term' => $request->input('is_term'),
+    //         ]);
+
+    //         $user->save();
+    //         $msg = $otp . ' is your Verification code for Bids.Sa ';
+    //         // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
+    //         $first_name = $user->first_name;
+    //         $otp =$user->otp;
+
+    //         Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
+
+    //         $isTerm = (int) $request->input('is_term');
+
+    //         // $token = JWTAuth::fromUser($user);
+
+    //         return response()->json([
+    //             'ResponseCode' => 200,
+    //             'Status' => 'true',
+    //             'Message' => 'Otp Send Successfully',
+    //             'data' => [
+    //                 'user' => [
+    //                     'first_name' => $user->first_name,
+    //                     'last_name' => $user->last_name,
+    //                     'phone' => $user->phone,
+    //                     'email' => $user->email,
+    //                     'device_token' => $user->device_token,
+    //                     'otp' => $user->otp,
+    //                     'country_code' => $user->country_code,
+    //                     'is_term' => $isTerm,
+    //                 ],
+    //             ],
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'ResponseCode' => 500,
+    //             'Status' => 'False',
+    //             'Message' => $e->getMessage(),
+    //         ], 500);
+    //     }
+
+    // }
+
+
+    //register without otp
     public function register(Request $request)
-    {
-        try {
+{
+    try {
+        $rules = [
+            'name' => 'required|string',
+            'last_name' => 'required|string',
+            'phone' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            'device_token' => '',
+            'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*])[A-Za-z\d!@#$&*]{8,}$/'],
+            'confirm_password' => 'required|same:password',
+            'country_code' => 'required',
+            'is_term' => 'required|boolean',
+        ];
 
-            $rules = [
-                'name' => 'required|string',
-                'last_name' => 'required|string',
-                'phone' => 'required',
-                'email' => 'required|string|email|max:255|unique:users',
-                'device_token' => '',
-                'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$&*])[A-Za-z\d!@#$&*]{8,}$/'],
-                'confirm_password' => 'required|same:password',
-                'country_code' => 'required',
-                'is_term' => 'required|boolean',
-            ];
+        $customMessages = [
+            'password.regex' => 'Password must be at least 8 characters 1 uppercase 1 lowercase and 1 number.',
+        ];
 
-            $customMessages = [
-                'password.regex' => 'Password must be at least 8 characters 1 uppercase 1 lowercase and 1 number.',
-            ];
-        
-            // $validator = Validator::make($request->all(), $rules);
-            $validator = Validator::make($request->all(), $rules, $customMessages);
+        $validator = Validator::make($request->all(), $rules, $customMessages);
 
-            if ($validator->fails()) {
-                $firstErrorMessage = $validator->errors()->first();
-                return response()->json([
-                    'ResponseCode' => 422,
-                    'Status' => 'False',
-                    'Message' => $firstErrorMessage,
-                ], 422);
-            }
-            // Password must be at least 8 characters 1 uppercase 1 lowercase and 1 number
-            $otp = rand(1000, 9999);
-            $user = new TempUsers([
-                'first_name' => $request->input('name'),
-                'last_name' => $request->input('last_name'),
-                'phone' => $request->input('phone'),
-                'email' => $request->input('email'),
-                'device_token' => $request->input('device_token'),
-                'password' => bcrypt($request->input('password')),
-                'otp' => $otp,
-                'country_code' => $request->input('country_code'),
-                'is_term' => $request->input('is_term'),
-            ]);
-
-            $user->save();
-            $msg = $otp . ' is your Verification code for Bids.Sa ';
-            // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
-            $first_name = $user->first_name;
-            $otp =$user->otp;
-        
-            Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
-
-            $isTerm = (int) $request->input('is_term');
-
-            // $token = JWTAuth::fromUser($user);
-
+        if ($validator->fails()) {
+            $firstErrorMessage = $validator->errors()->first();
             return response()->json([
-                'ResponseCode' => 200,
-                'Status' => 'true',
-                'Message' => 'Otp Send Successfully',
-                'data' => [
-                    'user' => [
-                        'first_name' => $user->first_name,
-                        'last_name' => $user->last_name,
-                        'phone' => $user->phone,
-                        'email' => $user->email,
-                        'device_token' => $user->device_token,
-                        'otp' => $user->otp,
-                        'country_code' => $user->country_code,
-                        'is_term' => $isTerm,
-                    ],
-                ],
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'ResponseCode' => 500,
+                'ResponseCode' => 422,
                 'Status' => 'False',
-                'Message' => $e->getMessage(),
-            ], 500);
+                'Message' => $firstErrorMessage,
+            ], 422);
         }
 
+        $user = new TempUsers([
+            'first_name' => $request->input('name'),
+            'last_name' => $request->input('last_name'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
+            'device_token' => $request->input('device_token'),
+            'password' => bcrypt($request->input('password')),
+            'country_code' => $request->input('country_code'),
+            'is_term' => $request->input('is_term'),
+        ]);
+
+        $user->save();
+
+        return response()->json([
+            'ResponseCode' => 200,
+            'Status' => 'true',
+            'Message' => 'Registration Successful',
+            'data' => [
+                'user' => [
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'phone' => $user->phone,
+                    'email' => $user->email,
+                    'device_token' => $user->device_token,
+                    'country_code' => $user->country_code,
+                    'is_term' => (int) $request->input('is_term'),
+                ],
+            ],
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'ResponseCode' => 500,
+            'Status' => 'False',
+            'Message' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     // forgot verify otp
     public function verifyOTPforgot(Request $request)
@@ -296,7 +367,7 @@ class RegistrationApiController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-           
+
             if ($validator->fails()) {
                 $firstErrorMessage = $validator->errors()->first();
                 return response()->json([
@@ -340,7 +411,7 @@ class RegistrationApiController extends Controller
         $user->save();
         $first_name = $user->first_name;
         $subject = "Welcome to Bid.sa – Registration Successful!";
-    
+
         Mail::to($user->email)->send(new WelcomeMail($subject, $first_name));
 
         // Delete the temporary user record
@@ -403,10 +474,10 @@ class RegistrationApiController extends Controller
                         $user->device_token = $request->input('device_token');
                         $user->save();
                     }
-        
+
                     // Generate JWT token
                     $token = JWTAuth::fromUser($user);
-        
+
                     return response()->json([
                         'ResponseCode' => 200,
                         'Status' => 'true',
@@ -432,7 +503,7 @@ class RegistrationApiController extends Controller
                     'Message' => 'Invalid credentials.',
                 ], 422);
             }
-        
+
     }
 
     // Resend Otp again api.
@@ -555,7 +626,7 @@ class RegistrationApiController extends Controller
             $user->save();
             $first_name = $user->first_name;
             $otp =$user->otp;
-        
+
             Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
             // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
 
@@ -1132,7 +1203,7 @@ class RegistrationApiController extends Controller
     }
 
 
-    //  // add address primary 
+    //  // add address primary
     public function primaryAddress(Request $request)
     {
         try {
@@ -1140,9 +1211,9 @@ class RegistrationApiController extends Controller
                 'is_primary' => 'required',
                 'address_id' => 'required|exists:useraddresses,id',
             ];
-    
+
             $validator = Validator::make($request->all(), $rules);
-    
+
             if ($validator->fails()) {
                 $firstErrorMessage = $validator->errors()->first();
                 return response()->json([
@@ -1151,10 +1222,10 @@ class RegistrationApiController extends Controller
                     'Message' => $firstErrorMessage,
                 ], 422);
             }
-    
+
             $user = auth()->user();
             $userAddresses = Useraddress::where('user_id', $user->id)->get();
-    
+
             if ($request->is_primary) {
                 // If the request sets this address as primary, update all other addresses to not be primary
                 foreach ($userAddresses as $address) {
@@ -1163,11 +1234,11 @@ class RegistrationApiController extends Controller
                     }
                 }
             }
-    
+
             $userAddress = Useraddress::where('id', $request->address_id)
                 ->where('user_id', $user->id)
                 ->first();
-    
+
             if (!$userAddress) {
                 return response()->json([
                     'ResponseCode' => 422,
@@ -1175,11 +1246,11 @@ class RegistrationApiController extends Controller
                     'Message' => 'User Address not found',
                 ], 422);
             }
-    
+
             $userAddress->update(['is_primary' => $request->is_primary]);
-    
+
             $userDetails = $user->toArray();
-    
+
             return response()->json([
                 'ResponseCode' => 200,
                 'Status' => 'true',
@@ -1212,7 +1283,7 @@ class RegistrationApiController extends Controller
                     'ResponseCode' => 200,
                     'Status' => 'true',
                     'Message' => 'Currency  Retrieved Successfully',
-                    'data' =>$currency, 
+                    'data' =>$currency,
                 ], 200);
 
             } catch (\Exception $e) {
@@ -1230,11 +1301,11 @@ class RegistrationApiController extends Controller
         {
             try {
                 $user = auth()->user();
-    
+
                 $rules = [
                     'currency_code' => '',
                 ];
-    
+
                 $validator = Validator::make($request->all(), $rules);
                 if ($validator->fails()) {
                     if ($validator->fails()) {
@@ -1246,13 +1317,13 @@ class RegistrationApiController extends Controller
                         ], 422);
                     }
                 }
-    
+
                 $data = [
                     'currency_code' => $request->input('currency_code'),
                 ];
-    
+
                 $user->update($data);
-    
+
                 return response()->json([
                     'ResponseCode' => 200,
                     'Status' => 'true',
@@ -1269,7 +1340,7 @@ class RegistrationApiController extends Controller
          // cms pages start
 
     public function termsconditions(request $request){
-    
+
         try {
            $data= Page::where('id',1)->get();
              return response()->json([
@@ -1285,7 +1356,7 @@ class RegistrationApiController extends Controller
     }
 
     public function privacypolicies(request $request){
-    
+
         try {
            $data= Page::where('id',3)->get();
             return response()->json([
