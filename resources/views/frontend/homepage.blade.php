@@ -494,6 +494,7 @@
                                         $auctionTypeName = '';
                                         $auctionTypeIcon = '';
 
+                                        // تحقق من وجود mostRecentBid و product
                                         if (isset($mostRecentBid) && isset($mostRecentBid->product)) {
                                             $auctionTypeName = optional($mostRecentBid->product->auctionType)->name;
 
@@ -530,6 +531,7 @@
                             @endif
                         </div>
                     </div>
+
 
                 </div>
             @endforeach
