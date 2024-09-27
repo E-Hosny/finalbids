@@ -20,10 +20,11 @@ return new class extends Migration
             $table->decimal('reserved_price', 10, 2);
             $table->decimal('Increment', 10, 2)->nullable();
             $table->datetime('auction_end_date');
-            $table->text('description'); 
+            $table->text('description');
             $table->boolean('is_popular')->default(false);
             $table->enum('status', ['new', 'open', 'suspended', 'closed']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

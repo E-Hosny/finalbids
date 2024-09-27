@@ -17,12 +17,16 @@ return new class extends Migration
             $table->string('slug');
             $table->string('image_path');
             $table->datetime('start_date_time');
+            $table->datetime('end_date_time');
             $table->integer('auction_type_id');
+            $table->string('category_id', 255)->nullable()->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
             $table->text('description')->nullable();
             $table->boolean('status')->default(true)->comment('Description Status: true (active) or false (inactive)');
             $table->boolean('is_trending')->default(false);
             $table->timestamps();
-            
+            $table->softDeletes();
+
+
         });
     }
 
