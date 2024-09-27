@@ -248,6 +248,8 @@
         <div class="img-card">
             @php
                 $galleries = \App\Models\Gallery::where('lot_no', $product->lot_no)->get();
+                // تأكد من وجود $mostRecentBid قبل استخدامه
+                $mostRecentBid = \App\Models\BidPlaced::where('product_id', $product->id)->orderBy('created_at', 'desc')->first();
             @endphp
 
             @if ($galleries->isNotEmpty())
@@ -399,6 +401,7 @@
         <a href="#" class="next-btn-img"><img src="{{ asset('frontend/images/next-btn.svg') }}" alt=""></a>
     </div>
 </div>
+
 
 
             @endforeach
