@@ -52,7 +52,7 @@
                   <div class="row">
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">First Name <span class="star">*</span></label>
+                        <label for="">{{__('message.first-name')  }}<span class="star">*</span></label>
                         <input type="text" name="first_name" id="first_name">
 
                       </div>
@@ -273,9 +273,9 @@ $(document).ready(function () {
                         $("#email").after('<div class="error-message">' + response.error + '</div>');
                   } else {
                      // Set spinner and disable button
-                    //  $('.login-btn').html('<i class="fa fa-spinner fa-spin"></i> Sending OTP...').prop('disabled', true);
-                    // $('.numberTag').text(" "+ ' '+$('#email').val().toLowerCase());
-                    // openOtpVerificationModal();
+                     $('.login-btn').html('<i class="fa fa-spinner fa-spin"></i> Sending OTP...').prop('disabled', true);
+                    $('.numberTag').text(" "+ ' '+$('#email').val().toLowerCase());
+                    openOtpVerificationModal();
                   }
                 },
                 error: function() {
@@ -292,9 +292,9 @@ $(document).ready(function () {
     }
 
     // Function to open modal
-    // function openOtpVerificationModal() {
-    //     $("#exampleModalToggle").modal("show");
-    // }
+    function openOtpVerificationModal() {
+        $("#exampleModalToggle").modal("show");
+    }
 
     // Initialize intlTelInput for mobile code
     $("#mobile_code-login").intlTelInput({
@@ -334,10 +334,10 @@ $(document).ready(function() {
 
 <script>
 
-// $(document).ready(function() {
-//     $('body').on('click','.btn-verify-otp', function(){
-//       verifyOTP();
-//     });
+$(document).ready(function() {
+    $('body').on('click','.btn-verify-otp', function(){
+      verifyOTP();
+    });
 
     function verifyOTP() {
       const otpValue = $('#first').val() + $('#second').val() + $('#third').val() + $('#fourth').val();
@@ -440,3 +440,4 @@ function moveToNextInput(currentInput, nextInputId) {
 
   </body>
 @include('frontend.layouts.footer')
+
