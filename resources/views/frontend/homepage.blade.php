@@ -465,7 +465,7 @@
                             <img src="{{ asset('frontend/images/heart.png') }}" alt="">
                         </div>
                         <div class="box-img">
-                            @if ($galleries && $galleries->count() > 0)
+                            @if (isset($galleries) && $galleries->count() > 0)
                                 @if ($bidRequest && $bidRequest->status == 1)
                                     <a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}">
                                         <img src="{{ asset($galleries->first()->image_path) }}" alt="">
@@ -484,12 +484,11 @@
                         </div>
                         <div>
                             @php
-                                $lastBid = \App\Models\BidPlaced::where('product_id', $mostRecentBid->product->id)
+                                $lastBid = isset($mostRecentBid->product) ? \App\Models\BidPlaced::where('product_id', $mostRecentBid->product->id)
                                                 ->orderBy('created_at', 'desc')
-                                                ->first();
+                                                ->first() : null;
                             @endphp
 
-                            <!-- for Timed and Private auction -->
                             @if (isset($mostRecentBid->product->auctionType))
                                 @if ($mostRecentBid->product->auctionType->name == 'Private' || $mostRecentBid->product->auctionType->name == 'Timed')
                                     @if (strtotime($mostRecentBid->product->auction_end_date) > strtotime('now'))
@@ -506,7 +505,6 @@
                                     @endif
                                 @endif
 
-                                <!-- Live Auction -->
                                 @if ($mostRecentBid->product->auctionType->name == 'Live')
                                     @if ($lastBid && $lastBid->bid_amount < $mostRecentBid->product->minsellingprice)
                                         <p><span style="color: #3E0269;">Auction is in progress</span></p>
@@ -558,6 +556,7 @@
         </div>
     </div>
 </section>
+
 
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
