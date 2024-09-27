@@ -3,19 +3,19 @@
   .nodata {
     color: black;
     font-size: 38px;
-    text-align: center; 
+    text-align: center;
 }
 
 .no-products-found {
-    text-align: center; 
+    text-align: center;
 }
 .project-link {
     text-decoration: none;
-    color: black; 
+    color: black;
 }
 
 .project-link:hover h3 {
-    color: #3E0269; 
+    color: #3E0269;
 }
   </style>
 <section class="hero-ther">
@@ -23,22 +23,22 @@
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6 text-center">
            <h1>{{ session('locale') === 'en' ? 'Projects' : (session('locale') === 'ar' ? 'المشاريع' : 'Projects') }}</h1>
-          
+
            <form action="{{ route('pastauction') }}" method="GET" class="search-frm-prdt" id="searchForm">
-              <input type="text" name="search" id="searchInput" placeholder="Search projects..." value="{{ request()->input('search') }}">
+              <input type="text" name="search" id="searchInput" placeholder="{{ session('locale') === 'en' ? 'Search products...' : (session('locale') === 'ar' ? 'ابحث عن منتجات' : 'Search products...') }}" value="{{ request()->input('search') }}">
               <button type="submit"><img class="w-100" src="{{ asset('frontend/images/rounded-sr.svg') }}" alt=""></button>
           </form>
         </div>
       </div>
     </div>
   </section>
- 
+
 
   <section class="product-list-man mt-5">
     <div class="container">
       <div class="row">
         @foreach($projects as $pro) <div class="col-xl-4 col-lg-6 col-md-6">
-            
+
                 <div class="card-product product-blndle">
                 <a href="{{ url('products', $pro->slug) }}">
                 <div class="product-image">
@@ -49,13 +49,13 @@
                             @endif
                 </div>
                 </a>
-                
+
                 <div class="bid-box-status">
                   <div class="bid-box-status-ic">
                       @php
                           $auctionTypeName = $pro->auctionType->name;
                           $auctionTypeIcon = '';
-              
+
                           if ($auctionTypeName === 'Private') {
                               $auctionTypeIcon = asset('auctionicon/private_icon.png');
                           } elseif ($auctionTypeName === 'Timed') {
@@ -64,7 +64,7 @@
                               $auctionTypeIcon = asset('auctionicon/live.png');
                           }
                       @endphp
-              
+
                       <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
                       @if(session('locale') === 'en')
                       <span>{{ $pro->auctionType->name }}</span>
@@ -86,10 +86,10 @@
                       $formattedEnddateTime = date("F j, g:i A",  $end);
                       $formattedEndDateTimeconvert = date("M j, g:i A", $end);
                       $currentDateTime = now();
-                  
+
                   @endphp
                 <div class="card-product-dtl p-0">
-                    
+
                     <!-- @if(session('locale') === 'en')
                            <h3>{{$pro->name}}  </h3>
                         @elseif(session('locale') === 'ar')
@@ -119,7 +119,7 @@
                             ->where('project_id', $pro->id)
                             ->first();
                     @endphp
-                           
+
                                 @php
                                     $originalDateTime = $pro->end_date_time;
                                     $originalDatesTime = new Carbon\Carbon($originalDateTime);
@@ -130,34 +130,34 @@
                                 <a href="{{ url('products', $pro->slug) }}"><button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'View Results' : (session('locale') === 'ar' ? 'الكثير مغلق' : 'View Results') }}  </button></a>
                                 @endif
 
-                                
-                                @if ($pro->auctionType->name == 'Live' && $currentDateTime > $originalDateTime) 
-                                <a href="{{ url('products', $pro->slug) }}"><button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'View Results' : (session('locale') === 'ar' ? 'الكثير مغلق' : 'View Results') }}  </button></a>
-                                    
-                                @endif
-                                      
 
-                                @if ($pro->auctionType->name == 'Private' && $currentDateTime > $originalDateTime) 
+                                @if ($pro->auctionType->name == 'Live' && $currentDateTime > $originalDateTime)
                                 <a href="{{ url('products', $pro->slug) }}"><button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'View Results' : (session('locale') === 'ar' ? 'الكثير مغلق' : 'View Results') }}  </button></a>
-                                    
+
                                 @endif
-                                      
-                  
+
+
+                                @if ($pro->auctionType->name == 'Private' && $currentDateTime > $originalDateTime)
+                                <a href="{{ url('products', $pro->slug) }}"><button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'View Results' : (session('locale') === 'ar' ? 'الكثير مغلق' : 'View Results') }}  </button></a>
+
+                                @endif
+
+
                 </div>
                 </div>
-           
+
             </div>
             @endforeach
       </div>
-      
+
       <ul class="pagination">
       {{ $projects->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
         </ul>
-       
+
     </div>
   </section>
   <section class="product-list-man mt-5">
-   
+
 
    @if($projects->isEmpty())
        <div class="no-products-found">
@@ -166,8 +166,8 @@
    @endif
 </section>
 
-  
- 
+
+
 
     <script src="{{asset('frontend/js/jquery.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -176,7 +176,7 @@
     <script src="{{asset('frontend/js/main.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
  <script>
-  
+
 
   const rangeInput = document.querySelectorAll(".range-input input"),
   priceInput = document.querySelectorAll(".price-input input"),
@@ -223,7 +223,7 @@ rangeInput.forEach((input) => {
 
 function submitSearchForm() {
   var searchInputValue = document.getElementById('searchInput').value.trim();
-  
+
   // Check if the search input is not empty
   if (searchInputValue !== '') {
       // Get the current URL
@@ -252,8 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
  </script>
 
- 
+
 @include('frontend.layouts.requestbidscript')
 
 @include('frontend.layouts.footer')
- 

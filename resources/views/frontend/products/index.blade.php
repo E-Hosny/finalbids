@@ -1,6 +1,6 @@
 @include('frontend.layouts.header')
 @php
-       
+
         $bidRequest = \App\Models\BidRequest::where('project_id', $projects->id)->first();
     @endphp
 <style>
@@ -36,38 +36,38 @@ button.text-btns {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
+    height: 100vh;
 }
 
 .nodata {
     color: black;
     font-size: 38px;
-    text-align: center; 
+    text-align: center;
 }
 
 .no-products-found {
-    text-align: center; 
+    text-align: center;
 }
 
 .prd-link {
     text-decoration: none;
-    color: black; 
+    color: black;
 }
 
 .prd-link:hover h3 {
-    color: #3E0269; 
+    color: #3E0269;
 }
   </style>
-  
+
 <section class="hero-ther inner_header">
     <div class="container-fluid">
       <div class="row justify-content-center">
         <div class="col-lg-4 col-md-6 bid-btn-right">
           <div class="data-bid d-block">
           <div class="data-btn text-center">
-          
-                
-         
+
+
+
            @if(session('locale') === 'en')
                         <h1>{{$projects->name}}</h1>
                         @elseif(session('locale') === 'ar')
@@ -76,7 +76,7 @@ button.text-btns {
                         <h1>{{$projects->name}}</h1>
                         @endif
 
-                        
+
            @php
                 $originalDateTime = $projects->start_date_time;
                 $timestamp = strtotime($originalDateTime);
@@ -89,7 +89,7 @@ button.text-btns {
            <p>{{$formattedDateTime}} - {{$formattedEnddateTime}}</p>
              @if ($projects->auctionType->name == 'Live' && $currentDateTime > $endDatetime)
                     <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق الدفعة' : 'Lot Closed') }}</button>
-                @elseif($projects->auctionType->name == 'Live')   
+                @elseif($projects->auctionType->name == 'Live')
                 <a href="{{ url('productslive', $projects->slug) }}"><button class="btn btn-danger enter_live">Enter Live Auction</button></a>
               @endif
               <div class="bid-box-status">
@@ -97,7 +97,7 @@ button.text-btns {
                       @php
                           $auctionTypeName = $projects->auctionType->name;
                           $auctionTypeIcon = '';
-              
+
                           if ($auctionTypeName === 'Private') {
                               $auctionTypeIcon = asset('auctionicon/private_icon.png');
                           } elseif ($auctionTypeName === 'Timed') {
@@ -106,7 +106,7 @@ button.text-btns {
                               $auctionTypeIcon = asset('auctionicon/live.png');
                           }
                       @endphp
-              
+
                       <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
                       @if(session('locale') === 'en')
                      <span>{{ $projects->auctionType->name }}</span>
@@ -131,10 +131,10 @@ button.text-btns {
                                 $originalDatesTime = new Carbon\Carbon($originalDateTime);
                                 $twoWeeksBefore = $originalDatesTime->copy()->subWeeks(2);
                                 $currentDateTime = now()->timezone('Asia/Kolkata');
-                               
+
                                 $enddate = $projects->end_date_time;
                                 $enddatetime  = new Carbon\Carbon($enddate);
-                                
+
                                 @endphp
 
               <div class="serach_topbar">
@@ -148,7 +148,7 @@ button.text-btns {
                <!-- timed auction -->
                @if ($projects->auctionType->name == 'Timed' && $currentDateTime > $enddatetime)
                     <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق الدفعة' : 'Lot Closed') }}</button>
-                @else  
+                @else
                       @if ($projects->auctionType->name == 'Timed'  && $currentDateTime >= $originalDateTime)
                           <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} </button>
                       @elseif ($projects->auctionType->name == 'Timed' && $currentDateTime >= $twoWeeksBefore)
@@ -159,48 +159,48 @@ button.text-btns {
                 <!-- Private Auction -->
                 @if ($projects->auctionType->name == 'Private' && $currentDateTime > $enddatetime)
                     <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق القطعة' : 'Lot Closed') }}</button>
-                @else   
+                @else
                           @if ($bidRequest && $bidRequest->status == 1 && $projects->auctionType->name == 'Private' && $currentDateTime >= $originalDateTime)
                               <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} </button>
                           @elseif ($bidRequest && $bidRequest->status == 0 && $projects->auctionType->name == 'Private')
-                              <button class="btn btn-primary" >            
-                                {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }} 
+                              <button class="btn btn-primary" >
+                                {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}
                               </button>
                           @elseif  ($bidRequest && $bidRequest->status == 1 && $projects->auctionType->name == 'Private' && $currentDateTime <= $originalDateTime)
                                           <button class="btn btn-primary" style="display: none;" >
-                                              
+
                                               Project Not start
-                                        </button>  
+                                        </button>
                           @elseif ($projects->auctionType->name == 'Private' && $currentDateTime >= $twoWeeksBefore)
                           <button class="btn btn-primary" onclick="requestBid('{{ $projects->name }}', '{{ $projects->id }}', '{{ $projects->auction_type_id }}', '{{ $projects->deposit_amount }}')">
                               {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب المزايدة' : 'Request Bid') }}</button>
                           @endif
                 @endif
-              
+
                 <!-- Live Auction -->
                 @if ($projects->auctionType->name == 'Live' && $currentDateTime > $enddatetime)
                     <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق الدفعة' : 'Lot Closed') }}</button>
-                @else   
+                @else
                         @if ($bidRequest && $bidRequest->status == 1 && $projects->auctionType->name == 'Live' && $currentDateTime >= $originalDateTime)
                             <button class="text-btns" style="display: none;">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} </button>
                         @elseif ($bidRequest && $bidRequest->status == 0 && $projects->auctionType->name == 'Live')
-                            <button class="btn btn-primary" >            
-                              {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }} 
+                            <button class="btn btn-primary" >
+                              {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}
                             </button>
                         @elseif  ($bidRequest && $bidRequest->status == 1 && $projects->auctionType->name == 'Live' && $currentDateTime <= $originalDateTime)
                                         <button class="btn btn-primary" style="display: none;" >
-                                            
+
                                             Project Not start
-                                      </button>  
+                                      </button>
                         @elseif ($projects->auctionType->name == 'Live' && $currentDateTime >= $twoWeeksBefore)
                         <button class="btn btn-primary" onclick="requestBid('{{ $projects->name }}', '{{ $projects->id }}', '{{ $projects->auction_type_id }}', '{{ $projects->deposit_amount }}')">
                             {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب المزايدة' : 'Request Bid') }}</button>
                         @endif
                 @endif
-                
-                
+
+
               </div>
-            </div>            
+            </div>
           </div>
         </div>
 
@@ -210,7 +210,8 @@ button.text-btns {
   <section class="list-fliter">
     <div class="container">
       <div class="result-lst">
-      <h3>{{ $totalItems }} Items</h3>
+        <h3>{{ session('locale') === 'en' ? 'Items' : (session('locale') === 'ar' ? 'المنتجات' : 'Items') }} <span>{{ ' : '. $totalItems }}</span></h3>
+
         <div class="fliter-short">
           <form action="" class="cmn-frm">
             <!-- <select name="sort" class="m-0" onchange="this.form.submit()">
@@ -218,8 +219,8 @@ button.text-btns {
                 <option value="price_high_low">Price: High to Low</option>
             </select> -->
             <select name="sort" class="m-0" onchange="this.form.submit()">
-        <option value="price_low_high" {{ isset($_GET['sort']) && $_GET['sort'] == 'price_low_high' ? 'selected' : '' }}>Price: Low to High</option>
-        <option value="price_high_low" {{ isset($_GET['sort']) && $_GET['sort'] == 'price_high_low' ? 'selected' : '' }}>Price: High to Low</option>
+        <option value="price_low_high" {{ isset($_GET['sort']) && $_GET['sort'] == 'price_low_high' ? 'selected' : '' }}>{{ session('locale') === 'en' ? 'Price: Low to High' : (session('locale') === 'ar' ? 'السعر : من الأقل الى الأعلى' : 'Price: Low to High') }}</option>
+        <option value="price_high_low" {{ isset($_GET['sort']) && $_GET['sort'] == 'price_high_low' ? 'selected' : '' }}>{{ session('locale') === 'en' ? 'Price: High to Low' : (session('locale') === 'ar' ? 'السعر : من الأعلى الى الأقل' : 'Price: High to Low') }}</option>
     </select>
           </form>
         </div>
@@ -273,14 +274,14 @@ button.text-btns {
                         @else
                         <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"> <h3 >{{$product->lot_no}}: {{$product->title}}</h3></a>
                         @endif
-                       
+
                  <h5>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</h5>
-                    
+
                  <!-- @if ($currentBid)
                       <p>
                           {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
                           <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
-                          
+
                       </p>
                  @endif -->
                  <!--  -->
@@ -314,9 +315,9 @@ button.text-btns {
                                       @if ($product->auctionType->name == 'Private'|| $product->auctionType->name == 'Timed')
                                           <li class="days-wrapper"><span class="days"></span>days</li>
                                       @endif
-                                    
+
                                       <li ><span class="hours"></span>Hours</li>
-                                    
+
                                       <li><span class="minutes"></span>Minutes</li>
                                       <li><span class="seconds"></span>Seconds </li>
                                   </ul>
@@ -324,20 +325,20 @@ button.text-btns {
                         @endif
                     @endif
                     @else
-                  
+
                   @endif
                            @php
                                 $loggedInUserId = Auth::id();
                                 $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)
                                                                     ->where('project_id', $product->project_id)
-                                                                   
+
                                                                     ->first();
                           @endphp
-                 
+
               <!-- For Timed Auction -->
               @if ($projects->auctionType->name == 'Timed' && $currentDateTime > $enddatetime)
                     <button class="text-btn" style="color: red;">{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
-                @else  
+                @else
                       @if ($projects->auctionType->name == 'Timed' && $currentDateTime >= $originalDateTime && $product->auction_end_date >= $formattedDateTime)
                       <a href="{{ url('productsdetail', $product->slug) }}"> <button class="text-btn">
                                 {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}
@@ -345,14 +346,14 @@ button.text-btns {
                       @endif
               @endif
                <!-- For Live Auction -->
-                      @php 
+                      @php
                         $lastBid = \App\Models\BidPlaced::where('product_id', $product->id)
                                                   ->orderBy('created_at', 'desc')
                                                   ->first();
                         @endphp
                 @if ($projects->auctionType->name == 'Live' && $currentDateTime > $enddatetime)
                     <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
-                @else  
+                @else
                             @if ($lastBid && $lastBid->bid_amount >= $product->minsellingprice && $projects->auctionType->name == 'Live')
                                   <p><strong><span style="color: red;">Bid Closed</span></strong></p>
                                   @else
@@ -367,14 +368,14 @@ button.text-btns {
              <!-- For Private Auction -->
              @if ($projects->auctionType->name == 'Private' && $currentDateTime > $enddatetime)
                     <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
-                @else  
+                @else
                     @if ($bidRequest && $bidRequest->status == 1 &&  $projects->auctionType->name == 'Private' && $currentDateTime >= $originalDateTime && $product->auction_end_date >= $formattedDateTime)
                     <a href="{{ url('productsdetail', $product->slug) }}">   <button class="text-btn">
                                 {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}
                             </button></a>
                       @endif
             @endif
-            
+
 
               </div>
             </div>
@@ -383,21 +384,21 @@ button.text-btns {
         @endforeach
 
        </div>
-      
+
         <ul class="pagination">
-           
-           {{ $products->appends($_GET)->links('pagination::bootstrap-5') }} 
-       
+
+           {{ $products->appends($_GET)->links('pagination::bootstrap-5') }}
+
         </ul>
-       
+
     </div>
   </section>
   <section class="product-list">
-   
+
 
     @if($products->isEmpty())
         <div class="no-products-found">
-       
+
         <h2 class="nodata">{{ session('locale') === 'en' ? 'No Data Found' : (session('locale') === 'ar' ? 'لا يوجد بيانات' : 'No Data Found') }}</h2>
         </div>
     @endif
@@ -411,7 +412,7 @@ button.text-btns {
     <!-- <script src="{{asset('frontend/js/main.js')}}"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
  <script>
-  
+
 
   const rangeInput = document.querySelectorAll(".range-input input"),
   priceInput = document.querySelectorAll(".price-input input"),
@@ -458,28 +459,28 @@ rangeInput.forEach((input) => {
 
 // function submitSearchForm() {
 //   var searchInputValue = document.getElementById('searchInput').value.trim();
-  
-  
+
+
 //   if (searchInputValue !== '') {
-     
+
 //       var currentUrl = window.location.href;
 
-     
+
 //       var separator = currentUrl.includes('?') ? '&' : '?';
 
 //       var newUrl = currentUrl + separator + 'search=' + encodeURIComponent(searchInputValue);
 
-    
+
 //       window.location.href = newUrl;
 //   }
 // }
 
 // document.addEventListener('DOMContentLoaded', function () {
- 
+
 //   var urlSearchParams = new URLSearchParams(window.location.search);
 //   var searchInputValue = urlSearchParams.get('search');
 
- 
+
 //   if (searchInputValue !== null) {
 //       document.getElementById('searchInput').value = decodeURIComponent(searchInputValue);
 //   }
@@ -506,18 +507,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function submitSearchForm() {
     var searchInputValue = document.getElementById('searchInput').value.trim();
-    
+
     // Check if the search input is not empty
     if (searchInputValue !== '') {
       // Get the current URL
       var currentUrl = window.location.href;
-  
+
       // Check if the URL already has parameters
       var separator = currentUrl.includes('?') ? '&' : '?';
-  
+
       // Add the search parameter to the current URL
       var newUrl = currentUrl + separator + 'search=' + encodeURIComponent(searchInputValue);
-  
+
       // Redirect to the new URL
       window.location.href = newUrl;
     }
