@@ -446,7 +446,7 @@
                                     </a>
                                 @else
                                     @php
-                                        $projectSlug = optional($mostRecentBid->product->project)->slug;
+                                        $projectSlug = optional(optional($mostRecentBid)->product)->project->slug ?? null;
                                     @endphp
                                     <a href="{{ url('products', $projectSlug) }}" onclick="return showPopup(event)">
                                         <img src="{{ asset($galleries->first()->image_path) }}" alt="">
@@ -530,6 +530,7 @@
                             @endif
                         </div>
                     </div>
+
                 </div>
             @endforeach
         </div>
