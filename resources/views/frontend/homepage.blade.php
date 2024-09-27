@@ -494,11 +494,9 @@
                                         $auctionTypeName = '';
                                         $auctionTypeIcon = '';
 
-                                        // تحقق من وجود mostRecentBid و product
                                         if (isset($mostRecentBid) && isset($mostRecentBid->product)) {
                                             $auctionTypeName = optional($mostRecentBid->product->auctionType)->name;
 
-                                            // تحديد الأيقونة حسب نوع المزاد
                                             if ($auctionTypeName === 'Private') {
                                                 $auctionTypeIcon = asset('auctionicon/private_icon.png');
                                             } elseif ($auctionTypeName === 'Timed') {
@@ -512,7 +510,8 @@
                                     @if(session('locale') === 'en')
                                         <span>{{ $auctionTypeName }}</span>
                                     @elseif(session('locale') === 'ar')
-                                        <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span>
+                                        {{-- <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span> --}}
+                                        <span><p>نوع المزاد</p></span>
                                     @else
                                         <span>{{ $auctionTypeName }}</span>
                                     @endif
