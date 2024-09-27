@@ -243,192 +243,154 @@
                                         ->first();
                                 @endphp
 
-            <div class="item">
-                <div class="popular_slider_item card-most-product">
+<div class="item">
+    <div class="popular_slider_item card-most-product">
 
-                    <div class="img-card">
+        <div class="img-card">
+            @php
+                $galleries = \App\Models\Gallery::where('lot_no', $product->lot_no)->get();
+            @endphp
 
-                        @php
-                        $galleries = \App\Models\Gallery::where('lot_no', $product->lot_no)->get();
-                        @endphp
+            @if ($galleries->isNotEmpty())
+                @if ($bidRequest && $bidRequest->status == 1)
+                    <a href="{{ url('productsdetail', $product->slug) }}">
+                        <img src="{{ asset($galleries->first()->image_path) }}" alt="">
+                    </a>
+                @else
+                    <a href="{{ url('products', optional($product->project)->slug) }}" onclick="return showPopups(event)">
+                        <img src="{{ asset($galleries->first()->image_path) }}" alt="">
+                    </a>
+                @endif
+            @else
+                <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image">
+            @endif
 
-                        @if ($galleries)
-                        @if($bidRequest && $bidRequest->status == 1)
-                            <a href="{{ url('productsdetail', $product->slug) }}"><img
-                                    src="{{ asset($galleries->first()->image_path) }}" alt=""> </a>
-                        @else
+            @auth
+                <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
+                    <input type="checkbox" name="" id="" @if(in_array($product->id, $wishlist)) checked @endif>
+                    <img src="{{ asset('frontend/images/heart.png') }}" alt="">
+                </div>
+            @else
+                <a href="{{ route('signin') }}"><i class="fa fa-heart-o "></i></a>
+            @endauth
 
-                            <a href="{{ url('products', optional($product->project)->slug) }}" onclick="return showPopups(event)"><img
-                                    src="{{ asset($galleries->first()->image_path) }}" alt=""> </a>
-                        @endif
-                        @else
-                            <img src="{{asset('frontend/images/default-product-image.png')}}" alt="Default Image">
-                        @endif
-
-
-                        @auth
-
-                        <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif"
-                            data-product-id="{{ $product->id }}">
-                            <input type="checkbox" name="" id="" @if(in_array($product->id, $wishlist)) checked @endif>
-                            <img src="{{asset('frontend/images/heart.png')}}" alt="">
-                        </div>
-
-                        @else
-                        <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a>
-                        @endauth
-
-
-                        <div class="bid-box-status">
-                            <div class="bid-box-status-ic">
-                                @php
-                                $auctionTypeName = $auctionType->name;
-                                $auctionTypeIcon = '';
-
-                                if ($auctionTypeName === 'Private') {
-                                $auctionTypeIcon = asset('auctionicon/private_icon.png');
-                                } elseif ($auctionTypeName === 'Timed') {
-                                $auctionTypeIcon = asset('auctionicon/time.png');
-                                } elseif ($auctionTypeName === 'Live') {
-                                $auctionTypeIcon = asset('auctionicon/live.png');
-                                }
-                                @endphp
-
-                                <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}"
-                                    alt="Auction Type Icon">
-                                @if(session('locale') === 'en')
-                                <span>{{ $auctionType->name }}</span>
-
-                                @elseif(session('locale') === 'ar')
-                                <h2>{{$auctionType->name_ar}}</h2>
-                                @else
-                                <span>{{ $auctionType->name }}</span>
-
-                                @endif
-                            </div>
-                        </div>
-
-                    </div>
+            <div class="bid-box-status">
+                <div class="bid-box-status-ic">
                     @php
-                        $lastBids =  \App\Models\BidPlaced::where('product_id', $product->id)
-                                        ->orderBy('created_at', 'desc')
-                                        ->first();
+                        $auctionTypeName = optional($auctionType)->name;
+                        $auctionTypeIcon = '';
+
+                        if ($auctionTypeName === 'Private') {
+                            $auctionTypeIcon = asset('auctionicon/private_icon.png');
+                        } elseif ($auctionTypeName === 'Timed') {
+                            $auctionTypeIcon = asset('auctionicon/time.png');
+                        } elseif ($auctionTypeName === 'Live') {
+                            $auctionTypeIcon = asset('auctionicon/live.png');
+                        }
                     @endphp
 
-
-
-                    <div class="popular_lnt">
-                        <span>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</span>
-                        @if ($auctionType->name == 'Private' || $auctionType->name == 'Timed')
-                        @if(strtotime($product->auction_end_date) > strtotime('now'))
-                        <div class="countdown-time thisisdemoclass" data-id='{{ $product->id }}'
-                            data-date='{{ $product->auction_end_date }}' id="countdown-{{ $product->id }}">
-                            <ul>
-                                @if ($product->auctionType->name == 'Private'|| $product->auctionType->name == 'Timed')
-                                <li class="days-wrapper"><span class="days"></span>days</li>
-                                @endif
-
-                                <li><span class="hours"></span>Hours</li>
-
-                                <li><span class="minutes"></span>Minutes</li>
-                                <li><span class="seconds"></span>Seconds </li>
-                            </ul>
-                        </div>
+                    <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
+                    <span>
+                        @if(session('locale') === 'en')
+                            {{ $auctionTypeName }}
+                        @elseif(session('locale') === 'ar')
+                            {{ optional($auctionType)->name_ar }}
                         @else
-                        <p><span style="color: red;">Lot closed</span></p>
+                            {{ $auctionTypeName }}
                         @endif
-                        @endif
-                        @if ($product->auctionType->name == 'Live' && $lastBids && $lastBids->bid_amount < $product->minsellingprice)
-                    <p><span style="color: #3E0269;">Auction is in progress</span></p>
-                    @elseif ($product->auctionType->name == 'Live' && $lastBids && $lastBids->bid_amount >= $product->minsellingprice)
-                        <p><span style="color: red;">Bid Closed</span></p>
-                    @endif
-                    </div>
-
-
-
-                    <!-- @if(session('locale') === 'en')
-
-                    <h3>{{ $product->lot_no }}:
-                            {{ substr(strip_tags($product->title), 0, 20) }}
-                            {{ strlen(strip_tags($product->title)) > 20 ? '...' : '' }}
-                        </h3>
-                    @elseif(session('locale') === 'ar')
-                    <h3>{{ $product->lot_no }}:
-                            {{ substr(strip_tags($product->title_ar), 0, 20) }}
-                            {{ strlen(strip_tags($product->title_ar)) > 20 ? '...' : '' }}
-                        </h3>
-                    @else
-                    <h3>{{ $product->lot_no }}:
-                            {{ substr(strip_tags($product->title), 0, 20) }}
-                            {{ strlen(strip_tags($product->title)) > 20 ? '...' : '' }}
-                        </h3>
-                    @endif -->
-                    @if($bidRequest && $bidRequest->status == 1)
-                        <a href="{{ url('productsdetail', $product->slug) }}"class="pop-link">
-                            <h3 class="">
-                                {{ session('locale') === 'en' ? $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '') :
-                                (session('locale') === 'ar' ? $product->lot_no . ': ' . substr(strip_tags($product->title_ar), 0, 20) . (strlen(strip_tags($product->title_ar)) > 20 ? '...' : '') :
-                                $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '')) }}
-                            </h3>
-                        </a>
-                    @else
-                        <a href="{{ url('products', optional($product->project)->slug) }}"class="pop-link" onclick="return showPopups(event)">
-                            <h3 class="">
-                                {{ session('locale') === 'en' ? $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '') :
-                                (session('locale') === 'ar' ? $product->lot_no . ': ' . substr(strip_tags($product->title_ar), 0, 20) . (strlen(strip_tags($product->title_ar)) > 20 ? '...' : '') :
-                                $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '')) }}
-                            </h3>
-                        </a>
-                    @endif
-
-
-                    @if(session('locale') === 'en')
-                    <p>
-                        {{ substr(strip_tags($product->description), 0, 100) }}
-                        {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
-                    </p>
-                    @elseif(session('locale') === 'ar')
-                    {{ substr(strip_tags($product->description_ar), 0, 100) }}
-                    {{ strlen(strip_tags($product->description_ar)) > 100 ? '...' : '' }}
-                    @else
-                    <p>
-                        {{ substr(strip_tags($product->description), 0, 100) }}
-                        {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
-                    </p>
-                    @endif
-                    @php
-                    $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
-                                            ->where('status', 1)
-                                            ->orderBy('bid_amount', 'desc')
-                                            ->first();
-                    $sold = \App\Models\BidPlaced::where('product_id', $product->id)
-                                    ->where('sold', 2)
-                                    ->where('status', '!=', 0)
-                                    ->orderBy('bid_amount', 'desc')
-                                    ->first();
-                    @endphp
-
-                    <!-- @if ($currentBid)
-                        <span class="curnt-bid-man">
-                            {{ session('locale') === 'en' ? 'Current Bid' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}: {{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}}
-                        </span>
-                    @endif -->
-                    @if ($sold)
-                        <span class="curnt-bid-man">
-                        {{ session('locale') === 'en' ? 'Sold' : (session('locale') === 'ar' ? 'باع' : 'Sold:') }}: {{ formatPrice($sold->bid_amount, session()->get('currency')) }} {{$currency}}
-
-                            </span>
-                        @elseif ($currentBid)
-                        <span class="curnt-bid-man">
-                            {{ session('locale') === 'en' ? 'Current Bid' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}: {{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}}
-                        </span>
-                    @endif
-                    <a href="#" class="next-btn-img"><img src="{{asset('frontend/images/next-btn.svg')}}" alt=""></a>
-
-
+                    </span>
                 </div>
             </div>
+
+        </div>
+
+        @php
+            $lastBids = \App\Models\BidPlaced::where('product_id', $product->id)
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+        @endphp
+
+        <div class="popular_lnt">
+            <span>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</span>
+            @if ($auctionTypeName == 'Private' || $auctionTypeName == 'Timed')
+                @if(strtotime($product->auction_end_date) > strtotime('now'))
+                    <div class="countdown-time thisisdemoclass" data-id='{{ $product->id }}'
+                        data-date='{{ $product->auction_end_date }}' id="countdown-{{ $product->id }}">
+                        <ul>
+                            <li class="days-wrapper"><span class="days"></span> days</li>
+                            <li><span class="hours"></span> Hours</li>
+                            <li><span class="minutes"></span> Minutes</li>
+                            <li><span class="seconds"></span> Seconds</li>
+                        </ul>
+                    </div>
+                @else
+                    <p><span style="color: red;">Lot closed</span></p>
+                @endif
+            @endif
+
+            @if ($auctionTypeName == 'Live')
+                @if ($lastBids && $lastBids->bid_amount < $product->minsellingprice)
+                    <p><span style="color: #3E0269;">Auction is in progress</span></p>
+                @elseif ($lastBids && $lastBids->bid_amount >= $product->minsellingprice)
+                    <p><span style="color: red;">Bid Closed</span></p>
+                @endif
+            @endif
+        </div>
+
+        @if ($bidRequest && $bidRequest->status == 1)
+            <a href="{{ url('productsdetail', $product->slug) }}" class="pop-link">
+                <h3>
+                    {{ session('locale') === 'en' ? $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '') :
+                    (session('locale') === 'ar' ? $product->lot_no . ': ' . substr(strip_tags($product->title_ar), 0, 20) . (strlen(strip_tags($product->title_ar)) > 20 ? '...' : '') :
+                    $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '')) }}
+                </h3>
+            </a>
+        @else
+            <a href="{{ url('products', optional($product->project)->slug) }}" class="pop-link" onclick="return showPopups(event)">
+                <h3>
+                    {{ session('locale') === 'en' ? $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '') :
+                    (session('locale') === 'ar' ? $product->lot_no . ': ' . substr(strip_tags($product->title_ar), 0, 20) . (strlen(strip_tags($product->title_ar)) > 20 ? '...' : '') :
+                    $product->lot_no . ': ' . substr(strip_tags($product->title), 0, 20) . (strlen(strip_tags($product->title)) > 20 ? '...' : '')) }}
+                </h3>
+            </a>
+        @endif
+
+        <p>
+            @if(session('locale') === 'en')
+                {{ substr(strip_tags($product->description), 0, 100) }} {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
+            @elseif(session('locale') === 'ar')
+                {{ substr(strip_tags($product->description_ar), 0, 100) }} {{ strlen(strip_tags($product->description_ar)) > 100 ? '...' : '' }}
+            @else
+                {{ substr(strip_tags($product->description), 0, 100) }} {{ strlen(strip_tags($product->description)) > 100 ? '...' : '' }}
+            @endif
+        </p>
+
+        @php
+            $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
+                            ->where('status', 1)
+                            ->orderBy('bid_amount', 'desc')
+                            ->first();
+            $sold = \App\Models\BidPlaced::where('product_id', $product->id)
+                            ->where('sold', 2)
+                            ->where('status', '!=', 0)
+                            ->orderBy('bid_amount', 'desc')
+                            ->first();
+        @endphp
+
+        @if ($sold)
+            <span class="curnt-bid-man">
+                {{ session('locale') === 'en' ? 'Sold' : (session('locale') === 'ar' ? 'باع' : 'Sold:') }}: {{ formatPrice($sold->bid_amount, session()->get('currency')) }} {{$currency}}
+            </span>
+        @elseif ($currentBid)
+            <span class="curnt-bid-man">
+                {{ session('locale') === 'en' ? 'Current Bid' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}: {{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}}
+            </span>
+        @endif
+
+        <a href="#" class="next-btn-img"><img src="{{ asset('frontend/images/next-btn.svg') }}" alt=""></a>
+    </div>
+</div>
+
             @endforeach
             @endif
             @endforeach
