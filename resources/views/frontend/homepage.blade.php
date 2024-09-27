@@ -442,12 +442,12 @@
         <div class="box-img">
             @if (isset($galleries) && $galleries->count() > 0)
                 @if ($bidRequest && $bidRequest->status == 1)
-                    <a href="{{ url('productsdetail', $mostRecentBid->product->slug) }}">
+                    <a href="{{ url('productsdetail', optional($mostRecentBid)->product->slug) }}">
                         <img src="{{ asset($galleries->first()->image_path) }}" alt="">
                     </a>
                 @else
                     @php
-                        $projectSlug = optional($mostRecentBid->product->project)->slug;
+                        $projectSlug = optional($mostRecentBid)->product->project->slug;
                     @endphp
                     <a href="{{ url('products', $projectSlug) }}" onclick="return showPopup(event)">
                         <img src="{{ asset($galleries->first()->image_path) }}" alt="">
@@ -492,15 +492,20 @@
             <div class="bid-box-status">
                 <div class="bid-box-status-ic">
                     @php
-                        $auctionTypeName = isset($mostRecentBid->product->auctionType) ? $mostRecentBid->product->auctionType->name : '';
+                        $auctionTypeName = '';
                         $auctionTypeIcon = '';
 
-                        if ($auctionTypeName === 'Private') {
-                            $auctionTypeIcon = asset('auctionicon/private_icon.png');
-                        } elseif ($auctionTypeName === 'Timed') {
-                            $auctionTypeIcon = asset('auctionicon/time.png');
-                        } elseif ($auctionTypeName === 'Live') {
-                            $auctionTypeIcon = asset('auctionicon/live.png');
+                        if (isset($mostRecentBid) && isset($mostRecentBid->product)) {
+                            $auctionTypeName = optional($mostRecentBid->product->auctionType)->name;
+
+                            // تحديد الأيقونة حسب نوع المزاد
+                            if ($auctionTypeName === 'Private') {
+                                $auctionTypeIcon = asset('auctionicon/private_icon.png');
+                            } elseif ($auctionTypeName === 'Timed') {
+                                $auctionTypeIcon = asset('auctionicon/time.png');
+                            } elseif ($auctionTypeName === 'Live') {
+                                $auctionTypeIcon = asset('auctionicon/live.png');
+                            }
                         }
                     @endphp
                     <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
@@ -527,6 +532,7 @@
         </div>
     </div>
 </div>
+
 
             @endforeach
         </div>
