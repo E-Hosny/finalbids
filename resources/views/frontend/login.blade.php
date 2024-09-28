@@ -19,12 +19,12 @@
           </div>
           <div class="col-md-6">
             <div class="login-detail">
-              <h2>Login</h2>
-               
+              <h2>{{__('message.login') }}</h2>
+
                 <form action="{{ route('loggedin') }}" method="POST" class="cmn-frm">
                    @csrf
                   <div class="form-group">
-                    <label for="">Email</label>
+                    <label for="">{{__('message.email-address') }}</label>
                     <input type="text" name="email" id="email">
                     @error('email')
                                     <span class="text-danger">{{ $message }}</span>
@@ -32,36 +32,36 @@
                   </div>
                   <br>
                   <div class="form-group">
-                    <label for="">Password </label>
+                    <label for="">{{ __('message.password') }}</label>
                     <input class="pe-4" type="password" name="password" id="password">
                     <i class="fa fa-eye-slash input-icon" id="password-toggle"></i>
                     @error('password')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                   </div>
-                  <a  class="text-btn forgt-btn edit-number" data-bs-toggle="modal" href="#forgotpassword">Forgot Password?</a>
+                  <a  class="text-btn forgt-btn edit-number" data-bs-toggle="modal" href="#forgotpassword">{{ __('message.forgot-password') }}</a>
                   <!-- <button class="btn btn-secondary login-btn" data-bs-toggle="modal" href="#exampleModalToggle" type="button"> Login</button> -->
-                  <button class="btn btn-secondary login-btn" type="submit">Login</button>
+                  <button class="btn btn-secondary login-btn" type="submit">{{ __('message.login') }}</button>
                 </form>
-                <span class="sign-tag-line">if you don't have an account? <a href="{{route('register')}}" class="text-btn">Sign Up</a></span>
+                <span class="sign-tag-line"> {{__('message.do-not-have-account')}} <a href="{{route('register')}}" class="text-btn">{{ __('message.sign-up') }}</a></span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-   
+
   <div class="modal fade" id="forgotpassword" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        
+
         <div class="modal-body">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="login-mdl text-center ">
             <img src="{{asset('frontend/images/logo.svg')}}" alt="">
             <h2>Forgot Password</h2>
             <div class="numberArea">
-              
+
               <p>Enter the email associated with your account and we’ll send an
                 email with instructions to reset your password.</p>
               <form action="" class="cmn-frm mt-4">
@@ -71,7 +71,7 @@
                     <div id="emailError" class="error-message text-danger"></div>
 
                 </div>
-                
+
               </form>
               <!-- data-bs-target="#newpassword" data-bs-toggle="modal" data-bs-dismiss="modal" -->
               <button  class="my-4 btn btn-secondary px-5 sendForgotPasswordOtpBtn" type="button">Send</button>
@@ -83,20 +83,20 @@
                 <div class="form-group text-start otp-filds" id="otp-verification-form">
                   <!-- <label for=" ">OTP</label> -->
                   <!-- <input type="number" class="forgetPasswordOTP" name="" id="" required> -->
-              
+
                   <input type="number" class="otpValue" name="otp" id="first" maxlength="1" oninput="moveToNextInput(this, 'second')" onkeydown="moveToPreviousInput(this, '')" />
                   <input type="number" class="otpValue" name="otp" id="second" maxlength="1" oninput="moveToNextInput(this, 'third')" onkeydown="moveToPreviousInput(this, 'first')" />
                   <input type="number" class="otpValue" name="otp" id="third" maxlength="1" oninput="moveToNextInput(this, 'fourth')" onkeydown="moveToPreviousInput(this, 'second')" />
                   <input type="number" class="otpValue" name="otp" id="fourth" maxlength="1" onkeydown="moveToPreviousInput(this, 'third')" />
 
-                </div>                
+                </div>
               </form>
               <a  class="my-4 btn btn-secondary px-5 verifyForgotPasswordOtpBtn"   type="button"> Verify Otp</a>
             </div>
-                          
+
           </div>
         </div>
-         
+
       </div>
     </div>
   </div>
@@ -105,7 +105,7 @@
   <div class="modal fade" id="newpassword" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        
+
         <div class="modal-body">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="login-mdl text-center">
@@ -130,20 +130,20 @@
               <div class="error-msg text-danger" id="passwordMatchError"></div>
               <div class="success-msg" id="successMessage"></div>
 
-                 
+
               </form>
               <a href="javascript:void(0);" class="my-4 btn btn-secondary px-5 resetPasswordButton" > Reset Password</a>
               <a   class="text-btn d-flex justify-content-center gap-2 align-items-center" data-bs-dismiss="modal" aria-label="Close"><img src="{{asset('frontend/images/back-arrow.svg')}}" alt=""> Back to login </a>
           </div>
         </div>
-         
+
       </div>
     </div>
   </div>
-  
-    <script src="{{asset('frontend/js/jquery.min.js')}}"></script> 
-    <script src="{{asset('frontend/js/bootstrap.js')}}"></script> 
-    <script src="{{asset('frontend/js/main.js')}}"></script> 
+
+    <script src="{{asset('frontend/js/jquery.min.js')}}"></script>
+    <script src="{{asset('frontend/js/bootstrap.js')}}"></script>
+    <script src="{{asset('frontend/js/main.js')}}"></script>
     <script>
   // Toggle Password Visibility
   document.getElementById('togglePassword').addEventListener('click', function () {
@@ -202,7 +202,7 @@
       let emailError = $('#emailError');
 
       if (email) {
-        
+
         let emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (email.match(emailFormat)) {
@@ -250,13 +250,13 @@
           success:function(res){
             console.log("res", res);
             if(res.status == 'success') {
-              $('#forgotpassword').modal('hide');              
+              $('#forgotpassword').modal('hide');
               $('#newpassword').modal('show');
               $('.numberArea').removeClass('hide');
               $('.otpArea').addClass('hide');
             } else {
               alert(`${res.message}: ${res.error}`);
-            }            
+            }
           },error:function(res){
             console.log("error in request!");
           }
@@ -309,7 +309,7 @@ $('body').on('click', '.resetPasswordButton', function() {
 
     function restrictInput(currentInput) {
         var maxLength = parseInt(currentInput.getAttribute('maxlength'));
-    
+
         if (currentInput.value.length > 1) {
             // If more than one character is entered, keep only the first character
             currentInput.value = currentInput.value.charAt(0);
@@ -327,7 +327,7 @@ $('body').on('click', '.resetPasswordButton', function() {
         restrictInput(this);
         moveToNextInput(this, $(this).data('next'));
     });
-    
+
     $('.otpValue').on('keydown', function(event) {
         moveToPreviousInput(this, $(this).data('prev'));
     });

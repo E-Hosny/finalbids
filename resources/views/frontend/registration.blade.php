@@ -46,36 +46,36 @@
           </div>
           <div class="col-md-6">
             <div class="login-detail p-5 pb-5">
-              <h2>Sign Up</h2>
+              <h2>{{ __('message.sign-up') }}</h2>
                 <form action="{{ route('registration') }}" method="post" class="cmn-frm">
                   @csrf
                   <div class="row">
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">First Name <span class="star">*</span></label>
+                        <label for="">{{ __('message.first-name') }}<span class="star">*</span></label>
                         <input type="text" name="first_name" id="first_name">
 
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">Last Name <span class="star">*</span></label>
+                        <label for="">{{ __('message.last-name') }} <span class="star">*</span></label>
                         <input type="text" name="last_name" id="last_name">
 
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">Email Address <span class="star">*</span></label>
+                        <label for="">{{ __('message.email-address') }}<span class="star">*</span></label>
                         <input type="text" name="email" id="email">
 
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                       <div class="form-group">
-                        <label for="">Country code <span class="star">*</span></label>
+                        <label for="">{{ __('message.country-code') }}<span class="star">*</span></label>
                         <select name="country_code" class="choices__list choices__list--single form-control" id="country_code" tabindex="-1" data-choice="active">
-                          <option value="">Choose Country</option>
+                          <option value="">{{ __('message.choose-country') }}</option>
                           @foreach ($cont as $at)
                           <option value="+{{ $at->phonecode }}">{{ $at->name }}</option>
                           @endforeach
@@ -85,21 +85,21 @@
                     </div>
                     <div class="col-lg-12 col-md-12">
                       <div class="form-group">
-                        <label for="">Phone Number <span class="star">*</span> </label>
-                       <input type="tel"  placeholder="Phone Number" name="phone" id="phone" maxlength=10>
+                        <label for="">{{ __('message.phone-number') }} <span class="star">*</span> </label>
+                       <input type="tel"  placeholder='' name="phone" id="phone" maxlength=10>
 
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label for="">Address <span class="star">*</span></label>
+                        <label for="">{{ __('message.address') }}<span class="star">*</span></label>
                         <input type="text" name="address" id="address">
 
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                         <div class="form-group">
-                            <label for="">Password <span class="star">*</span></label>
+                            <label for="">{{ __('message.password') }} <span class="star">*</span></label>
                             <input class="pe-5" type="password" name="password" id="password">
                             <i class="fa fa-eye-slash input-icon" id="password-toggle"></i>
 
@@ -107,7 +107,7 @@
                     </div>
                     <div class="col-lg-6 col-md-12">
                         <div class="form-group">
-                            <label for="">Confirm Password <span class="star">*</span></label>
+                            <label for="">{{ __('message.confirm-password') }} <span class="star">*</span></label>
                             <input type="password" name="confirm_password" id="confirm_password">
                             <i class="fa fa-eye-slash input-icon" id="confirm-password-toggle"></i>
                         </div>
@@ -116,15 +116,15 @@
                       <div class="form-group d-flex gap-2 align-items-center">
                        <div class="form-check register_check">
                         <input class="form-check-label" type="checkbox" name="is_term" id="is_term" value="1">
-                        <label for="is_term">Accept <a href="{{route('terms-conditions')}}" class="text-btn text-capitalize">Terms & Conditions.</a></label>
+                        <label for="is_term">{{ __('message.accept') }} <a href="{{route('terms-conditions')}}" class="text-btn text-capitalize">{{ __('message.terms-condition') }}</a></label>
                       </div>
                       </div>
                     </div>
                   </div>
-                    <button class="btn btn-secondary login-btn font-bld"  title="Submit"> Sign Up</button>
+                    <button class="btn btn-secondary login-btn font-bld"  title="Submit"> {{ __('message.sign-up') }}</button>
 
                 </form>
-                <span class="sign-tag-line">if you have an account? <a href="{{route('signin')}}" class="text-btn">Login</a></span>
+                <span class="sign-tag-line">{{ __('message.if-you-have-an-account') }}  <a href="{{route('signin')}}" class="text-btn">{{ __('message.login') }}</a></span>
             </div>
           </div>
         </div>
