@@ -131,7 +131,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  {{-- <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
 
@@ -158,7 +158,7 @@
 
       </div>
     </div>
-  </div>
+  </div> --}}
 
     <script src="{{asset('frontend/js/jquery.min.js')}}"></script>
     <script src="{{asset('frontend/js/bootstrap.js')}}"></script>
@@ -273,9 +273,18 @@ $(document).ready(function () {
                         $("#email").after('<div class="error-message">' + response.error + '</div>');
                   } else {
                      // Set spinner and disable button
-                     $('.login-btn').html('<i class="fa fa-spinner fa-spin"></i> Sending OTP...').prop('disabled', true);
-                    $('.numberTag').text(" "+ ' '+$('#email').val().toLowerCase());
-                    openOtpVerificationModal();
+                    //  $('.login-btn').html('<i class="fa fa-spinner fa-spin"></i> Sending OTP...').prop('disabled', true);
+                    // $('.numberTag').text(" "+ ' '+$('#email').val().toLowerCase());
+                    // openOtpVerificationModal();
+                    Swal.fire({
+                    title: 'Congratulations!',
+                    text: 'User Created Successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+            }).then(function() {
+              window.location.href = "{{ url('/signin') }}";
+            });
+
                   }
                 },
                 error: function() {

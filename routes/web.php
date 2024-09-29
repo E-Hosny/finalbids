@@ -60,7 +60,7 @@ Route::get('about-us', [HomepageController::class,'about'])->name('about-us');
 Route::get('termsconditions', [HomepageController::class,'termsconditions'])->name('termsconditions');
 Route::get('privacypolicy', [HomepageController::class,'privacypolicy'])->name('privacypolicy');
 Route::post('/mark-as-read/{notificationId}', [HomepageController::class,'markAsRead']);
-// 
+//
 
 Route::get('products-list', [HomepageController::class,'productlist'])->name('products-list');
 Route::get('/projects/{auction_type_slug}', [HomepageController::class,'projectByAuctionType'])->name('projects.by_auction_type');
@@ -117,7 +117,7 @@ Route::group(['middleware' => 'auth'],function(){
 
     Route::post('adduseraddress', [DashboardController::class, 'adduseraddress'])->name('adduseraddress');
     Route::get('/addresseedit/{id}', [DashboardController::class, 'addresseedit'])->name('addresseedit');
-    
+
     Route::get('/addressesprimary/{id}', [DashboardController::class, 'primary'])->name('addresses.primary');
 
     Route::get('/addressesdelete/{id}', [DashboardController::class,'delete'])->name('addresses.delete');
@@ -143,7 +143,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// admin 
+// admin
 Route::middleware(['user'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -174,7 +174,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::resource('products', ProductController::class);
     Route::get('products/get-project/{auction}', [ProductController::class,'getprojects'])->name('products/get-project');
     Route::get('products/remove/{id}', [ProductController::class, 'deleteImage'])->name('admin.deleteImage');
-    
+
     Route::resource('bidvalues', BidvalueController::class);
     Route::resource('banners', BannerController::class);
     Route::resource('projects', ProjectController::class);
@@ -188,7 +188,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::resource('helpsupport', HelpsupportController::class);
 
 
-    
+
 });
 
 require __DIR__.'/auth.php';
