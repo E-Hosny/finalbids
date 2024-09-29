@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegistrationApiController;
 use App\Http\Controllers\Api\ProductApiController;
+use App\Http\Controllers\OtpController;
+
 
 
 
@@ -23,8 +25,11 @@ use App\Http\Controllers\Api\ProductApiController;
 // });
 Route::get('downloadinvoice', [ProductApiController::class, 'downloadInvoice'])->name('download.invoice');
 
+
 Route::group(['namespace' => 'API'], function () {
     // country list
+    Route::post('/send-otp', [OtpController::class, 'sendOtp']);
+
     Route::get('termsconditions', [RegistrationApiController::class, 'termsconditions']);
     Route::get('privacypolicies', [RegistrationApiController::class, 'privacypolicies']);
     Route::get('countries', [RegistrationApiController::class, 'countries']);
@@ -74,14 +79,14 @@ Route::group(['namespace' => 'API'], function () {
     Route::post('/bidupdate', [ProductApiController::class, 'bidupdate']);
     Route::post('generate', [ProductApiController::class, 'generate'])->name('generate');
 
-     // wishlist related api 
+     // wishlist related api
     Route::post('addtowishlist', [ProductApiController::class,'addOrRemoveFromWishlist']);
     Route::post('myWishlist', [ProductApiController::class,'myWishlist']);
     // help support
 
     Route::post('help-support', [ProductApiController::class, 'helpsupport']);
     Route::post('bidrequest', [ProductApiController::class, 'bidrequest']);
-    
+
     Route::get('notificationcount', [ProductApiController::class, 'notificationcount']);
 
     Route::get('notificationlist', [ProductApiController::class, 'notificationlist']);
@@ -91,8 +96,8 @@ Route::group(['namespace' => 'API'], function () {
 
     Route::post('pastauction', [ProductApiController::class, 'pastauction']);
     // deeep linking
-    
 
- 
+
+
 });
 

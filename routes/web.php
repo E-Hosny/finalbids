@@ -29,11 +29,7 @@ use App\Http\Controllers\Frontend\DashboardController;
 use App\Http\Controllers\Frontend\ProductWishController;
 use App\Http\Controllers\Frontend\LangController;
 use App\Http\Controllers\Frontend\BiddingController;
-
-
-
-
-
+use App\Http\Controllers\OtpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +45,8 @@ use App\Http\Controllers\Frontend\BiddingController;
 // Route::get('/', function () {
 //     return view('frontend.homepage');
 // });
+Route::get('/test-otp', [OtpController::class, 'test']);
+
 Route::get('/refer', [HomepageController::class, 'deeplink'])->name('refer');
 Route::get('/paymentSuccess', [HomepageController::class,'paymentSuccess'])->name('paymentSuccess');
 Route::get('/', [HomepageController::class,'homepage'])->name('homepage');
