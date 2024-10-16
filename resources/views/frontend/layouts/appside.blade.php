@@ -1,7 +1,7 @@
 
 <style>
     .category-list {
-        display: none; 
+        display: none;
         position: absolute;
         top: 100%;
         left: 0;
@@ -14,26 +14,26 @@
     .error{
       color: red!important;
       width: 100%;
-      text-transform: lowercase; 
+      text-transform: lowercase;
 
     }
     .error::first-letter {
-       text-transform: uppercase; 
+       text-transform: uppercase;
       }
 
       .error-message{
       color: red!important;
       width: 100%;
-      text-transform: lowercase; 
+      text-transform: lowercase;
 
     }
     .error-message::first-letter {
-       text-transform: uppercase; 
+       text-transform: uppercase;
       }
       .notification-all {
-    max-height: 200px; 
+    max-height: 200px;
     overflow-y: auto;
-   
+
 }
 .notification-all ul li a h4 {
     font-size: 16px;
@@ -93,14 +93,14 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
 
 
   </head>
-  
+
   <body @if(session()->get('locale') == 'ar') class="rtl" @endif>
 
-    <!-- <nav class="nav header"> 
+    <!-- <nav class="nav header">
           <div class="search-logo">
           @if ($logo)
             <div class="logo">
-             
+
               @if (session('locale') === 'en')
               <a href="{{url('/')}}"><img class="f-logo" src="{{ asset('img/settings/' . $logo->image) }}" alt="" /></a>
               @elseif (session('locale') === 'ar')
@@ -115,7 +115,7 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
             </div>
           @endif
            <div class="">
-            
+
            </div>
           </div>
           <div id="mainListDiv" class="main_list">
@@ -128,7 +128,7 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
                         <ul>
                         @foreach($categories as $category)
                                 @if($category->projects_count > 0)
-                                    
+
                                         @if(session('locale') === 'en')
                                         <li>
                                         <a href="{{ url('category', $category->slug) }}">
@@ -154,7 +154,7 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
                 </li>
 
                    <li><a href="{{route('pastauction')}}">{{ session('locale') === 'en' ? 'Past Auction' : (session('locale') === 'ar' ? 'المزادات السابقة' : 'Past Auction') }}</a></li>
-                   
+
                     <li><a href="{{ route('about-us') }}">{{ session('locale') === 'en' ? 'About Us' : (session('locale') === 'ar' ? 'من نحن' : 'About Us') }}</a></li>
 
                     <li><a href="{{ route('contact-us') }}">{{ session('locale') === 'en' ? 'Contact Us' : (session('locale') === 'ar' ? 'تواصل معنا' : 'Contact Us') }}</a></li>
@@ -162,21 +162,21 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
                         <select class="form-select changeLang">
                             <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>English</option>
                             <option value="ar" {{ session()->get('locale') == 'ar' ? 'selected' : '' }}>عربي</option>
-                  
+
                         </select>
                         <select class="form-select changecurrency">
                             <option value="SAR" {{ session()->get('currency', 'SAR') == 'SAR' ? 'selected' : '' }}>SAR</option>
                             <option value="USD" {{ session()->get('currency') == 'USD' ? 'selected' : '' }}>USD</option>
                         </select>
-                  
-              </ul>              
+
+              </ul>
           </div>
           <div class="nav_links main_list">
               <ul  class="navlinks">
                   @if (auth()->check())
-                 
+
                   <li><button class="notification-btn"><img src="{{asset('frontend/images/resize-1714129767870338802notification.jpg')}}" alt="">
-                
+
                   <?php if ($notcount > 0): ?>
                         <span class="notification-count">{{$notcount}}</span>
                     <?php else: ?>
@@ -185,35 +185,35 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
                 </button>
                         <div class="notification-all">
                         <h3>Notification</h3>
-                      
+
                         <ul>
                            @foreach($not as $notification)
                            @php
-                                $project = $notification->project()->first(); 
+                                $project = $notification->project()->first();
                             @endphp
                             @if($project)
                                 <li>
                                     <a href="{{ url('products', $project->slug) }}" class="notification-link" data-notification-id="{{ $notification->id }}">
                                         <img src="{{asset('frontend/images/notificn-icon.svg')}}" alt="">
                                         <h4 style="@if($notification->is_read == 0) color: #4949bd; @endif">{{ $notification->title }}</h4>
-                                       
+
                                     </a>
-                                    
+
                                     <?php
                                         $created_at = $notification->created_at;
 
                                         $formatted_date = date('j M g:i a', strtotime($created_at));
 
-                                       
+
                                         ?>
                                       <div style="text-align: right;width: 100%!important;font-size: 10px;margin-bottom: 1px;">{{ $formatted_date }}</div>
 
-                                  
+
                                 </li>
                             @endif
                             @endforeach
                         </ul>
-                        
+
                         </div>
                     </li>
                     <li><a href="{{route('getwishlist')}}"><img src="{{asset('frontend/images/like.svg')}}" alt="" style="width: 25px;"></a></li>
@@ -225,7 +225,7 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
                         </li>
                         <li>
                         <a class="btn btn-secondary px-5" href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
-                             
+
                         </li>
                     @endif
               </ul>
@@ -234,7 +234,7 @@ $notcount = App\Models\Appnotification::where('is_read',0)->count();
               <i></i>
               <i></i>
               <i></i>
-          </span> 
+          </span>
   </nav> -->
 
 
