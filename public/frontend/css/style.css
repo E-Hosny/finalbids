@@ -791,6 +791,10 @@ img.input-lft-icon {
 
 .trending-auction-section {
     margin: 50px 0;
+
+}
+.trending-auction-section .container {
+    width: 90%;
 }
 
 
