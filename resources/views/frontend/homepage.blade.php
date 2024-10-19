@@ -28,10 +28,13 @@
 <style>
     .trending-auction-section {
         background-color: #f8f9fa;
+        margin:0;
+        padding-top:50px;
     }
 
     .card {
         border: 0;
+        width: 300px;
     }
 
     .card-body {
@@ -65,7 +68,8 @@
 
 
 </style>
-<section class="home home_slider">
+<section class
+="home home_slider">
     <div class="owl-carousel owl-theme">
         @foreach($banners as $b)
             @php
@@ -114,9 +118,9 @@
                         @endforeach
                 </div>
 </section>
-<section class="trending-auction-section">
-    <div class="container">
-        <div class="section-heading d-flex px-5">
+<section class="trending-auction-section mb-5">
+    <div class="container ">
+        <div class="section-heading d-flex px-4">
             <h2>{{ session('locale') === 'en' ? 'Recommended Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Recommended Auctions') }}</h2>
         </div>
         @foreach($auctionTypesWithProject as $at)
@@ -170,6 +174,7 @@
                             </div>
                         </div>
                     </div>
+
                 @endforeach
             </div>
         @endforeach

@@ -92,8 +92,8 @@ input::-webkit-inner-spin-button {
 .border-white-btn:hover {
     color: #fff;
 }
-input[type="checkbox"], input[type="radio"] { 
-    margin-bottom: 0 !important; 
+input[type="checkbox"], input[type="radio"] {
+    margin-bottom: 0 !important;
         padding: 10px !important ;
 }
 .cmn-frm input[type="checkbox"].form-check-input:checked {
@@ -664,7 +664,7 @@ input[type="radio"]:checked::after {
     box-shadow: 0 0 20px #0000002b;
     flex-wrap: unset;
 }
- 
+
 
 .search-frm input {
     border: 1px solid #7F12DD;
@@ -763,6 +763,10 @@ img.input-lft-icon {
 
 .trending-auction-section {
     margin: 50px 0;
+
+}
+.trending-auction-section .container {
+    width: 90%;
 }
 
 
@@ -776,7 +780,7 @@ img.input-lft-icon {
     background-position: left;
 }
 .trending-auction-section .auction-type {
-    
+
 }
 .login-outer-box .row .row [class*="col-"] {
     padding: 0 15px;
@@ -1326,7 +1330,7 @@ footer h3 {
 }
 
 .ftr-mang-eb img.f-logo {
-/*    max-width: 50%;*/ 
+/*    max-width: 50%;*/
 }
 
 .ftr-mang-eb a {
@@ -1472,7 +1476,7 @@ form.news-letter button {
 
   select {
     -moz-appearance: none;
-    -webkit-appearance: none; 
+    -webkit-appearance: none;
     position: relative;
     background-image: url(../images/down.svg);
         padding-right: 70px !important;
@@ -1721,7 +1725,7 @@ select {
     margin-bottom: 50px;
 }
 
- 
+
 .pagination {
     gap: 10px;
     justify-content: center;
@@ -1848,7 +1852,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .price-input input {
-    padding: 7px; 
+    padding: 7px;
 }
 
 .prty-filter h3 {
@@ -1990,8 +1994,8 @@ section.detail-section h3 {
 .img-select::-webkit-scrollbar {
     width: 0px;
 }
- 
- 
+
+
 
 
 .img-select .img-item {
@@ -2146,7 +2150,7 @@ section.account-hero-section h1 {
 .account-outer-box {
     border-radius:  10px;
     background: #FFF;
-    margin-top: 230px; 
+    margin-top: 230px;
     box-shadow: 0 0 10px #740fc957;
 }
 
@@ -2495,8 +2499,8 @@ section.account-hero-section h1 {
 .notification-all {
     position: absolute;
     width: 400px;
-    text-align: left; 
-    top: 50px;   
+    text-align: left;
+    top: 50px;
     border-radius: 10px 0px 10px 10px;
     background: #FFF;
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.16);
@@ -2512,7 +2516,7 @@ section.account-hero-section h1 {
 .notification-all ul li a h4{
     font-size: 16px;
     margin: 0;
-    
+
 }
 .notification-all ul li a h4 span{
     font-size: 14px;
@@ -2676,7 +2680,7 @@ section.account-hero-section h1 {
 .rtl .account-menu ul li a{
         padding: 14px 30px 14px 10px;
 }
-.rtl .account-menu ul li a { 
+.rtl .account-menu ul li a {
     background-position: right;
     margin-right: 15px;
 }
@@ -2781,7 +2785,7 @@ section.account-hero-section h1 {
     .home_slider .hero-section {
         min-height: 50vh;
     }
-    
+
     .hero-section h1 {
         font-size: 50px;
     }
@@ -2807,7 +2811,7 @@ section.account-hero-section h1 {
     min-width: 100px;
 }
 }
- 
+
 
 @media screen and (max-width: 991.98px) {
     .user-login {
@@ -2835,7 +2839,7 @@ section.account-hero-section h1 {
     }
 
     .nav div.main_list ul {
-        gap: 13px; 
+        gap: 13px;
     }
     .nav div.main_list .navlinks {
     gap: 15px;
@@ -2992,7 +2996,7 @@ span.header_nm {
 .notification-all ul li {
     padding: 10px 0 !important;
 }
-.notification-all ul { 
+.notification-all ul {
         padding: 0 !important;
     }
 
@@ -3029,7 +3033,7 @@ span.header_nm {
     margin-left: 0;
     margin-right: 15px;
 }
-    .notification-all ul li a { 
+    .notification-all ul li a {
         padding: 0 !important;
     }
     .header {
@@ -3087,7 +3091,7 @@ span.header_nm {
         right: 0;
     }
 
-    .lange-drop, .notification-btn{ 
+    .lange-drop, .notification-btn{
     padding: 0 20px;
     }
 
@@ -3141,17 +3145,17 @@ span.header_nm {
     .prty-filter.p-4 {
         padding: 0 !important;
     }
-    .hero-ther { 
+    .hero-ther {
         padding: 50px 0;
     }
     .hero-ther h1 {
         font-size: 30px;
     }
-    .img-showcase { 
+    .img-showcase {
         height: 320px;
     }
-    .img-select .img-item { 
-        height: 65px; 
+    .img-select .img-item {
+        height: 65px;
     }
     .result-lst{
         display: block;
@@ -3160,10 +3164,10 @@ span.header_nm {
         width: 100%;
     }
     .result-lst h3 {
-        margin:0 0 20px; 
+        margin:0 0 20px;
     }
     section.account-hero-section h1 {
-        font-size: 30px; 
+        font-size: 30px;
     }
     .dropdown-with {
     padding: 0 20px;
@@ -3370,7 +3374,7 @@ section.account-hero-section h1 {
     .privacy-link ul::before {
         width: 47%;
     }
-    .categry-list li { 
+    .categry-list li {
     width: 43%;
     margin-bottom: 15px;
 }
@@ -3506,13 +3510,13 @@ input#outbidCheckbox {
 .form-group .pop-box i {
     padding-right: 5px;
 }
-}   
+}
 
 .outr-box {
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 0 20px #7710cf45;
-    margin: auto;    
+    margin: auto;
     width: 80%;
 }
 .outr-box h2{
