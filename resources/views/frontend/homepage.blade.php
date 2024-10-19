@@ -49,6 +49,21 @@
     .clickable {
         cursor: pointer;
     }
+    /* Group 41 */
+
+    .view-text {
+        color: #0D3858;
+    }
+
+
+    /* Adjust the container spacing */
+    .container {
+        padding-left: 5px;
+        padding-right: 5px;
+        margin: 0 auto; /* Center the content */
+    }
+
+
 </style>
 <section class="home home_slider">
     <div class="owl-carousel owl-theme">
@@ -100,14 +115,13 @@
                 </div>
 </section>
 <section class="trending-auction-section">
-    <div class="container py-5">
-        <div class="section-heading d-flex px-4">
+    <div class="container">
+        <div class="section-heading d-flex px-5">
             <h2>{{ session('locale') === 'en' ? 'Recommended Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Recommended Auctions') }}</h2>
         </div>
         @foreach($auctionTypesWithProject as $at)
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 trending-auction-section-items">
                 @foreach($at->projects as $project)
-
                     @php
                         $loggedInUserId = auth()->id();
                         $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)
@@ -117,24 +131,6 @@
 
                         $formattedStartDateTimeconvert  = date("j-M", strtotime($project->start_date_time));
                         $formattedEndDateTimeconvert    = date("j-M", strtotime($project->end_date_time));
-
-
-                        $originalDateTime = $project->start_date_time;
-                        $timestamp = strtotime($originalDateTime);
-                        $formattedDateTime = date("F j, g:i A", $timestamp);
-
-                        $endDatetime = $project->end_date_time;
-                        $end =strtotime($endDatetime);
-                        $formattedEnddateTime = date("F j, g:i A",  $end);
-                        $formattedEndDateTimeconvert = date("M j, g:i A", $end);
-                        $currentDateTime = now();
-
-                        //      <!-- for timed auction  -->
-
-                        $originalDateTime = $project->start_date_time;
-                        $originalDatesTime = new Carbon\Carbon($originalDateTime);
-                        $twoWeeksBefore = $originalDatesTime->copy()->subWeeks(2);
-                        $currentDateTime = now()->timezone('Asia/Kolkata');
 
                     @endphp
 
@@ -157,52 +153,20 @@
                                             <img src="{{  asset("img/projects/$project->image_path")}}" class="card-img-top" height="276" width="243"
                                                  alt="{{ $project->title }}">
                                         @else
-                                        <img  src="{{ asset('img/default-images/pro-1.png') }}" height="276" width="243"
-                                              alt="Default Image">
+                                            <img   src="{{ asset('img/default-images/pro-1.png') }}" height="276" width="243"
+                                                alt="Default Image">
                                         @endif
                                 </div>
                             </a>
 
                             <div class="card-footer bg-transparent">
 
-                                @if ($at->name == 'Timed'  && $currentDateTime >= $originalDateTime)
-                                    <p class="text-muted clickable">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}</p>
-                                @elseif ($at->name == 'Timed' && $currentDateTime >= $twoWeeksBefore)
-                                    <p class="text-muted clickable">{{ session('locale') === 'en' ? 'EXPLORE NOW' : (session('locale') === 'ar' ? 'استكشف الآن' : 'EXPLORE NOW') }}</p>
-                                @endif
-
-                                <!-- For Live Auction -->
-                                @if ($bidRequest && $bidRequest->status == 1 && $at->name == 'Live' && $currentDateTime >= $originalDateTime)
-                                    <p class="text-muted clickable"> onclick="bidNow()">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} </p>
-                                @elseif ($bidRequest && $bidRequest->status == 0 && $at->name == 'Live')
-                                    <p class="text-muted clickable">{{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}</p>
-                                @elseif  ($bidRequest && $bidRequest->status == 1 && $at->name == 'Live' && $currentDateTime <= $originalDateTime)
-
-                                    <p class="text-muted clickable"> Project Not start</p>
-
-                                @elseif  ($at->name == 'Live' && $currentDateTime >= $twoWeeksBefore)
-                                    <p class="text-muted clickable"  onclick="requestBid('{{ $project->name }}', '{{ $project->id }}', '{{ $project->auction_type_id }}', '{{ $project->deposit_amount }}')">{{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب المزايدة' : 'Request Bid') }}</p>
-                                @endif
-
-
-                                <!-- For Private Auction -->
-                                @if ($bidRequest && $bidRequest->status == 1 && $at->name == 'Private' && $currentDateTime >= $originalDateTime)
-                                    <button class="text-btn" onclick="bidNow()">
-                                        {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}
-                                    </button>
-                                @elseif ($bidRequest && $bidRequest->status == 0 && $at->name == 'Private')
-                                    <p class="text-muted clickable">
-                                        {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}
-                                    </p>
-                                @elseif  ($bidRequest && $bidRequest->status == 1 && $at->name == 'Private' && $currentDateTime <= $originalDateTime)
-                                    <p class="text-muted clickable"> Project Not start</p>
-                                @elseif  ($at->name == 'Private' && $currentDateTime >= $twoWeeksBefore)
-                                    <p class="text-muted clickable"   onclick="requestBid('{{ $project->name }}', '{{ $project->id }}', '{{ $project->auction_type_id }}', '{{ $project->deposit_amount }}')">
-                                        {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب عرض أسعار' : 'Request Bid') }}
-                                    </p>
-
-                                @endif
-                                <a href="{{ url('products', $project->slug) }}" class="text-primary">{{ session('locale') === 'ar' ? 'عرض  '.count($project->products).' قطعة أرض ': 'View '.count($project->products).' lots'   }}</a>
+                                <p class="text-muted">OPEN FOR BIDDING</p>
+                                <a href="{{ url('products', $project->slug) }}" class="text-decoration-">
+                                    <span class="view-text">
+                                    {{ session('locale') === 'ar' ? 'عرض  '.count($project->products).' قطعة أرض ': 'View '.count($project->products).' lots'   }}
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -211,6 +175,169 @@
         @endforeach
     </div>
 </section>
+
+{{--<section class="trending-auction-section">--}}
+{{--    <div class="container">--}}
+{{--        <div class="section-heading">--}}
+{{--            <h2>{{ session('locale') === 'en' ? 'Recommended Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Recommended Auctions') }}</h2>--}}
+{{--        </div>--}}
+{{--        <div class="trending-auction-section-itms">--}}
+
+{{--            @foreach($auctionTypesWithProject as $at)--}}
+{{--                <div class="trending-auction-section-itm">--}}
+{{--                    <div class="row action_row">--}}
+{{--                        <div class="col-lg-3 col-md-12 auction-type   align-just">--}}
+{{--                            <div class="">--}}
+{{--                                <div>--}}
+{{--                                    @if(session('locale') === 'en')--}}
+{{--                                        <h2>{{$at->name}}</h2>--}}
+{{--                                    @elseif(session('locale') === 'ar')--}}
+{{--                                        <h2>{{$at->name_ar}}</h2>--}}
+{{--                                    @else--}}
+{{--                                        <h2>{{$at->name}}</h2>--}}
+{{--                                    @endif--}}
+
+{{--                                    <a href="{{ url('projects', $at->slug) }}"--}}
+{{--                                       class="border-white-btn">{{ session('locale') === 'en' ? 'VIEW ALL' : (session('locale') === 'ar' ? 'عرض الكل' : 'VIEW ALL') }}</a>--}}
+
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-lg-9 col-md-12">--}}
+{{--                            <div class="row">--}}
+{{--                                @foreach($at->projects as $project)--}}
+{{--                                    <div class="col-xl-6 col-md-12">--}}
+{{--                                        <div class="card-product">--}}
+{{--                                            <a href="{{ url('products', $project->slug) }}">--}}
+
+{{--                                                <div class="product-image">--}}
+{{--                                                    @if (!empty($project->image_path))--}}
+{{--                                                        <img src="{{ asset("img/projects/$project->image_path") }}"--}}
+{{--                                                             alt="{{ $project->title }}">--}}
+{{--                                                    @else--}}
+{{--                                                        <img--}}
+{{--                                                            src="{{ asset('frontend/images/default-product-image.png') }}"--}}
+{{--                                                            alt="Default Image">--}}
+{{--                                                    @endif--}}
+{{--                                                </div>--}}
+{{--                                            </a>--}}
+
+{{--                                            <div class="card-product-dtl">--}}
+
+{{--                                                @if(session('locale') === 'en')--}}
+{{--                                                    <a href="{{ url('products', $project->slug) }}"--}}
+{{--                                                       class="project-link"><h3>{{ $project->name }} </h3></a>--}}
+{{--                                                @elseif(session('locale') === 'ar')--}}
+{{--                                                    <a href="{{ url('products', $project->slug) }}"--}}
+{{--                                                       class="project-link"><h3>{{$project->name_ar}}</h3></a>--}}
+{{--                                                @else--}}
+{{--                                                    <a href="{{ url('products', $project->slug) }}"--}}
+{{--                                                       class="project-link"><h3>{{ $project->name }} </h3></a>--}}
+{{--                                                @endif--}}
+{{--                                                @php--}}
+{{--                                                    $originalDateTime = $project->start_date_time;--}}
+{{--                                                    $timestamp = strtotime($originalDateTime);--}}
+{{--                                                    $formattedDateTime = date("F j, g:i A", $timestamp);--}}
+{{--                                                    $formattedDateTimeconvert = date("M j, g:i A", $timestamp);--}}
+{{--                                                    $endDatetime = $project->end_date_time;--}}
+{{--                                                    $end =strtotime($endDatetime);--}}
+{{--                                                    $formattedEnddateTime = date("F j, g:i A",  $end);--}}
+{{--                                                    $formattedEndDateTimeconvert = date("M j, g:i A", $end);--}}
+{{--                                                    $currentDateTime = now();--}}
+
+{{--                                                @endphp--}}
+{{--                                                @if ($at->name == 'Live' || $at->name == 'Private')--}}
+{{--                                                    <h5>{{ formatPrice($project->deposit_amount, session()->get('currency')) }}  {{$currency}}</h5>--}}
+
+{{--                                                @endif--}}
+
+{{--                                                <p>{{  $formattedDateTimeconvert }}--}}
+{{--                                                    - {{$formattedEndDateTimeconvert}}</p>--}}
+{{--                                                @php--}}
+{{--                                                    $loggedInUserId = Auth::id();--}}
+{{--                                                    $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)--}}
+{{--                                                                                        ->where('project_id', $project->id)--}}
+{{--                                                                                        ->first();--}}
+
+{{--                                                @endphp--}}
+
+{{--                                                    <!-- for timed auction  -->--}}
+
+{{--                                                @php--}}
+{{--                                                    $originalDateTime = $project->start_date_time;--}}
+{{--                                                    $originalDatesTime = new Carbon\Carbon($originalDateTime);--}}
+{{--                                                    $twoWeeksBefore = $originalDatesTime->copy()->subWeeks(2);--}}
+{{--                                                    $currentDateTime = now()->timezone('Asia/Kolkata');--}}
+
+{{--                                                @endphp--}}
+
+
+{{--                                                @if ($at->name == 'Timed'  && $currentDateTime >= $originalDateTime)--}}
+{{--                                                    <button--}}
+{{--                                                        class="text-btn">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} </button>--}}
+{{--                                                @elseif ($at->name == 'Timed' && $currentDateTime >= $twoWeeksBefore)--}}
+{{--                                                    <button--}}
+{{--                                                        class="text-btn"> {{ session('locale') === 'en' ? 'EXPLORE NOW' : (session('locale') === 'ar' ? 'استكشف الآن' : 'EXPLORE NOW') }} </button>--}}
+{{--                                                @endif--}}
+
+{{--                                                <!-- For Live Auction -->--}}
+{{--                                                @if ($bidRequest && $bidRequest->status == 1 && $at->name == 'Live' && $currentDateTime >= $originalDateTime)--}}
+{{--                                                    <button--}}
+{{--                                                        class="text-btn"--}}
+{{--                                                        onclick="bidNow()">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}  </button>--}}
+{{--                                                @elseif ($bidRequest && $bidRequest->status == 0 && $at->name == 'Live')--}}
+{{--                                                    <button class="text-btn">--}}
+
+{{--                                                        {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}--}}
+{{--                                                    </button>--}}
+{{--                                                @elseif  ($bidRequest && $bidRequest->status == 1 && $at->name == 'Live' && $currentDateTime <= $originalDateTime)--}}
+{{--                                                    <button class="text-btn" style="display: none;">--}}
+
+{{--                                                        Project Not start--}}
+{{--                                                    </button>--}}
+
+{{--                                                @elseif  ($at->name == 'Live' && $currentDateTime >= $twoWeeksBefore)--}}
+{{--                                                    <button class="text-btn"--}}
+{{--                                                            onclick="requestBid('{{ $project->name }}', '{{ $project->id }}', '{{ $project->auction_type_id }}', '{{ $project->deposit_amount }}')">--}}
+{{--                                                        {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب المزايدة' : 'Request Bid') }}</button>--}}
+{{--                                                @endif--}}
+
+
+{{--                                                <!-- For Private Auction -->--}}
+{{--                                                @if ($bidRequest && $bidRequest->status == 1 && $at->name == 'Private' && $currentDateTime >= $originalDateTime)--}}
+{{--                                                    <button class="text-btn" onclick="bidNow()">--}}
+{{--                                                        {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}--}}
+{{--                                                    </button>--}}
+{{--                                                @elseif ($bidRequest && $bidRequest->status == 0 && $at->name == 'Private')--}}
+{{--                                                    <button class="text-btn">--}}
+{{--                                                        {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}--}}
+{{--                                                    </button>--}}
+{{--                                                @elseif  ($bidRequest && $bidRequest->status == 1 && $at->name == 'Private' && $currentDateTime <= $originalDateTime)--}}
+{{--                                                    <button class="text-btn" style="display: none;">--}}
+
+{{--                                                        Project Not start--}}
+{{--                                                    </button>--}}
+{{--                                                @elseif  ($at->name == 'Private' && $currentDateTime >= $twoWeeksBefore)--}}
+{{--                                                    <button class="text-btn"--}}
+{{--                                                            onclick="requestBid('{{ $project->name }}', '{{ $project->id }}', '{{ $project->auction_type_id }}', '{{ $project->deposit_amount }}')">--}}
+{{--                                                        {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب عرض أسعار' : 'Request Bid') }}--}}
+{{--                                                    </button>--}}
+{{--                                                @endif--}}
+
+
+{{--                                            </div>--}}
+
+{{--                                        </div>--}}
+
+{{--                                    </div>--}}
+{{--                                @endforeach--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            @endforeach--}}
+{{--        </div>--}}
+{{--</section>--}}
 
 <section class="most-view-product">
     <div class="container">
