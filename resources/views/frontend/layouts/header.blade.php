@@ -202,13 +202,15 @@ if (Auth::check()) {
                     <li><a href="{{ route('contact-us') }}">{{ session('locale') === 'en' ? 'Contact Us' : (session('locale') === 'ar' ? 'تواصل معنا' : 'Contact Us') }}</a></li>
 
 
-
+                 @guest
                     <li class="group-hidden">
                         <a  href="{{route('signin')}}">{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="group-hidden">
                         <a class=" " href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
                     </li>
+                 @endguest
+
 
                     <li class="group-hidden">
                         <select class="changeLang lang-select">
@@ -217,6 +219,13 @@ if (Auth::check()) {
 
                         </select>
                     </li>
+
+                    @auth
+                    <li class="group-hidden"><a  class="profile-hdr" href="{{route('userdashboard')}}" >{{ Auth::user()->first_name }}<span class="header_nm">{{Auth::user()->first_name}}</span>
+                        <img src="{{asset('frontend/images/dummyuser.png')}}" alt=""></a></li>
+                        <li class="group-hidden"><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
+
+                    @endauth
 
 
 
@@ -251,6 +260,8 @@ if (Auth::check()) {
 
 
                     @auth
+                    <li><a  class="profile-hdr" href="{{route('userdashboard')}}" ><span class="header_nm">{{Auth::user()->first_name }}</span>
+                        <img src="{{asset('frontend/images/dummyuser.png')}}" alt=""></a></li>
                         <li><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
 
                     @endauth
