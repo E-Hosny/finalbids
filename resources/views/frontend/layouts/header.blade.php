@@ -1,16 +1,30 @@
 
 <style>
 @font-face {
-    font-family: 'LuxuriousRoman-Regular';
-    src: url('/fonts/LuxuriousRoman-Regular.ttf') format('truetype');
+    font-family: 'Luxury-1.0';
+    src: url('/fonts/Luxury-1.0.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'IBMPlexSansArabic-Regular';
+    src: url('/fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-
 body {
-        font-family: 'LuxuriousRoman-Regular', sans-serif !important;
+        /* font-family: 'Luxury-1.0', sans-serif !important; */
+        /* font-weight: bold !important; */
     }
+
+    h1, h2, h3, h4, h5, h6, li {
+    font-family: 'Luxury-1.0', sans-serif !important;
+}
+
+p {
+    font-family: 'IBMPlexSansArabic-Regular', sans-serif !important ;
+}
 
     .category-list {
         display: none;
@@ -235,6 +249,12 @@ if (Auth::check()) {
                     <li>
                 @endguest
 
+
+                    @auth
+                        <li><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
+
+                    @endauth
+
                     <li>
                         <select class="changeLang lang-select">
                             <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>English</option>
@@ -242,11 +262,6 @@ if (Auth::check()) {
 
                         </select>
                     </li>
-
-                    @auth
-                        <li><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
-
-                    @endauth
 
                 </ul>
                 <div class="search-box">
@@ -263,8 +278,8 @@ if (Auth::check()) {
 
 
           </div>
-
-          {{-- <div class="nav_links main_list">
+{{--
+          <div class="nav_links main_list">
               <ul  class="navlinks">
                   @if (auth()->check())
 
@@ -390,11 +405,12 @@ if (Auth::check()) {
 }
 
 .search-input {
-    padding: 4px 80px 4px 30px;
+    padding: 4px 100px 4px 30px;
     border: 2px solid #ccc;
     outline: none;
     font-size: 16px;
     transition: all 0.3s ease;
+    /* width: 100%; */
 }
 
 .search-btn {

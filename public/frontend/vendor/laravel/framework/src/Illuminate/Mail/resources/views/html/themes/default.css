@@ -1,19 +1,15 @@
 /* Base */
 
-@font-face {
-    font-family: 'Luxury';
-    src: url('/fonts/Luxury.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
 
-body,
-body *:not(html):not(style):not(br):not(tr):not(code) {
+/* body, */
+/* body *:not(html):not(style):not(br):not(tr):not(code) {
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     position: relative;
-}
+} */
+
+
 
 body {
     -webkit-text-size-adjust: none;

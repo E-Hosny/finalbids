@@ -1,5 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
 
+@font-face {
+    font-family: 'Luxury-1.0';
+    src: url('/fonts/Luxury-1.0.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'IBMPlexSansArabic-Regular';
+    src: url('/fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+        /* font-family: 'Luxury-1.0', sans-serif !important; */
+        /* font-weight: bold !important; */
+    }
+
+    h1, h2, h3, h4, h5, h6, li {
+        font-family: 'Luxury-1.0', sans-serif !important;
+    }
+
+    p {
+        font-family: 'IBMPlexSansArabic-Regular', sans-serif !important;
+    }
+
 html,
 body {
     margin: 0;

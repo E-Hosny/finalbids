@@ -300,7 +300,9 @@
                     @if(session('locale') === 'en')
                         <span>{{ $auctionTypeName }}</span>
                     @elseif(session('locale') === 'ar')
-                        <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span>
+                        {{-- <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span> --}}
+                        <span>{{ $auctionTypeName }}</span>
+
                     @else
                         <span>{{ $auctionTypeName }}</span>
                     @endif
