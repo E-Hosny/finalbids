@@ -1,5 +1,17 @@
 
 <style>
+@font-face {
+    font-family: 'LuxuriousRoman-Regular';
+    src: url('/fonts/LuxuriousRoman-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+        font-family: 'LuxuriousRoman-Regular', sans-serif !important;
+    }
+
     .category-list {
         display: none;
         position: absolute;
@@ -107,7 +119,7 @@ if (Auth::check()) {
 
   <body @if(session()->get('locale') == 'ar') class="rtl" @endif>
 
-    <nav class="nav header bg-danger">
+    <nav class="nav header">
 
           <div class="search-logo">
 
@@ -134,7 +146,7 @@ if (Auth::check()) {
 
 
 
-          <div id="mainListDiv" class="main_list bg-info w-100 d-flex px-4  ">
+          <div id="mainListDiv" class="main_list  w-100 d-flex px-4  ">
               <ul class="navlinks">
               <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }}</a></li>
 
@@ -177,12 +189,32 @@ if (Auth::check()) {
 
 
 
+                    <li class="group-hidden">
+                        <a  href="{{route('signin')}}">{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
+                    </li>
+                    <li class="group-hidden">
+                        <a class=" " href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                    </li>
+
+                    <li class="group-hidden">
+                        <select class="changeLang lang-select">
+                            <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>English</option>
+                            <option value="ar" {{ session()->get('locale') == 'ar' ? 'selected' : '' }}>عربي</option>
+
+                        </select>
+                    </li>
+
+
+
+
               </ul>
 
 
 
 
-              <div class=" bg-body nav-right-group ">
+
+
+              <div class="nav-right-group">
 
                 <!-- <div class="drop-lange-select"> -->
                     {{-- <select class="form-select changecurrency">
@@ -192,13 +224,16 @@ if (Auth::check()) {
                     <!-- </div> -->
 
                     <ul class="my-1">
-
-                    <li class="bg-secondary d-flex align-items-center">
+                @guest
+                    <li class=" d-flex align-items-center">
                         <a class=" " href="{{route('signin')}}">{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="d-flex align-items-center">
                         <a class=" " href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
                     </li>
+
+                    <li>
+                @endguest
 
                     <li>
                         <select class="changeLang lang-select">
@@ -207,6 +242,11 @@ if (Auth::check()) {
 
                         </select>
                     </li>
+
+                    @auth
+                        <li><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
+
+                    @endauth
 
                 </ul>
                 <div class="search-box">
@@ -217,7 +257,9 @@ if (Auth::check()) {
                 </div>
 
 
+
                 </div>
+
 
 
           </div>
@@ -300,12 +342,45 @@ if (Auth::check()) {
 
   <style>
 
+    .nav a{
+        font-size: 20px !important;
+        margin: 0px 7px;
+    }
+    .nav select{
+        font-size: 20px !important;
+    }
 
+
+    .nav{
+        height: 100px;
+    }
+
+
+.group-hidden {
+    display: none;
+}
+
+
+@media only screen and (max-width: 1000px){
+    .group-hidden{
+        display: block;
+    }
+    .nav{
+        height: 60px;
+    }
+}
 @media only screen and (max-width: 1000px){
     .nav-right-group{
         display: none;
     }
 }
+
+@media only screen and (max-width: 1000px){
+   .center-items{
+    /* display: block; */
+   }
+}
+
 
 
 .search-box {
@@ -315,7 +390,7 @@ if (Auth::check()) {
 }
 
 .search-input {
-    padding: 4px 40px 4px 30px;
+    padding: 4px 80px 4px 30px;
     border: 2px solid #ccc;
     outline: none;
     font-size: 16px;
@@ -335,7 +410,7 @@ if (Auth::check()) {
 }
 
 .search-btn i {
-    color: #007bff;
+    color: black;
 }
 
 

@@ -45,7 +45,7 @@ class BannerController extends Controller
             'description' => 'required',
             'image_path' => 'required|image|max:2048',
             'url'        => 'required',
-            'status' => 'required|boolean', 
+            'status' => 'required|boolean',
         ]);
 
         if ($request->hasFile('image_path')) {
@@ -114,17 +114,18 @@ class BannerController extends Controller
             'title_ar' =>'required|max:255',
             'description' => 'required',
             'description_ar' => 'required',
-            'image_path' => 'image|max:2048',
+            'image_path' => 'image',
+            // 'image_path' => 'image|max:2048',
             'url'        => '',
-            'status' => 'boolean', 
+            'status' => 'boolean',
         ]);
 
         if ($request->hasFile('image_path')) {
             $data['image_path'] = $this->verifyAndUpload($request, 'image_path');
         }
-    
+
         $banner->update($data);
-        
+
         return redirect()->route('admin.banners.index')->with('success', 'Banner updated successfully!');
     }
 

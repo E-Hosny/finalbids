@@ -1,3 +1,13 @@
+
+@font-face {
+    font-family: 'Luxury';
+    src: url('/fonts/Luxury.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
 .error {
     color: red;
 }
@@ -16,7 +26,7 @@ table {
 
 
 .pagination li:last-child a.page-link{
-    display: block;  
+    display: block;
     padding: 0;
     margin: 0 3px;
     border-radius: 50% !important;
@@ -26,10 +36,10 @@ table {
     background-image: url(https://icons.veryicon.com/png/o/miscellaneous/test-2/next-28.png);
     background-size: 16px;
     background-repeat: no-repeat;
-    background-position: center; 
+    background-position: center;
 }
 .pagination li:first-child a.page-link{
-    display: block;  
+    display: block;
     padding: 0;
     margin: 0 3px;
     border-radius: 50% !important;
@@ -87,7 +97,7 @@ table {
 }
    .navbar-vertical.navbar-expand-xs.fixed-start.menu_open{
     left: 0;
-   } 
+   }
 }
 table.dataTable>tbody>tr.odd.selected>* {
     box-shadow: none;
