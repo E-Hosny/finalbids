@@ -27,6 +27,7 @@ class TempUsers extends Model
         'lang_id',
         'currency_code',
         'is_otp_verify',
+        'notify_on',
     ];
 
 }

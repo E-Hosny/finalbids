@@ -15,7 +15,7 @@ use App\Models\Country;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\{State,StartBid};
+use App\Models\{State, StartBid};
 use App\Models\User;
 use App\Models\Page;
 use App\Models\Wishlist;
@@ -471,40 +471,107 @@ class HomepageController extends Controller
 
     public function loggedin(Request $request)
     {
-        $request->validate([
+        // Validate the request
+        $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
         $credentials = $request->only('email', 'password');
         $user = User::where('email', $request->email)->first();
+
         if ($user) {
-            if ($user->status == 0 ) {
-                return back()->withErrors(['email' => 'Your Account is Inactive Contact To Admin.']);
+            if ($user->status == 0) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'Your Account is Inactive. Contact Admin.']
+                ], 403);
             }
-             // Check if the user role is not 2 (user)
-             if ($user->role != 2) {
-                return back()->withErrors(['email' => 'These credentials do not match our records.']);
+            if ($user->role != 2) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'These credentials do not match our records.']
+                ], 401);
             }
-            if($user->is_otp_verify == 0 ){
-                return back()->withErrors(['email' => 'You have Entered Invalid Credentials']);
+            if ($user->is_otp_verify == 0) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => 'You have entered invalid credentials.']
+                ], 401);
             }
         }
+
         if (Auth::attempt($credentials)) {
             $previousUrl = Session::get('previousUrl');
-
             if ($previousUrl) {
                 Session::forget('previousUrl');
-                // return redirect()->to($previousUrl);
+                return response()->json([
+                    'success' => true,
+                    'redirect' => $previousUrl
+                ]);
             }
-            return redirect()->intended('/');
+            return response()->json([
+                'success' => true,
+                'redirect' => route('homepage')
+            ]);
         }
 
-
-        return back()->withErrors(['email' => 'These credentials do not match our records.']);
+        return response()->json([
+            'success' => false,
+            'errors' => ['email' => 'These credentials do not match our records.']
+        ], 401);
     }
 
     public function register(Request $request)
+    {
+        try {
+            $rules = [
+                'full_name' => 'required|string',
+                'email' => 'required|string|email|max:255|unique:users|unique:temp_users',
+                'phone' => 'required|numeric|digits:10',
+                'password' => 'required|string|min:8',
+                'is_term' => 'required|boolean',
+//                'cancel_receive' => 'nullable|boolean',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $user = new TempUsers([
+                'first_name' => $request->input('full_name'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'password' => bcrypt($request->input('password')),
+                'is_term' => $request->input('is_term'),
+//                'notify_on' => $request->input('cancel_receive', 0),
+                'is_otp_verify' => 0,
+                'status' => 0,
+            ]);
+
+            $user->save();
+
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('homepage'),
+                'message' => 'Registration successful. Verification email sent!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred during registration.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function registerOld(Request $request)
     {
         try {
             $rules = [
