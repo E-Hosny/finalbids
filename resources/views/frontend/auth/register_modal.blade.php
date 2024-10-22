@@ -5,7 +5,7 @@
                 <div class="login-mdl text-center">
                     <span class="login-title">Creat Account</span>
                     <div class="form-size">
-                        <form action="{{ route('registration') }}" method="POST" class="cmn-frm">
+                        <form action="{{ route('registerTemp') }}" method="POST" class="cmn-frm">
                             @csrf
                             <div class="row justify-content-center">
                                 <div class="row col-md-12 mb-1 mt-4">
@@ -85,7 +85,7 @@
 
         const formData = new FormData(this);
 
-        fetch("{{ route('registration') }}", {
+        fetch("{{ route('registerTemp') }}", {
             method: "POST",
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value
