@@ -518,7 +518,7 @@ class HomepageController extends Controller
         ], 401);
     }
 
-    public function register(Request $request)
+    public function registerTemp(Request $request)
     {
         try {
             $rules = [
@@ -539,8 +539,10 @@ class HomepageController extends Controller
                 ], 422);
             }
 
+            $otp = rand(1000, 9999);
+            $full_name = $request->input('full_name');
             $user = new TempUsers([
-                'first_name' => $request->input('full_name'),
+                'first_name' => $full_name,
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
                 'password' => bcrypt($request->input('password')),
@@ -548,9 +550,13 @@ class HomepageController extends Controller
 //                'notify_on' => $request->input('cancel_receive', 0),
                 'is_otp_verify' => 0,
                 'status' => 0,
+                'otp' => $otp,
             ]);
-
             $user->save();
+
+            Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
+            Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
+
 
             return response()->json([
                 'status' => 'success',
@@ -567,7 +573,7 @@ class HomepageController extends Controller
     }
 
 
-    public function registerOld(Request $request)
+    public function register(Request $request)
     {
         try {
             $rules = [
@@ -580,7 +586,6 @@ class HomepageController extends Controller
                 'confirm_password' => 'required|same:password',
                 'country_code' => 'required',
                 'is_term' => 'required|boolean',
-
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -611,7 +616,7 @@ class HomepageController extends Controller
             ]);
 
             $user->save();
-            $msg = $otp . ' is your Verification code for Bids.Sa ';
+//            $msg = $otp . ' is your Verification code for Bids.Sa ';
             // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
             $first_name = $request->input('first_name');
 
@@ -630,6 +635,7 @@ class HomepageController extends Controller
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
+
     public function resend_otp(Request $request){
         {
             $rules = [
