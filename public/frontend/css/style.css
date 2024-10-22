@@ -1493,7 +1493,7 @@ form.news-letter button {
     margin-bottom: 30px;
     border: 1px solid #C2C2C2;
     padding: 14px 10px;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     background-color: transparent;
     color: #000;
 }

@@ -4,6 +4,8 @@ $logo = App\Models\Setting::where('is_static', 2)->orderBy('title', 'ASC')->firs
 $pages =App\Models\Page::where('is_static', 1)->orderBy('title', 'ASC')->first();
 
 @endphp
+@include('frontend.auth.login_modal')
+@include('frontend.auth.register_modal')
 
 <footer>
     <div class="container">
@@ -38,13 +40,13 @@ $pages =App\Models\Page::where('is_static', 1)->orderBy('title', 'ASC')->first()
                 @endif
             </div> -->
 
-           
+
             <!-- <div class="col-md-4">
             <h3>{{ session('locale') === 'en' ? 'Company' : (session('locale') === 'ar' ? 'الشركة' : 'Company') }}</h3>
 
                 <ul class="use-fulllink">
-              
-              
+
+
                 </ul>
             </div> -->
             <!-- <div class="col-md-4">
@@ -58,7 +60,7 @@ $pages =App\Models\Page::where('is_static', 1)->orderBy('title', 'ASC')->first()
 
                     </div>
                 </form>
-           
+
             </div> -->
         </div>
         <div class="privacy-link">
@@ -141,7 +143,7 @@ $('.popular_slider.owl-carousel').owlCarousel({
     nav: false,
     autoplay: false,
     autoplaySpeed: 3000,
-    autoplayHoverPause: false,    
+    autoplayHoverPause: false,
     responsive: {
         0: {
             items: 1,
@@ -179,7 +181,7 @@ $(document).ready(function() {
 </script> -->
 <script>
     $(document).ready(function() {
-      
+
         setInterval(() => {
             $('.thisisdemoclass').each(function() {
                 var date = $(this).data('date');
@@ -192,14 +194,14 @@ $(document).ready(function() {
                     // $(this).find('ul').hide();
                     $('#bidnow').hide();
                     $(this).parent().find('.countdown-time').html('<p><span style="color: red;">Lot closed</span></p>');
-                    $('#bidForm').hide(); 
-                   
+                    $('#bidForm').hide();
+
                 } else {
                     const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-                   
+
                     if (timeRemaining <= 300000) {
                     // Change color to red when 5 minutes or less remaining
                     $(this).find('.days').css('color', 'red');
