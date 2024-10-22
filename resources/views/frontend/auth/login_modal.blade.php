@@ -5,7 +5,7 @@
             <div class="modal-body border-0">
                 <div class="login-mdl text-center">
                     <span class="login-title">LOGIN</span>
-                    <div class="numberArea">
+                    <div class="numberArea mt-3">
                         <form id="loginForm" class="cmn-frm" method="POST" novalidate>
                             @csrf
                             <div class="row justify-content-center">

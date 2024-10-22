@@ -8,7 +8,7 @@
                         <form action="{{ route('registration') }}" method="POST" class="cmn-frm">
                             @csrf
                             <div class="row justify-content-center">
-                                <div class="row col-md-12 mb-1">
+                                <div class="row col-md-12 mb-1 mt-4">
                                     <div class="col-md-6">
                                         <label for="email" class="d-flex justify-content-start  mb-1">Full Name</label>
                                         <input type="text" name="full_name" id="full_name" placeholder="Ebtahim Ahmed">
