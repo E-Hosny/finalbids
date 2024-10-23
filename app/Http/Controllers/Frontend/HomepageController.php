@@ -573,6 +573,7 @@ class HomepageController extends Controller
             return response()->json([
                 'status' => 'success',
                 'redirect' => route('homepage'),
+                'email' => $user->email,
                 'message' => __('Registration successful. Verification email sent!'),
             ]);
         } catch (\Exception $e) {
@@ -754,6 +755,7 @@ class HomepageController extends Controller
     }
     public function verifyOTP(Request $request)
 {
+
     $rules = [
         'email' => 'required|email',
         'otpValue' => 'required|string|min:4',
