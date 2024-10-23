@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-body border-0">
                 <div class="login-mdl text-center">
-                    <span class="login-title">LOGIN</span>
+                    <span class="login-title">{{__('Login')}}</span>
                     <div class="numberArea mt-3">
                         <form id="loginForm" class="cmn-frm" method="POST" novalidate>
                             @csrf
@@ -12,14 +12,14 @@
                                 <span class="text-danger" id="text-error"></span>
 
                                 <div class="form-group mb-3" style="max-width:482px;">
-                                    <label for="email" class="d-flex justify-content-start mb-1">Email</label>
+                                    <label for="email" class="d-flex justify-content-start mb-1">{{__('Email')}}</label>
                                     <input type="email" name="email" id="email" class="form-control"
                                            placeholder="email@app.com" required>
                                     <span class="text-danger" id="email-error"></span>
                                 </div>
 
                                 <div class="form-group mb-3" style="max-width:482px;">
-                                    <label for="password" class="d-flex justify-content-start mb-1">Password</label>
+                                    <label for="password" class="d-flex justify-content-start mb-1">{{__('Password')}}</label>
                                     <input type="password" name="password" id="password" class="form-control"
                                            placeholder="Enter Your Password" required>
                                     <span class="text-danger" id="password-error"></span>
@@ -28,11 +28,11 @@
 
                             <!-- Forgot Password Link -->
                             <div class="d-flex justify-content-center">
-                                <a href="#"><span class="forget-passowrd">Forgot Password?</span></a>
+                                <a href="#"><span class="forget-passowrd">{{__('Forgot Password?')}}</span></a>
                             </div>
 
                             <!-- Login Button -->
-                            <button type="submit" class="login-btn btn btn-primary mt-3">LOGIN</button>
+                            <button type="submit" class="login-btn btn btn-primary mt-3">{{__('Login')}}</button>
 
                             <!-- Close Modal Button -->
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -40,7 +40,7 @@
                             <!-- Register Modal Trigger -->
                             <div class="form-group d-flex justify-content-center mt-3">
                                 <a class="switch-to-register" href="#">
-                                    <span class="btn-create-account">New to MOZAIDA? Create Account</span>
+                                    <span class="btn-create-account">{{__('New to MOZAIDA?')}} {{__('Create Account')}}</span>
                                 </a>
                             </div>
                         </form>
@@ -181,6 +181,49 @@
     .login-mdl img {
         max-width: 150px;
         margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .custom-modal-size {
+            max-width: 100%;
+            margin: 10px;
+        }
+
+        .login-mdl {
+            padding: 15px 20px;
+        }
+
+        .login-title {
+            font-size: 24px;
+        }
+
+        .form-size {
+            width: 100%;
+        }
+
+        .login-btn {
+            height: 45px;
+        }
+
+        .btn-create-account {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-height: 600px) {
+        .custom-modal-size .modal-content {
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .modal-body {
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .custom-modal-size {
+            height: auto;
+        }
     }
 </style>
 

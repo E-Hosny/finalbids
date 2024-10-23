@@ -480,19 +480,19 @@ class HomepageController extends Controller
             if ($user->status == 0) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ['email' => 'Your Account is Inactive. Contact Admin.']
+                    'errors' => ['email' => __('Your Account is Inactive. Contact Admin.')]
                 ], 403);
             }
             if ($user->role != 2) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ['email' => 'These credentials do not match our records.']
+                    'errors' => ['email' => __('These credentials do not match our records.')]
                 ], 401);
             }
             if ($user->is_otp_verify == 0) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ['email' => 'You have entered invalid credentials.']
+                    'errors' => ['email' => __('You have entered invalid credentials.')]
                 ], 401);
             }
         }
@@ -514,7 +514,7 @@ class HomepageController extends Controller
 
         return response()->json([
             'success' => false,
-            'errors' => ['email' => 'These credentials do not match our records.']
+            'errors' => ['email' => __('These credentials do not match our records.')]
         ], 401);
     }
 
@@ -527,10 +527,22 @@ class HomepageController extends Controller
                 'phone' => 'required|numeric|digits:10',
                 'password' => 'required|string|min:8',
                 'is_term' => 'required|boolean',
-//                'cancel_receive' => 'nullable|boolean',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+
+            $messages = [
+                'full_name.required' => __('The full name field is required.'),
+                'email.required' => __('We need your email address to register.'),
+                'email.email' => __('Please provide a valid email address.'),
+                'email.unique' => __('This email address is already registered.'),
+                'phone.required' => __('Please provide your phone number.'),
+                'phone.digits' => __('The phone number must be exactly 10 digits.'),
+                'password.required' => __('A password is required to create your account.'),
+                'password.min' => __('Your password must be at least 8 characters long.'),
+                'is_term.required' => __('You must agree to the terms and conditions.'),
+            ];
+
+            $validator = Validator::make($request->all(), $rules,$messages);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -561,12 +573,12 @@ class HomepageController extends Controller
             return response()->json([
                 'status' => 'success',
                 'redirect' => route('homepage'),
-                'message' => 'Registration successful. Verification email sent!',
+                'message' => __('Registration successful. Verification email sent!'),
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'An error occurred during registration.',
+                'message' => __('An error occurred during registration.'),
                 'error' => $e->getMessage(),
             ], 500);
         }
