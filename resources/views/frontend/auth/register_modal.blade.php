@@ -1,4 +1,4 @@
-<div class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" id="registerModal" aria-hidden="true" aria-labelledby="otpModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-lg custom-modal-size">
         <div class="modal-content">
             <div class="modal-body border-0">
@@ -62,6 +62,35 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="otpModalToggle" aria-hidden="true" aria-labelledby="otpModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <input type="hidden" id="otp-email" name="otp-email">
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="login-mdl text-center">
+                    <img src="{{asset('logo.png')}}" alt="">
+                    <p>{{__('Please enter 4-digit verification code that was send to your Email')}}</p>
+                    <form action="{{ route('verify-otp') }}" method="post" class="cmn-frm otp-filds" id="otp-verification-form">
+                        <input type="number" class="otpValue" name="otp" id="first" maxlength="1" oninput="moveToNextInput(this, 'second')" onkeydown="moveToPreviousInput(this, '')" />
+                        <input type="number" class="otpValue" name="otp" id="second" maxlength="1" oninput="moveToNextInput(this, 'third')" onkeydown="moveToPreviousInput(this, 'first')" />
+                        <input type="number" class="otpValue" name="otp" id="third" maxlength="1" oninput="moveToNextInput(this, 'fourth')" onkeydown="moveToPreviousInput(this, 'second')" />
+                        <input type="number" class="otpValue" name="otp" id="fourth" maxlength="1" onkeydown="moveToPreviousInput(this, 'third')" />
+                    </form>
+                    <p>{{__('Didn’t Receive the Code?')}} <a href="#" class="text-btn edit-number" id="resend-code">{{__('Resend')}}</a></p>
+
+
+                    <button type="button" name="verify-otp" class="mt-4 btn btn-secondary px-5 btn-verify-otp">{{__('Verify')}}</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -204,6 +233,8 @@
     document.querySelector('#registerModal form').addEventListener('submit', function (event) {
         event.preventDefault();
 
+
+
         document.querySelectorAll('.text-danger').forEach(el => el.innerText = '');
 
         const formData = new FormData(this);
@@ -218,21 +249,16 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
+                    console.log(data);
                     document.querySelector('#registerModal').classList.remove('show');
                     document.querySelector('form').reset();
                     document.body.classList.remove('modal-open');
                     document.querySelector('.modal-backdrop').remove();
 
-                    Swal.fire({
-                        title: "{{__('Congratulations!')}}",
-                        text: "{{__('User Created Successfully.')}}",
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(function() {
-{{--                        window.location.href = "{{ url('signin') }}";--}}
-//                         window.location.href =  data.redirect;
-                    });
+                    // store for otp verify and resend
+                    let email = data.email;
 
+                    openOtpVerificationModal(email);
 
                 } else if (data.status === 'error') {
                     for (const key in data.errors) {
@@ -269,5 +295,130 @@
 
         let registerModal = new bootstrap.Modal(document.getElementById('LoginModal'));
         registerModal.show();
+    });
+
+    // Function to open modal
+    function openOtpVerificationModal(email) {
+
+        document.querySelector('#otp-email').value = email;
+
+         $("#otpModalToggle").modal("show");
+    }
+
+
+
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#resend-code').click(function(event) {
+            event.preventDefault();
+            resendCode();
+        });
+
+        function resendCode() {
+
+            let email = $('#otp-email').val();
+            console.log(email);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('resend_otp') }}",
+                data: { email: email },
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert("{{__('Verification code has been resent to your email.')}}");
+                    } else {
+                        alert("{{__('Failed to resend verification code. Please try again later.')}}");
+                    }
+                },
+                error: function() {
+                    alert("{{__('An error occurred while resending verification code.')}}");
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('body').on('click','.btn-verify-otp', function(){
+            verifyOTP();
+        });
+
+        function verifyOTP() {
+            const otpValue = $('#first').val() + $('#second').val() + $('#third').val() + $('#fourth').val();
+
+            let email = $('#otp-email').val();
+            console.log(email);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('verify-otp') }}",
+                data: { otpValue: otpValue, email: email },
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.status === 'error') {
+                        alert("Invalid OTP. Please try again.");
+                    } else if (response.status === 'success') {
+
+
+                        setTimeout(function() {
+                            Swal.fire({
+                                title: "{{__('Congratulations!')}}",
+                                text: "{{__('User Created Successfully.')}}",
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                window.location.href = "{{ route('homepage') }}";
+                            });
+                        }, 500);
+
+                        // $("#otpModalToggle").modal("hide");
+
+                    }
+                },
+                error: function() {
+                    alert("An error occurred while verifying OTP.");
+                }
+            });
+        }
+    });
+
+    function moveToNextInput(currentInput, nextInputId) {
+        var maxLength = parseInt(currentInput.getAttribute('maxlength'));
+
+        if (currentInput.value.length === maxLength) {
+            // Move to the next input field
+            document.getElementById(nextInputId).focus();
+        }
+    }
+
+    function restrictInput(currentInput) {
+        var maxLength = parseInt(currentInput.getAttribute('maxlength'));
+
+        if (currentInput.value.length > 1) {
+            // If more than one character is entered, keep only the first character
+            currentInput.value = currentInput.value.charAt(0);
+        }
+    }
+
+    function moveToPreviousInput(currentInput, previousInputId) {
+        if (event.key === 'Backspace' && currentInput.value.length === 0) {
+            // Move to the previous input field
+            document.getElementById(previousInputId).focus();
+        }
+    }
+
+    $('.otpValue').on('input', function() {
+        restrictInput(this);
+        moveToNextInput(this, $(this).data('next'));
+    });
+
+    $('.otpValue').on('keydown', function(event) {
+        moveToPreviousInput(this, $(this).data('prev'));
     });
 </script>
