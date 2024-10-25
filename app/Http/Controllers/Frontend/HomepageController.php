@@ -529,7 +529,7 @@ class HomepageController extends Controller
                 'full_name' => 'required|string',
                 'email' => 'required|string|email|max:255|unique:users|unique:temp_users',
                 'phone' => 'required|numeric|digits:10',
-                'password' => 'required|string|min:8',
+                'password' => 'required|string|min:6',
                 'is_term' => 'required|boolean',
             ];
 
@@ -542,7 +542,7 @@ class HomepageController extends Controller
                 'phone.required' => __('Please provide your phone number.'),
                 'phone.digits' => __('The phone number must be exactly 10 digits.'),
                 'password.required' => __('A password is required to create your account.'),
-                'password.min' => __('Your password must be at least 8 characters long.'),
+                'password.min' => __('Your password must be at least 6 characters long.'),
                 'is_term.required' => __('You must agree to the terms and conditions.'),
             ];
 
@@ -555,7 +555,10 @@ class HomepageController extends Controller
                 ], 422);
             }
 
-            $otp = rand(1000, 9999);
+            // $otp = rand(1000, 9999);
+
+            DB::beginTransaction();
+
             $full_name = $request->input('full_name');
             $user = new TempUsers([
                 'first_name' => $full_name,
@@ -564,14 +567,17 @@ class HomepageController extends Controller
                 'password' => bcrypt($request->input('password')),
                 'is_term' => $request->input('is_term'),
 //                'notify_on' => $request->input('cancel_receive', 0),
-                'is_otp_verify' => 0,
+                // 'is_otp_verify' => 0,
                 'status' => 0,
-                'otp' => $otp,
+                // 'otp' => $otp,
             ]);
             $user->save();
 
-            Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
-            Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
+            DB::commit();
+
+
+            // Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
+            // Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
 
 
             return response()->json([
@@ -581,6 +587,8 @@ class HomepageController extends Controller
                 'message' => __('Registration successful. Verification email sent!'),
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Registration error: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
                 'message' => __('An error occurred during registration.'),
@@ -757,6 +765,8 @@ class HomepageController extends Controller
 
         return response()->json(!$userExists);
     }
+
+
     public function verifyOTP(Request $request)
 {
 
@@ -801,14 +811,13 @@ class HomepageController extends Controller
                 $existingUser->update($userData);
                 $first_name = $user->first_name;
                 $subject = "Welcome to Bid.sa – Registration Successful!";
-
-
+                Auth::login($existingUser);
             } else {
                 // Create new user
                 $newUser = User::create($userData);
                 $first_name = $user->first_name;
                 $subject = "Welcome to Bid.sa – Registration Successful!";
-
+                Auth::login($newUser);
 
             }
 
