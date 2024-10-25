@@ -11,31 +11,32 @@
                                 <div class="row col-12 mb-1 mt-4">
                                     <div class="col-md-6 mb-2">
                                         <label for="full_name" class="d-flex justify-content-start mb-1">{{__('Full Name')}}</label>
-                                        <input type="text" name="full_name" id="full_name" placeholder="Ebtahim Ahmed" class="form-control">
+                                        <input type="text" name="full_name" id="full_name" placeholder="" class="form-control">
                                         <span class="text-danger full_name-error"></span>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <label for="phone" class="d-flex justify-content-start mb-1">{{__('Phone Number')}}</label>
-                                        <input type="text" name="phone" id="phone" placeholder="966 214 896 321" class="form-control">
+                                        <input type="text" name="phone" id="phone" placeholder="" class="form-control">
                                         <span class="text-danger phone-error" id=""></span>
                                     </div>
                                 </div>
                                 <div class="row col-12 mb-1">
                                     <div class="col-md-6 mb-2">
                                         <label for="email" class="d-flex justify-content-start mb-1">{{__('Email')}}</label>
-                                        <input type="email" name="email" id="email" placeholder="email@app.com" class="form-control">
+                                        <input type="email" name="email" id="email" placeholder="" class="form-control">
                                         <span class="text-danger email-error"></span>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <label for="password" class="d-flex justify-content-start mb-1">{{__('Password')}}</label>
-                                        <input type="password" name="password" id="password" placeholder="Enter Your Password" class="form-control">
+                                        <input type="password" name="password" id="password" placeholder="" class="form-control">
                                         <span class="text-danger password-error"></span>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <div class="form-group d-flex gap-2 align-items-center mb-4">
+                                    <div class="form-group d-flex gap-2 align-items-center mt-2 ">
                                         <div class="form-check register_check">
+
                                             <input class="form-check-label" type="checkbox" name="is_term" id="is_term" value="1">
                                             <label for="is_term">{{__('I have read, understood and agree to ')}}  <a href="{{route('terms-conditions')}}" class="text-decoration-underline">
                                                     {{__('Privacy Policy')}}</a> {{__('and terms and conditions of website usage.')}}</label>

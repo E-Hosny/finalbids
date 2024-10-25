@@ -40,8 +40,10 @@ body {
 a {
     color: #000;
 }
+
 a:hover{
     color: #3E0269;
+    cursor: pointer;
 }
 a,
 a:hover {
