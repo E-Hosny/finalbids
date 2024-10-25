@@ -23,6 +23,11 @@
         color: #3E0269;
     }
 
+    .hero-section-btn .view-result-btn{
+        background-color: #0D3858 !important;
+        /* color: #0D3858 !important; */
+    }
+
 </style>
 
 <style>
@@ -68,8 +73,7 @@
 
 
 </style>
-<section class
-="home home_slider">
+<section class="home home_slider">
     <div class="owl-carousel owl-theme">
         @foreach($banners as $b)
             @php
@@ -91,7 +95,7 @@
                                                 <p>{{ strip_tags($b->description) }}</p>
                                             @elseif(session('locale') === 'ar')
                                                 <h1>{{$b->title_ar}} <br></h1>
-                                                <p>{{ strip_tags($b->description_ar) }}</p>
+                                                {{-- <p>{{ strip_tags($b->description_ar) }}</p> --}}
                                             @else
                                                 <h1>{{$b->title}} <br></h1>
                                                 <p>{{ strip_tags($b->description) }}</p>
@@ -101,12 +105,12 @@
                                                 @if ($project && $currentDateTime > $project->end_date_time)
                                                     <div class="hero-section-btn">
                                                         <a href="{{ url('products',  $b->url) }}"
-                                                           class="btn btn-secondary">{{ session('locale') === 'en' ? 'View Results' : (session('locale') === 'ar' ? 'عرض النتائج' : 'View Results') }} </a>
+                                                           class="btn text-white px-4 view-result-btn">{{ session('locale') === 'en' ? 'View Results' : (session('locale') === 'ar' ? 'عرض النتائج' : 'View Results') }} </a>
                                                     </div>
                                                 @else
                                                     <div class="hero-section-btn">
                                                         <a href="{{ url('products', $b->url) }}"
-                                                           class="btn btn-secondary">{{ session('locale') === 'en' ? 'Explore Now' : (session('locale') === 'ar' ? 'استكشاف الآن' : 'Explore Now') }}</a>
+                                                           class="btn btn-secondary  ">{{ session('locale') === 'en' ? 'Explore Now' : (session('locale') === 'ar' ? 'استكشاف الآن' : 'Explore Now') }}</a>
                                                     </div>
                                                 @endif
                                             @endif
@@ -143,7 +147,7 @@
                             <div class="card-header bg-transparent">
 
                                 @if(session('locale') === 'en')
-                                    <p href="{{ url('products', $project->slug) }}" >{{ $project->name }}</p>
+                                    <p class="fw-bold" href="{{ url('products', $project->slug) }}" >{{ $project->name }}</p>
                                 @elseif(session('locale') === 'ar')
                                     <p href="{{ url('products', $project->slug) }}" >{{$project->name_ar}}</p>
                                 @else
@@ -175,6 +179,7 @@
                         </div>
                     </div>
 
+
                 @endforeach
             </div>
         @endforeach
@@ -204,7 +209,6 @@
                                 <div class="img-card">
                                     @php
                                         $galleries = \App\Models\Gallery::where('lot_no', $product->lot_no)->get();
-                                        // تأكد من وجود $mostRecentBid قبل استخدامه
                                         $mostRecentBid = \App\Models\BidPlaced::where('product_id', $product->id)->orderBy('created_at', 'desc')->first();
                                     @endphp
 

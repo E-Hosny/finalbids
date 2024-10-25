@@ -109,10 +109,14 @@ class HomepageController extends Controller
                     ->has('projects')
                     ->get();
 
+                // $auctionTypesWithProject->transform(function ($auctionType)  {
+                //     $auctionType->projects = $auctionType->projects->filter(function ($project) {
+                //         return $project->products->isNotEmpty();
+                //     })->take(4);
                 $auctionTypesWithProject->transform(function ($auctionType)  {
                     $auctionType->projects = $auctionType->projects->filter(function ($project) {
                         return $project->products->isNotEmpty();
-                    })->take(4);
+                    });
 
                     return $auctionType;
                 });
