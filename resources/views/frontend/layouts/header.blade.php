@@ -203,11 +203,18 @@ if (Auth::check()) {
 
 
                  @guest
-                    <li class="group-hidden">
+                    {{-- <li class="group-hidden">
                         <a  href="{{route('signin')}}">{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="group-hidden">
                         <a class=" " href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                    </li> --}}
+
+                    <li class="group-hidden">
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
+                    </li>
+                    <li class="group-hidden">
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
                     </li>
                  @endguest
 
@@ -249,13 +256,14 @@ if (Auth::check()) {
                     <ul class="my-1">
                 @guest
                     <li class=" d-flex align-items-center">
-                        <a class=" " href="{{route('signin')}}">{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="d-flex align-items-center">
-                        <a class=" " href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
                     </li>
 
                     <li>
+
                 @endguest
 
 

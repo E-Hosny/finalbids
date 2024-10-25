@@ -15,7 +15,7 @@ use App\Models\Country;
 use App\Models\News;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\{State,StartBid};
+use App\Models\{State, StartBid};
 use App\Models\User;
 use App\Models\Page;
 use App\Models\Wishlist;
@@ -471,38 +471,132 @@ class HomepageController extends Controller
 
     public function loggedin(Request $request)
     {
-        $request->validate([
+        // Validate the request
+        $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
         $credentials = $request->only('email', 'password');
         $user = User::where('email', $request->email)->first();
+
         if ($user) {
-            if ($user->status == 0 ) {
-                return back()->withErrors(['email' => 'Your Account is Inactive Contact To Admin.']);
+            if ($user->status == 0) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => __('Your Account is Inactive. Contact Admin.')]
+                ], 403);
             }
-             // Check if the user role is not 2 (user)
-             if ($user->role != 2) {
-                return back()->withErrors(['email' => 'These credentials do not match our records.']);
+            if ($user->role != 2) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => __('These credentials do not match our records.')]
+                ], 401);
             }
-            if($user->is_otp_verify == 0 ){
-                return back()->withErrors(['email' => 'You have Entered Invalid Credentials']);
+            if ($user->is_otp_verify == 0) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => ['email' => __('You have entered invalid credentials.')]
+                ], 401);
             }
         }
+
         if (Auth::attempt($credentials)) {
             $previousUrl = Session::get('previousUrl');
-
             if ($previousUrl) {
                 Session::forget('previousUrl');
-                // return redirect()->to($previousUrl);
+                return response()->json([
+                    'success' => true,
+                    'redirect' => $previousUrl
+                ]);
             }
-            return redirect()->intended('/');
+            return response()->json([
+                'success' => true,
+                'redirect' => route('homepage')
+            ]);
         }
 
-
-        return back()->withErrors(['email' => 'These credentials do not match our records.']);
+        return response()->json([
+            'success' => false,
+            'errors' => ['email' => __('These credentials do not match our records.')]
+        ], 401);
     }
+
+    public function registerTemp(Request $request)
+    {
+        try {
+            $rules = [
+                'full_name' => 'required|string',
+                'email' => 'required|string|email|max:255|unique:users|unique:temp_users',
+                'phone' => 'required|numeric|digits:10',
+                'password' => 'required|string|min:6',
+                'is_term' => 'required|boolean',
+            ];
+
+
+            $messages = [
+                'full_name.required' => __('The full name field is required.'),
+                'email.required' => __('We need your email address to register.'),
+                'email.email' => __('Please provide a valid email address.'),
+                'email.unique' => __('This email address is already registered.'),
+                'phone.required' => __('Please provide your phone number.'),
+                'phone.digits' => __('The phone number must be exactly 10 digits.'),
+                'password.required' => __('A password is required to create your account.'),
+                'password.min' => __('Your password must be at least 6 characters long.'),
+                'is_term.required' => __('You must agree to the terms and conditions.'),
+            ];
+
+            $validator = Validator::make($request->all(), $rules,$messages);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            // $otp = rand(1000, 9999);
+
+            DB::beginTransaction();
+
+            $full_name = $request->input('full_name');
+            $user = new TempUsers([
+                'first_name' => $full_name,
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'password' => bcrypt($request->input('password')),
+                'is_term' => $request->input('is_term'),
+//                'notify_on' => $request->input('cancel_receive', 0),
+                // 'is_otp_verify' => 0,
+                'status' => 0,
+                // 'otp' => $otp,
+            ]);
+            $user->save();
+
+            DB::commit();
+
+
+            // Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
+            // Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
+
+
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('homepage'),
+                'email' => $user->email,
+                'message' => __('Registration successful. Verification email sent!'),
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Registration error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => __('An error occurred during registration.'),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     public function register(Request $request)
     {
@@ -517,7 +611,6 @@ class HomepageController extends Controller
                 'confirm_password' => 'required|same:password',
                 'country_code' => 'required',
                 'is_term' => 'required|boolean',
-
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -548,7 +641,7 @@ class HomepageController extends Controller
             ]);
 
             $user->save();
-            $msg = $otp . ' is your Verification code for Bids.Sa ';
+//            $msg = $otp . ' is your Verification code for Bids.Sa ';
             // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
             $first_name = $request->input('first_name');
 
@@ -567,6 +660,7 @@ class HomepageController extends Controller
             return Redirect::back()->with('error', $e->getMessage());
         }
     }
+
     public function resend_otp(Request $request){
         {
             $rules = [
@@ -671,8 +765,11 @@ class HomepageController extends Controller
 
         return response()->json(!$userExists);
     }
+
+
     public function verifyOTP(Request $request)
 {
+
     $rules = [
         'email' => 'required|email',
         'otpValue' => 'required|string|min:4',
@@ -714,14 +811,13 @@ class HomepageController extends Controller
                 $existingUser->update($userData);
                 $first_name = $user->first_name;
                 $subject = "Welcome to Bid.sa – Registration Successful!";
-
-
+                Auth::login($existingUser);
             } else {
                 // Create new user
                 $newUser = User::create($userData);
                 $first_name = $user->first_name;
                 $subject = "Welcome to Bid.sa – Registration Successful!";
-
+                Auth::login($newUser);
 
             }
 
