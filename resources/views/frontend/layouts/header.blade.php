@@ -150,7 +150,7 @@ if (Auth::check()) {
             </div>
           @else --}}
           <div class="logo">
-              <a href="{{url('/')}}"><img src="{{asset('logo.png')}}" alt=""></a>
+              <a href="{{url('/')}}"><img src="{{asset('logo.png')}}" alt="" class="w-100"></a>
             </div>
 
           {{-- @endif --}}
@@ -161,7 +161,7 @@ if (Auth::check()) {
 
 
           <div id="mainListDiv" class="main_list  w-100 d-flex px-4  ">
-              <ul class="navlinks">
+              <ul class="navlinks  px-2">
               <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }}</a></li>
 
               <li class="category-menu">
