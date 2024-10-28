@@ -214,7 +214,7 @@
 
               <div class="col-md-3">
                 <a href="{{ url('productsdetail', $product->slug) }}">
-                  <div class="card-product" style="max-width: 19rem;">
+                  <div class="card-product mx-auto" style="max-width: 19rem;">
                     <div class="product-image  text-center">
                                  @php
                                       $imagePath = \App\Models\Gallery::where('lot_no', $product->lot_no)->orderBy('id')->value('image_path');
@@ -226,15 +226,15 @@
                                   <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image" width="268" height="276" >
                               @endif
                               @auth
-                      <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
+                      {{-- <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
                           <input type="checkbox" name="" id="" @if(in_array($product->id, $wishlist)) checked @endif>
                           <img src="{{asset('frontend/images/heart.png')}}" alt="">
-                      </div>
+                      </div> --}}
                         @else
                               {{-- <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a> --}}
                               @endauth
                     </div>
-                    <div class="card-product-dtl">
+                    <div class="card-product-dtl px-1">
                               @if(session('locale') === 'en')
                               <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 class="pt-2" >{{$product->lot_no}}: {{$product->title}}</h3></a>
                               @elseif(session('locale') === 'ar')
@@ -376,6 +376,7 @@
     </div>
 
 </section>
+
 
 
 

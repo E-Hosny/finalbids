@@ -334,7 +334,7 @@ input[type="radio"]:checked::after {
 }
 
 .nav div.main_list ul li a:hover {
-    color: #3E0269;
+    color:#0D3858;
 }
 
 .drop-lange-select, .category-lst, .category-2nd {
@@ -3604,4 +3604,39 @@ input#outbidCheckbox {
 .publishedProducts .container{
     width: 90%;
 }
+
+.my-color{
+    color: #0D3858;
+}
+
+.product-slider {
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.product-item {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.product-item h5 {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.product-item p {
+    color: #777;
+}
+
+
+
 

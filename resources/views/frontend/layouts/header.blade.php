@@ -284,7 +284,7 @@ if (Auth::check()) {
 
                 </ul>
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Search...">
+                    <input type="text" class="search-input" placeholder={{ session('locale') === 'en' ? 'Search...' : (session('locale') === 'ar' ? 'ابحث...' : 'Search...') }}>
                     <button class="search-btn">
                         <i class="fa fa-search"></i>
                     </button>

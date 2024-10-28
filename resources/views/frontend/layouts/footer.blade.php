@@ -118,8 +118,8 @@ $pages =App\Models\Page::where('is_static', 1)->orderBy('title', 'ASC')->first()
     <div class="container  p-5">
         <div class="row p-3">
             <!-- Left Section: Logo and Social Icons (30%) -->
-            <div class="col-lg-4 d-flex flex-column align-items-center mb-3 text-center">
-                <img src="footer-logo.png" alt="Logo" class="mt-4 w-50" style="width: 100px;">
+            <div class="col-lg-3 d-flex flex-column align-items-center mb-3 text-center">
+                <img src="{{ asset('footer-logo.png') }}" alt="Logo" class="mt-5 w-50" style="width: 100px;">
                 <div class="d-flex justify-content-center gap-3 py-3">
                     <a href="#" class="text-dark px-1"><i class="fab fa-youtube"></i></a>
                     <a href="#" class="text-dark px-1"><i class="fab fa-instagram"></i></a>
@@ -129,55 +129,55 @@ $pages =App\Models\Page::where('is_static', 1)->orderBy('title', 'ASC')->first()
             </div>
 
             <!-- Right Section: Links (70%) -->
-            <div class="col-lg-8">
+            <div class="col-lg-9">
                 <div class="row">
                     <!-- Column 1 -->
-                    <div class="col-md-4 mb-3 text-center text-md-start">
-                        <h4 class="fw-bold">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? '' : 'Category') }}</h4>
-                        <hr class="mx-auto mx-md-0" style="width: 25%; background-color: black;">
+                    <div class="col-md-4 mb-3 text-center">
+                        <h4 class="fw-bold">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? 'الفئات' : 'Category') }}</h4>
+                        <hr class="mx-auto" style="width: 25%; background-color: black;">
                         <ul class="list-unstyled">
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Furniture' : (session('locale') === 'ar' ? '' : 'Furniture') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Jewelry' : (session('locale') === 'ar' ? '' : 'Jewelry') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Caramics' : (session('locale') === 'ar' ? '' : 'Caramics') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'ArtWork' : (session('locale') === 'ar' ? '' : 'ArtWork') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Clocks' : (session('locale') === 'ar' ? '' : 'Clocks') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Furniture' : (session('locale') === 'ar' ? 'أثاث' : 'Furniture') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Jewelry' : (session('locale') === 'ar' ? 'مجوهرات' : 'Jewelry') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Ceramics' : (session('locale') === 'ar' ? 'الخزف' : 'Ceramics') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'ArtWork' : (session('locale') === 'ar' ? 'لوحات فنية' : 'ArtWork') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Clocks' : (session('locale') === 'ar' ? 'ساعات' : 'Clocks') }}</a></li>
                         </ul>
                     </div>
 
                     <!-- Column 2 -->
-                    <div class="col-md-4 mb-3 text-center text-md-start">
-                        <h4 class="fw-bold">{{ session('locale') === 'en' ? 'How It Work' : (session('locale') === 'ar' ? '' : 'How It Work') }}</h4>
-                        <hr class="mx-auto mx-md-0" style="width: 25%; background-color: black;">
+                    <div class="col-md-4 mb-3 text-center">
+                        <h4 class="fw-bold">{{ session('locale') === 'en' ? 'How It Work' : (session('locale') === 'ar' ? 'كيفية العمل' : 'How It Work') }}</h4>
+                        <hr class="mx-auto" style="width: 25%; background-color: black;">
                         <ul class="list-unstyled">
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Registration' : (session('locale') === 'ar' ? '' : 'Registration') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Select Product' : (session('locale') === 'ar' ? '' : 'Select Product') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Go To Bidding' : (session('locale') === 'ar' ? '' : 'Go To Bidding') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Make Payment' : (session('locale') === 'ar' ? '' : 'Make Payment') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Registration' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Registration') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Select Product' : (session('locale') === 'ar' ? 'اختر المنتج' : 'Select Product') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Go To Bidding' : (session('locale') === 'ar' ? 'الانتقال الى المزايدة' : 'Go To Bidding') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Make Payment' : (session('locale') === 'ar' ? 'إتمام الدفع' : 'Make Payment') }}</a></li>
                         </ul>
                     </div>
 
                     <!-- Column 3 -->
-                    <div class="col-md-4 mb-3 text-center text-md-start">
-                        <h4 class="fw-bold">{{ session('locale') === 'en' ? 'Support' : (session('locale') === 'ar' ? '' : 'Support') }}</h4>
-                        <hr class="mx-auto mx-md-0" style="width: 25%; background-color: black;">
+                    <div class="col-md-4 mb-3 text-center">
+                        <h4 class="fw-bold">{{ session('locale') === 'en' ? 'Support' : (session('locale') === 'ar' ? 'الدعم الفني' : 'Support') }}</h4>
+                        <hr class="mx-auto" style="width: 25%; background-color: black;">
                         <ul class="list-unstyled">
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Help & Support' : (session('locale') === 'ar' ? '' : 'Help & Support') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Contact Us' : (session('locale') === 'ar' ? '' : 'Contact Us') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'About Us' : (session('locale') === 'ar' ? '' : 'About Us') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Our Policy' : (session('locale') === 'ar' ? '' : 'Our Policy') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Help & Support' : (session('locale') === 'ar' ? 'المساعدة والدعم' : 'Help & Support') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Contact Us' : (session('locale') === 'ar' ? 'تواصل معنا' : 'Contact Us') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'About Us' : (session('locale') === 'ar' ? 'من نحن' : 'About Us') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Our Policy' : (session('locale') === 'ar' ? 'سياستنا' : 'Our Policy') }}</a></li>
                         </ul>
                     </div>
 
                     <!-- Column 4 -->
-                    {{-- <div class="col-md-3 mb-3 text-center text-md-start">
+                    {{-- <div class="col-md-3 mb-3 text-center">
                         <h4 class="fw-bold">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? '' : 'Category') }}</h4>
-                        <hr class="mx-auto mx-md-0" style="width: 25%; background-color: black;">
+                        <hr class="mx-auto" style="width: 25%; background-color: black;">
                         <ul class="list-unstyled">
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Furniture' : (session('locale') === 'ar' ? '' : 'Furniture') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Jewelry' : (session('locale') === 'ar' ? '' : 'Jewelry') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Caramics' : (session('locale') === 'ar' ? '' : 'Caramics') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'ArtWork' : (session('locale') === 'ar' ? '' : 'ArtWork') }}</a></li>
-                            <li class="py-1"><a href="#" class="text-dark">{{ session('locale') === 'en' ? 'Clocks' : (session('locale') === 'ar' ? '' : 'Clocks') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Furniture' : (session('locale') === 'ar' ? '' : 'Furniture') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Jewelry' : (session('locale') === 'ar' ? '' : 'Jewelry') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Caramics' : (session('locale') === 'ar' ? '' : 'Caramics') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'ArtWork' : (session('locale') === 'ar' ? '' : 'ArtWork') }}</a></li>
+                            <li class="py-1"><a href="#" class="text-dark fs-5">{{ session('locale') === 'en' ? 'Clocks' : (session('locale') === 'ar' ? '' : 'Clocks') }}</a></li>
                         </ul>
                     </div> --}}
                 </div>
