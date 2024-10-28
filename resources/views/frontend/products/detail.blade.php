@@ -123,7 +123,7 @@
 
 .prty-sect p,
 .prty-sect a {
-    color: #fff;
+    color:black;
 }
 
 .bidplaced {
