@@ -124,7 +124,7 @@
 </section>
 <section class="trending-auction-section mb-5">
     <div class="container ">
-        <div class="section-heading d-flex px-4">
+        <div class="section-heading px-4">
             <h2>{{ session('locale') === 'en' ? 'Recommended Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Recommended Auctions') }}</h2>
         </div>
         @foreach($auctionTypesWithProject as $at)
@@ -139,6 +139,10 @@
 
                         $formattedStartDateTimeconvert  = date("j-M", strtotime($project->start_date_time));
                         $formattedEndDateTimeconvert    = date("j-M", strtotime($project->end_date_time));
+
+                         $currentDateTime = now();
+
+
 
                     @endphp
 
@@ -168,8 +172,10 @@
                             </a>
 
                             <div class="card-footer bg-transparent">
+                                @if ($project->end_date_time>=$currentDateTime)
+                                <p class="text-muted">{{ session('locale') === 'en' ? 'OPEN FOR BIDDING' : (session('locale') === 'ar' ? 'مفتوح للمزايدة' : 'OPEN FOR BIDDING') }}</p>
 
-                                <p class="text-muted">OPEN FOR BIDDING</p>
+                                @endif
                                 <a href="{{ url('products', $project->slug) }}" class="text-decoration-">
                                     <span class="view-text">
                                     {{ session('locale') === 'ar' ? 'عرض  '.count($project->products).' قطعة أرض ': 'View '.count($project->products).' lots'   }}
@@ -186,7 +192,195 @@
     </div>
 </section>
 
-<section class="most-view-product">
+<section class="publishedProducts pb-3">
+    <div class="container">
+        <h2 class="fw-bold px-3 pb-4 ">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الآن' : 'Bid Now') }}</h2>
+
+        <div class="row gy-4 mx-1">
+            @foreach($homeProducts as $product)
+               @php
+               $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
+                                          ->where('sold', 1)
+                                          ->where('status', '!=', 0)
+                                          ->orderBy('bid_amount', 'desc')
+                                          ->first();
+              $sold = \App\Models\BidPlaced::where('product_id', $product->id)
+                      ->where('sold', 2)
+                      ->where('status', '!=', 0)
+                      ->orderBy('bid_amount', 'desc')
+                      ->first();
+               @endphp
+
+
+              <div class="col-md-3">
+                <a href="{{ url('productsdetail', $product->slug) }}">
+                  <div class="card-product mx-auto" style="max-width: 19rem;">
+                    <div class="product-image  text-center">
+                                 @php
+                                      $imagePath = \App\Models\Gallery::where('lot_no', $product->lot_no)->orderBy('id')->value('image_path');
+                                  @endphp
+
+                              @if ($imagePath)
+                                  <img src="{{ asset($imagePath) }}" alt="Product Image"  width="268" height="276"  >
+                              @else
+                                  <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image" width="268" height="276" >
+                              @endif
+                              @auth
+                      {{-- <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
+                          <input type="checkbox" name="" id="" @if(in_array($product->id, $wishlist)) checked @endif>
+                          <img src="{{asset('frontend/images/heart.png')}}" alt="">
+                      </div> --}}
+                        @else
+                              {{-- <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a> --}}
+                              @endauth
+                    </div>
+                    <div class="card-product-dtl px-1">
+                              @if(session('locale') === 'en')
+                              <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 class="pt-2" >{{$product->lot_no}}: {{$product->title}}</h3></a>
+                              @elseif(session('locale') === 'ar')
+                              <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 class="pt-2" >{{$product->lot_no}}: {{$product->title_ar}}</h3></a>
+                              @else
+                              <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"> <h3 class="pt-2" >{{$product->lot_no}}: {{$product->title}}</h3></a>
+                              @endif
+
+                              <div class="card-product-desc" >
+                                  @if(session('locale') === 'en')
+                                  <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><p >{{strip_tags($product->description) }}</p></a>
+                                  @elseif(session('locale') === 'ar')
+                                  <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><p >{{ strip_tags($product->description_ar); }}</p></a>
+                                  @else
+                                  <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"> <p >{{ strip_tags($product->description); }}</p></a>
+                                  @endif
+                              </div>
+                       <!--  -->
+                                @php
+
+                                      $currentDateTime = now();
+                                      $formattedCurrentDateTime = $currentDateTime->format('Y-m-d H:i:s');
+                                      $currentDateTimeUTC = new DateTime('now');
+                                      $prductenddatetime =$product->auction_end_date;
+                                      $currentDateTimeUTC->setTimezone(new DateTimeZone('Asia/Kolkata'));
+                                      $formattedDateTime = $currentDateTimeUTC->format('Y-m-d H:i:s');
+                                      $enddatetime=$product->auction_end_date;
+
+                                      $project_id=$product->project_id;
+                                      $project=\App\Models\Project::find($project_id);
+                                      $originalDateTime = $project->start_date_time;
+
+
+
+                                  @endphp
+                      @if ($product->auction_end_date >= $formattedDateTime )
+                      @if (($product->auctionType->name == 'Private' || $product->auctionType->name == 'Timed') && ($product->auctionType->name != 'Live'))
+                              @if(strtotime($product->auction_end_date) > strtotime('now'))
+                                    <div class=" countdown-time thisisdemoclass" data-id='{{ $product->id }}' data-date='{{ $product->auction_end_date }}'
+                                        id="countdown-{{ $product->id }}">
+                                        <ul>
+                                            @if ($product->auctionType->name == 'Private'|| $product->auctionType->name == 'Timed')
+                                                <li class="days-wrapper"><span class="days"></span>days</li>
+                                            @endif
+
+                                            <li ><span class="hours"></span>Hours</li>
+
+                                            <li><span class="minutes"></span>Minutes</li>
+                                            <li><span class="seconds"></span>Seconds </li>
+                                        </ul>
+                                    </div>
+                              @endif
+                          @endif
+                          @else
+
+                        @endif
+                                 @php
+                                      $loggedInUserId = Auth::id();
+                                      $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)
+                                                                          ->where('project_id', $product->project_id)
+
+                                                                          ->first();
+                                @endphp
+
+                    <!-- For Timed Auction -->
+                    @if ($product->auctionType->name == 'Timed' && $currentDateTime > $enddatetime)
+                          <button class="text-btn" style="color: red;">{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
+                      @else
+                            @if ($product->auctionType->name == 'Timed' && $currentDateTime >= $originalDateTime && $product->auction_end_date >= $formattedDateTime)
+                            <a href="{{ url('productsdetail', $product->slug) }}"> <button class="text-btn">
+                                      {{-- {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} --}}
+                                  </button></a>
+                            @endif
+                    @endif
+                     <!-- For Live Auction -->
+                            @php
+                              $lastBid = \App\Models\BidPlaced::where('product_id', $product->id)
+                                                        ->orderBy('created_at', 'desc')
+                                                        ->first();
+                              @endphp
+                      @if ($product->auctionType->name == 'Live' && $currentDateTime > $enddatetime)
+                          <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
+                      @else
+                                  @if ($lastBid && $lastBid->bid_amount >= $product->minsellingprice && $product->auctionType->name == 'Live')
+                                        <p><strong><span style="color: red;">Bid Closed</span></strong></p>
+                                        @else
+                                                  @if ($bidRequest && $bidRequest->status == 1 && $projects->auctionType->name == 'Live' && $currentDateTime >= $originalDateTime)
+                                                  <a href="{{ url('productsdetail', $product->slug) }}">  <button class="text-btn">
+                                                            {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}
+                                                        </button></a>
+                                                  @endif
+                                    @endif
+                      @endif
+
+                   <!-- For Private Auction -->
+                    @if ($product->auctionType->name == 'Private' && $currentDateTime > $enddatetime)
+                          <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
+                      @else
+                          @if ($bidRequest && $bidRequest->status == 1 &&  $product->auctionType->name == 'Private' && $currentDateTime >= $originalDateTime && $product->auction_end_date >= $formattedDateTime)
+                          <a href="{{ url('productsdetail', $product->slug) }}">   <button class="text-btn">
+                                      {{-- {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} --}}
+                                  </button></a>
+                            @endif
+                  @endif
+
+                  <div class="card-product-price pt-2 mt-2">
+                      <h5>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</h5>
+
+                      <!-- @if ($currentBid)
+                           <p>
+                               {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
+                               <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
+
+                           </p>
+                      @endif -->
+                      <!--  -->
+                        @if ($sold)
+                           <p>
+                               {{ session('locale') === 'en' ? 'Sold:' : (session('locale') === 'ar' ? 'مباع' : 'Sold:') }}
+                               <span>{{ formatPrice($sold->bid_amount, session()->get('currency')) }} {{$currency}} </span>
+                           </p>
+                         @elseif ($currentBid)
+                         <p>
+                               {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
+                               <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
+                           </p>
+                         @endif
+                  </div>
+
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+
+
+
+              @endforeach
+    </div>
+
+</section>
+
+
+
+
+{{-- <section class="most-view-product">
     <div class="container">
         <div class="section-heading">
             <h2>{{ session('locale') === 'en' ? 'Popular Lots' : (session('locale') === 'ar' ? 'الاصناف الاكثر رواجاً' : 'Popular Lots') }}
@@ -378,9 +572,9 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> --}}
 
-<section class="most-bid">
+{{-- <section class="most-bid">
     <div class="container">
         <div class="section-heading">
             <h2>{{ session('locale') === 'en' ? 'Most Bids' : (session('locale') === 'ar' ? 'الاكثر مزايدة' : 'Most Bids') }}</h2>
@@ -389,7 +583,6 @@
             @foreach($mostRecentBids as $productId => $mostRecentBid)
                 @php
                     $loggedInUserId = Auth::id();
-                    // تحقق إذا كان $mostRecentBid موجوداً
                     $projectId = optional($mostRecentBid->product)->project_id;
                     $bidRequest = null;
 
@@ -485,7 +678,7 @@
                                         <span>{{ $auctionTypeName }}</span>
                                     @elseif(session('locale') === 'ar')
                                         {{-- <span>{{ optional($mostRecentBid->product->auctionType)->name_ar }}</span> --}}
-                                        <span><p>نوع المزاد</p></span>
+                                        {{-- <span><p>نوع المزاد</p></span>
                                     @else
                                         <span>{{ $auctionTypeName }}</span>
                                     @endif
@@ -518,6 +711,8 @@
         </div>
     </div>
 </section>
+ --}}
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

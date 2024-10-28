@@ -24,7 +24,7 @@ button.text-btns {
 .btn-primary {
     color: #fff;
     border-radius: 10px;
-    background: linear-gradient(90deg, #9501ff 0%, #7c16d4 100%);
+    background: linear-gradient(90deg, #0D3858 0%, #0D3858 100%);
     padding: 13px 30px;
     color: #fff !important;
     font-size: 16px;
@@ -55,11 +55,11 @@ button.text-btns {
 }
 
 .prd-link:hover h3 {
-    color: #3E0269;
+    color:#0D3858;
 }
   </style>
 
-<section class="hero-ther inner_header">
+<section class="hero-ther inner_heade">
     <div class="container-fluid">
       <div class="row justify-content-center">
         <div class="col-lg-4 col-md-6 bid-btn-right">
@@ -142,7 +142,12 @@ button.text-btns {
             <input type="text" name="search" id="searchInput" placeholder="{{ session('locale') === 'en' ? 'Search products...' : (session('locale') === 'ar' ? 'ابحث عن منتجات' : 'Search products...') }}">
 
                     <button type="button" onclick="submitSearchForm()">
-                        <img class="w-100" src="{{ asset('frontend/images/rounded-sr.svg') }}" alt="">
+                        {{-- <img class="w-100" src="{{ asset('frontend/images/rounded-sr.svg') }}" alt=""> --}}
+                        {{-- <button class="search-btn bg-info">
+                            <i class="fa fa-search"></i>
+                        </button> --}}
+                        <i class="fa fa-search mt-3 fs-4"></i>
+
                     </button>
                 </form>
                <!-- timed auction -->
@@ -207,9 +212,9 @@ button.text-btns {
       </div>
     </div>
   </section>
-  <section class="list-fliter">
+  <section class="list-fliter px-5">
     <div class="container">
-      <div class="result-lst">
+      <div class="result-lst mx-auto">
         <h3>{{ session('locale') === 'en' ? 'Items' : (session('locale') === 'ar' ? 'المنتجات' : 'Items') }} <span>{{ ' : '. $totalItems }}</span></h3>
 
         <div class="fliter-short">
@@ -229,8 +234,8 @@ button.text-btns {
   </section>
 
   <section class="product-list-man">
-    <div class="container">
-      <div class="row">
+    <div class="container px-5">
+      <div class="row gy-4">
       @foreach($products as $product)
          @php
          $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
@@ -244,59 +249,48 @@ button.text-btns {
                 ->orderBy('bid_amount', 'desc')
                 ->first();
          @endphp
-        <div class="col-md-6">
+
+
+        <div class="col-md-3">
           <a href="{{ url('productsdetail', $product->slug) }}">
-            <div class="card-product">
-              <div class="product-image">
+            <div class="card-product mx-auto" style="max-width: 19rem;">
+              <div class="product-image  text-center">
                            @php
                                 $imagePath = \App\Models\Gallery::where('lot_no', $product->lot_no)->orderBy('id')->value('image_path');
                             @endphp
 
                         @if ($imagePath)
-                            <img src="{{ asset($imagePath) }}" alt="Product Image">
+                            <img src="{{ asset($imagePath) }}" alt="Product Image"  width="268" height="276"  >
                         @else
-                            <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image">
+                            <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image" width="268" height="276" >
                         @endif
                         @auth
-                <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
+                {{-- <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
                     <input type="checkbox" name="" id="" @if(in_array($product->id, $wishlist)) checked @endif>
                     <img src="{{asset('frontend/images/heart.png')}}" alt="">
-                </div>
+                </div> --}}
                   @else
-                        <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a>
+                        {{-- <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a> --}}
                         @endauth
               </div>
-              <div class="card-product-dtl">
+              <div class="card-product-dtl px-1">
                         @if(session('locale') === 'en')
-                        <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 >{{$product->lot_no}}: {{$product->title}}</h3></a>
+                        <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 class="pt-2" >{{$product->lot_no}}: {{$product->title}}</h3></a>
                         @elseif(session('locale') === 'ar')
-                        <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 >{{$product->lot_no}}: {{$product->title_ar}}</h3></a>
+                        <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><h3 class="pt-2" >{{$product->lot_no}}: {{$product->title_ar}}</h3></a>
                         @else
-                        <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"> <h3 >{{$product->lot_no}}: {{$product->title}}</h3></a>
+                        <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"> <h3 class="pt-2" >{{$product->lot_no}}: {{$product->title}}</h3></a>
                         @endif
 
-                 <h5>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</h5>
-
-                 <!-- @if ($currentBid)
-                      <p>
-                          {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
-                          <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
-
-                      </p>
-                 @endif -->
-                 <!--  -->
-                   @if ($sold)
-                      <p>
-                          {{ session('locale') === 'en' ? 'Sold:' : (session('locale') === 'ar' ? 'مباع' : 'Sold:') }}
-                          <span>{{ formatPrice($sold->bid_amount, session()->get('currency')) }} {{$currency}} </span>
-                      </p>
-                    @elseif ($currentBid)
-                    <p>
-                          {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
-                          <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
-                      </p>
-                    @endif
-
+                        <div class="card-product-desc" >
+                            @if(session('locale') === 'en')
+                            <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><p >{{strip_tags($product->description) }}</p></a>
+                            @elseif(session('locale') === 'ar')
+                            <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"><p >{{ strip_tags($product->description_ar); }}</p></a>
+                            @else
+                            <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link"> <p >{{ strip_tags($product->description); }}</p></a>
+                            @endif
+                        </div>
                  <!--  -->
                           @php
                                 $currentDateTime = now();
@@ -309,7 +303,7 @@ button.text-btns {
                 @if ($product->auction_end_date >= $formattedDateTime )
                 @if (($product->auctionType->name == 'Private' || $product->auctionType->name == 'Timed') && ($product->auctionType->name != 'Live'))
                         @if(strtotime($product->auction_end_date) > strtotime('now'))
-                              <div class="countdown-time thisisdemoclass" data-id='{{ $product->id }}' data-date='{{ $product->auction_end_date }}'
+                              <div class=" countdown-time thisisdemoclass" data-id='{{ $product->id }}' data-date='{{ $product->auction_end_date }}'
                                   id="countdown-{{ $product->id }}">
                                   <ul>
                                       @if ($product->auctionType->name == 'Private'|| $product->auctionType->name == 'Timed')
@@ -341,7 +335,7 @@ button.text-btns {
                 @else
                       @if ($projects->auctionType->name == 'Timed' && $currentDateTime >= $originalDateTime && $product->auction_end_date >= $formattedDateTime)
                       <a href="{{ url('productsdetail', $product->slug) }}"> <button class="text-btn">
-                                {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}
+                                {{-- {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} --}}
                             </button></a>
                       @endif
               @endif
@@ -366,21 +360,47 @@ button.text-btns {
                 @endif
 
              <!-- For Private Auction -->
-             @if ($projects->auctionType->name == 'Private' && $currentDateTime > $enddatetime)
+              @if ($projects->auctionType->name == 'Private' && $currentDateTime > $enddatetime)
                     <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'قدم العرض الآن' : 'Lot Closed') }}</button>
                 @else
                     @if ($bidRequest && $bidRequest->status == 1 &&  $projects->auctionType->name == 'Private' && $currentDateTime >= $originalDateTime && $product->auction_end_date >= $formattedDateTime)
                     <a href="{{ url('productsdetail', $product->slug) }}">   <button class="text-btn">
-                                {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}
+                                {{-- {{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }} --}}
                             </button></a>
                       @endif
             @endif
 
+            <div class="card-product-price pt-2 mt-2">
+                <h5>{{ formatPrice($product->reserved_price, session()->get('currency')) }} {{$currency}}</h5>
+
+                <!-- @if ($currentBid)
+                     <p>
+                         {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
+                         <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
+
+                     </p>
+                @endif -->
+                <!--  -->
+                  @if ($sold)
+                     <p>
+                         {{ session('locale') === 'en' ? 'Sold:' : (session('locale') === 'ar' ? 'مباع' : 'Sold:') }}
+                         <span>{{ formatPrice($sold->bid_amount, session()->get('currency')) }} {{$currency}} </span>
+                     </p>
+                   @elseif ($currentBid)
+                   <p>
+                         {{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}
+                         <span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }} {{$currency}} </span>
+                     </p>
+                   @endif
+            </div>
 
               </div>
             </div>
           </a>
         </div>
+
+
+
         @endforeach
 
        </div>

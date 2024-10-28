@@ -117,7 +117,7 @@
 }
 
 .prty-sect {
-    background: #3e0269;
+    background: #F7F7F7;
     padding: 10px;
 }
 
@@ -199,11 +199,11 @@ section#default {
 <link rel="stylesheet" media="screen" href="https://unpkg.com/xzoom/dist/xzoom.css" id="cm-theme" />
 <section class="prty-sect">
     <div class="container">
-        <div class="row ">
+        <div class="row  ">
             <div class=" ">
                 <p class="m-0">
-                    <a href="{{url('/')}}"> {{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }} /</a> 
-    {{ session('locale') === 'en' ? $product->auctionType->name : (session('locale') === 'ar' ? $product->auctionType->name_ar : $product->auctionType->name) }} / 
+                    <a href="{{url('/')}}"> {{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }} /</a>
+    {{ session('locale') === 'en' ? $product->auctionType->name : (session('locale') === 'ar' ? $product->auctionType->name_ar : $product->auctionType->name) }} /
     {{ session('locale') === 'en' ? $product->project->name : (session('locale') === 'ar' ? $product->project->name_ar : $product->project->name) }}
 </p>
 
@@ -222,7 +222,7 @@ section#default {
             <h3>{{$product->lot_no}} : {{$product->title}}</h3>
             @endif
 
-        
+
             <div class="col-md-6">
                 <!-- <div class="product-imgs mt-4">
                 @auth
@@ -273,43 +273,43 @@ section#default {
                 </div> -->
                 <div class="product-imgs mt-4">
                     <section id="default" class="padding-top0">
-                   
+
                     <div class="row">
                     <div class="large-5 column">
-                        
+
                         <!-- <div class="xzoom-container">
                             <div class="xzoom-container_1">
                                  <img class="xzoom" id="xzoom-default" src="{{ asset($gallery->image_path)}}" xoriginal="{{ asset($gallery->image_path) }}" />
                             </div>
                         <div class="xzoom-thumbs">
                             @if ($galleries->isNotEmpty())
-                                        @foreach ($galleries as $gallery)                           
+                                        @foreach ($galleries as $gallery)
                             <a href="{{ asset($gallery->image_path) }}" data-id="{{ $loop->index + 1 }}">
                                 <img class="xzoom-gallery"  src="{{ asset($gallery->image_path) }}"  xpreview="{{ asset($gallery->image_path) }}"></a>
                             @endforeach
                                         @endif
-                        
+
                         </div>
                         </div> -->
-                        
+
                         <div class="xzoom-container">
-                           
+
                             <div class="img-zoom-container">
                                 <img id="myimage" src="{{ asset($gallery->image_path)}}" xoriginal="{{ asset($gallery->image_path) }}">
                             </div>
                             <div class="img-zoom-container_1">
                                 @if ($galleries->isNotEmpty())
-                                    @foreach ($galleries as $gallery)                           
+                                    @foreach ($galleries as $gallery)
                                         <a href="#" class="thumbnail-link" data-image="{{ asset($gallery->image_path) }}" data-preview="{{ asset($gallery->image_path) }}">
                                             <img class="xzoom-gallery" src="{{ asset($gallery->image_path) }}" xpreview="{{ asset($gallery->image_path) }}">
                                         </a>
                                     @endforeach
                                 @endif
                             </div>
-                         
+
                        </div>
-          
-                    
+
+
 
 
 
@@ -352,14 +352,14 @@ section#default {
             <div class="col-md-6">
                 <div class="bid-and-time">
                 <div id="myresult" class="img-zoom-result" ></div>
-              
+
                     <!-- @if ($currentBid)
                     <h4>{{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}<span>{{ formatPrice($currentBid->bid_amount, session()->get('currency')) }}
                             {{$currency}}</span> </h4>
                     @else
                     <h4>{{ session('locale') === 'en' ? 'Current Bid:' : (session('locale') === 'ar' ? 'المزايدة الحالية' : 'Current Bid:') }}<span>{{ formatPrice($product->reserved_price, session()->get('currency')) }}
                             {{$currency}}</span> </h4>
-                    
+
                     @endif -->
                     @if ($sold)
                         <h4 >{{ session('locale') === 'en' ? 'Sold:' : (session('locale') === 'ar' ? 'تم البيع:' : 'Sold:') }}<span>{{ formatPrice($sold->bid_amount, session()->get('currency')) }} {{ $currency }}</span></h4>
@@ -384,7 +384,7 @@ section#default {
                                 <li class="days-wrapper">:</li>
                                 @endif
 
-                               
+
 
                                 <li><span class="hours"></span>H</li>
                                 <li>:</li>
@@ -401,7 +401,7 @@ section#default {
             $currentTime = now()->timestamp;
               $auctionEndTime = strtotime($product->auction_end_date);
             @endphp
-            
+
             <div class="bid-now-container">
                 <div class="product-feature-box">
                     @if($bidPlacedId)
@@ -443,11 +443,11 @@ section#default {
                         <!-- Timed Auction -->
                         @if ($product->project->auctionType->name == 'Timed' && $currentDateTime > $enddatetime || $product->project->auctionType->name == 'Timed' && $currentDateTime >$product->auction_end_date )
                             <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق القطعة' : 'Lot Closed') }}</button>
-                        
-                        @else  
+
+                        @else
                                         @if ($product->project->auctionType->name == 'Timed')
                                         @if ($auctionEndTime <= $currentDateTime)
-                                        
+
                                             @if ($product->auction_end_date >= $formattedDateTime )
 
                                             <p>{{ session('locale') === 'en' ? 'Set Max Bid:' : (session('locale') === 'ar' ? 'تعيين أقصى مزايدة:
@@ -465,7 +465,7 @@ section#default {
                                                         @endif
                                                         @endforeach
                                                     </select>
-                                                
+
                                                     @if(Auth::check())
                                                     <button type="button" id="placeBidButton" data-bs-toggle="modal"
                                                         data-bs-target="#myModal">{{ session('locale') === 'en' ? 'Place Bid' : (session('locale') === 'ar' ? 'وضع مزايدة' : 'Place Bid') }}</button>
@@ -482,7 +482,7 @@ section#default {
                      <!-- Private Auction -->
                 @if ($product->project->auctionType->name == 'Private' && $currentDateTime > $enddatetime || $product->project->auctionType->name == 'Private' && $currentDateTime >$product->auction_end_date)
                     <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق الدفعة' : 'Lot Closed') }}</button>
-                @else  
+                @else
                         @if ($product->project->auctionType->name == 'Private')
                             @if ($auctionEndTime <= $currentDateTime)
                             @if($bidRequest && $bidRequest->status == 1)
@@ -503,7 +503,7 @@ section#default {
                                             @endif
                                             @endforeach
                                         </select>
-                                    
+
                                         @if(Auth::check())
                                         <button type="button" id="placeBidButton" data-bs-toggle="modal"
                                             data-bs-target="#myModal">{{ session('locale') === 'en' ? 'Place Bid' : (session('locale') === 'ar' ? 'وضع مزايدة' : 'Place Bid') }}</button>
@@ -521,11 +521,11 @@ section#default {
                     <!-- Live Case -->
                     <!-- @if ($product->project->auctionType->name == 'Live' && $currentDateTime > $enddatetime)
                             <button class="text-btn" style="color: red;" >{{ session('locale') === 'en' ? 'Lot Closed' : (session('locale') === 'ar' ? 'تم إغلاق القطعة' : 'Lot Closed') }}</button>
-                        @else  
+                        @else
                                 @if ($lastBid && $lastBid->bid_amount >= $product->minsellingprice && $product->project->auctionType->name == 'Live')
                                         <p><strong><span style="color: red;">Bid Closed</span></strong></p>
                                     @else
-                                        
+
                                             @if ($product->project->auctionType->name == 'Live')
                                                 @if ($auctionEndTime <= $currentDateTime)
                                                     @if($bidRequest && $bidRequest->status == 1)
@@ -543,7 +543,7 @@ section#default {
                                                                         @endif
                                                                     @endforeach
                                                                 </select>
-                                                            
+
                                                                 @if(Auth::check())
                                                                     <button type="button" id="placeBidButton" data-bs-toggle="modal" data-bs-target="#myModal">{{ session('locale') === 'en' ? 'Place Bid' : (session('locale') === 'ar' ? 'وضع مزايدة' : 'Place Bid') }}</button>
                                                                 @else
@@ -554,14 +554,14 @@ section#default {
                                                     @endif
                                                 @endif
                                             @endif
-                                    
+
                                     @endif
                     @endif -->
 
-                   
+
                 </div>
             </div>
-           
+
             <div class="product-feature-box">
                 @if(session('locale') === 'en')
                 <h4>{{$product->project->name}} </h4>
@@ -882,14 +882,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 var xzoom = $(this).data('xzoom');
                 xzoom.eventunbind();
             });
-            
+
             $('.xzoom, .xzoom2, .xzoom3').each(function() {
                 var xzoom = $(this).data('xzoom');
                 $(this).hammer().on("tap", function(event) {
                     event.pageX = event.gesture.center.pageX;
                     event.pageY = event.gesture.center.pageY;
                     var s = 1, ls;
-    
+
                     xzoom.eventmove = function(element) {
                         element.hammer().on('drag', function(event) {
                             event.pageX = event.gesture.center.pageX;
@@ -898,7 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             event.gesture.preventDefault();
                         });
                     }
-    
+
                     xzoom.eventleave = function(element) {
                         element.hammer().on('tap', function(event) {
                             xzoom.closezoom();
@@ -945,7 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
             xzoom.openzoom(event);
             });
         });
-        
+
         $('.xzoom5').each(function() {
             var xzoom = $(this).data('xzoom');
             $(this).hammer().on("tap", function(event) {
@@ -999,7 +999,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $.fancybox.open(xzoom.gallery().cgallery, {padding: 0, helpers: {overlay: {locked: false}}});
                 event.preventDefault();
             });
-           
+
             //Integration with magnific popup plugin
             $('#xzoom-magnific').bind('click', function(event) {
                 var xzoom = $(this).data('xzoom');
@@ -1076,7 +1076,7 @@ function imageZoom(imgID, resultID) {
         // Hide myresult
         $('#myresult').hide();
         $('.bid-now-container').show();
-        
+
     }
 
     function getCursorPos(e) {
@@ -1101,22 +1101,22 @@ function imageZoom(imgID, resultID) {
 imageZoom("myimage", "myresult");
 </script>
 <script>
-   
+
     document.addEventListener("DOMContentLoaded", function() {
-    
+
         var thumbnailLinks = document.querySelectorAll('.thumbnail-link');
 
-       
-        thumbnailLinks.forEach(function(link) {
-        
-            link.addEventListener('click', function(event) {
-                event.preventDefault(); 
 
-               
+        thumbnailLinks.forEach(function(link) {
+
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+
+
                 var imageSrc = this.getAttribute('data-image');
                 var previewSrc = this.getAttribute('data-preview');
 
-              
+
                 document.getElementById('myimage').src = imageSrc;
                 document.getElementById('myresult').style.backgroundImage = "url('" + previewSrc + "')";
             });

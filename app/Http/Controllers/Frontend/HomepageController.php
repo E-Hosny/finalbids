@@ -34,6 +34,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Models\Appnotification;
+use Carbon\Carbon;
+
 
 use Illuminate\Support\Facades\Log;
 
@@ -135,6 +137,7 @@ class HomepageController extends Controller
                                                 $subquery->where('end_date_time', '>=', $currentDateTime);
                                             });
                                     }])->where('status', 1)->get();
+
         $mostRecentBids = BidPlaced::select('product_id', DB::raw('MAX(bid_amount) as max_bid_amount'), DB::raw('COUNT(DISTINCT user_id) as bid_count'))
                                     ->where('sold', 1)
                                     ->where('status', '!=', 0)
@@ -143,13 +146,16 @@ class HomepageController extends Controller
                                     ->with('product', 'auctionType')
                                     ->get();
 
+        $homeProducts=Product::where('is_published','1')->get();
+
+
 
         $wishlist = [];
         if (Auth::check()) {
             $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
         }
 
-        return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'productauction', 'wishlist','mostRecentBids','currency'));
+        return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'productauction', 'wishlist','mostRecentBids','currency','homeProducts'));
     }
 
     public function projectByAuctionType($slug, Request $request)

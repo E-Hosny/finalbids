@@ -3,19 +3,19 @@
   .nodata {
     color: black;
     font-size: 38px;
-    text-align: center; 
+    text-align: center;
 }
 
 .no-products-found {
-    text-align: center; 
+    text-align: center;
 }
 .project-link {
     text-decoration: none;
-    color: black; 
+    color: black;
 }
 
 .project-link:hover h3 {
-    color: #3E0269; 
+    color: #3E0269;
 }
   </style>
 <section class="hero-ther">
@@ -23,7 +23,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6 text-center">
            <h1>{{ session('locale') === 'en' ? 'Projects' : (session('locale') === 'ar' ? 'مشاريع': 'Projects') }}</h1>
-          
+
             <form action="" class="search-frm-prdt" id="searchForm">
             <input type="text" name="search" id="searchInput" placeholder="{{ session('locale') === 'en' ? 'Search projects...' : (session('locale') === 'ar' ? 'ابحث عن المشاريع...' : 'Search projects...') }}">
 
@@ -33,14 +33,15 @@
       </div>
     </div>
   </section>
- 
+
 
   <section class="product-list-man mt-5">
     <div class="container">
-      <div class="row">
-        @foreach($projects as $pro) <div class="col-xl-4 col-lg-6 col-md-6">
-            
-                <div class="card-product product-blndle">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 trending-auction-section-items">
+     {{-- @foreach($projects as $pro)
+
+        <div class="col-md-3  bg-info">
+                <div class="card-product bg-danger product-blndle">
                 <a href="{{ url('products', $pro->slug) }}">
                 <div class="product-image">
                         @if (!empty($pro->image_path))
@@ -48,16 +49,16 @@
                             @else
                                 <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image">
                             @endif
-                
+
                 </div>
                 </a>
-                
+
                 <div class="bid-box-status">
                   <div class="bid-box-status-ic">
                       @php
                           $auctionTypeName = $pro->auctionType->name;
                           $auctionTypeIcon = '';
-              
+
                           if ($auctionTypeName === 'Private') {
                               $auctionTypeIcon = asset('auctionicon/private_icon.png');
                           } elseif ($auctionTypeName === 'Timed') {
@@ -66,7 +67,7 @@
                               $auctionTypeIcon = asset('auctionicon/live.png');
                           }
                       @endphp
-              
+
                       <img src="{{ !empty($auctionTypeIcon) ? $auctionTypeIcon : asset('frontend/images/default_icon.png') }}" alt="Auction Type Icon">
                       @if(session('locale') === 'en')
                       <span>{{ $pro->auctionType->name }}</span>
@@ -88,10 +89,10 @@
                       $formattedEnddateTime = date("F j, g:i A",  $end);
                       $formattedEndDateTimeconvert = date("M j, g:i A", $end);
                       $currentDateTime = now();
-                  
+
                   @endphp
                 <div class="card-product-dtl p-0">
-                    
+
                     <!-- @if(session('locale') === 'en')
                            <h3>{{$pro->name}}  </h3>
                         @elseif(session('locale') === 'ar')
@@ -121,7 +122,7 @@
                             ->where('project_id', $pro->id)
                             ->first();
                     @endphp
-                           
+
                                 @php
                                     $originalDateTime = $pro->start_date_time;
                                     $originalDatesTime = new Carbon\Carbon($originalDateTime);
@@ -145,22 +146,22 @@
 
                                 @if ($bidRequest && $bidRequest->status == 1 && $pro->auctionType->name == 'Live' && $currentDateTime >= $originalDateTime) <a href="{{ url('products', $pro->slug) }}"><button
                                             class="text-btn" >{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الان' : 'Bid Now') }}  </button></a>
-                                    @elseif ($bidRequest && $bidRequest->status == 0 && $pro->auctionType->name == 'Live') 
+                                    @elseif ($bidRequest && $bidRequest->status == 0 && $pro->auctionType->name == 'Live')
                                     <button class="text-btn" >
-                                        
-                                          {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }} 
+
+                                          {{ session('locale') === 'en' ? 'Requested' : (session('locale') === 'ar' ? 'تم الطلب' : 'Requested') }}
                                     </button>
                                     @elseif  ($bidRequest && $bidRequest->status == 1 && $pro->auctionType->name == 'Live' && $currentDateTime <= $originalDateTime)
                                     <button class="text-btn" style="display: none;" >
-                                        
+
                                         Project Not start
-                                  </button>  
-                                 
+                                  </button>
+
                                     @elseif  ($pro->auctionType->name == 'Live' && $currentDateTime >= $twoWeeksBefore) <button class="text-btn"
                                     onclick="requestBid('{{ $pro->name }}', '{{ $pro->id }}', '{{ $pro->auction_type_id }}', '{{ $pro->deposit_amount }}')">
                                      {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب المزايدة' : 'Request Bid') }}</button>
                                 @endif
-                                      
+
 
                                 <!-- For Private Auction -->
                                 <!-- @if ($bidRequest && $bidRequest->status == 1 && $pro->auctionType->name == 'Private' && $currentDateTime >= $originalDateTime) <button
@@ -180,30 +181,95 @@
                                         </button>
                                      @elseif  ($bidRequest && $bidRequest->status == 1 && $pro->auctionType->name == 'Private' && $currentDateTime <= $originalDateTime)
                                         <button class="text-btn" style="display: none;" >
-                                                
+
                                                 Project Not start
-                                        </button>  
+                                        </button>
                                     @elseif  ($pro->auctionType->name == 'Private' && $currentDateTime >= $twoWeeksBefore)
                                     <button class="text-btn"
                                           onclick="requestBid('{{ $pro->name }}', '{{ $pro->id }}', '{{ $pro->auction_type_id }}', '{{ $pro->deposit_amount }}')">
                                           {{ session('locale') === 'en' ? 'Request Bid' : (session('locale') === 'ar' ? 'طلب المزايدة' : 'Request Bid') }}</button>
                                   @endif
-                  
+
                 </div>
                 </div>
-           
+
             </div>
-            @endforeach
+     @endforeach --}}
+
+     @foreach($projects as $project)
+     @php
+         $loggedInUserId = auth()->id();
+         $bidRequest = \App\Models\BidRequest::where('user_id', $loggedInUserId)
+                                             ->where('project_id', $project->id)
+                                             ->first();
+
+
+         $formattedStartDateTimeconvert  = date("j-M", strtotime($project->start_date_time));
+         $formattedEndDateTimeconvert    = date("j-M", strtotime($project->end_date_time));
+
+          $currentDateTime = now();
+
+
+
+     @endphp
+
+     <div class="col d-flex justify-content-center">
+        <div class="card mb-3" style="width: 300px;">
+            <div class="card-header bg-transparent">
+
+                 @if(session('locale') === 'en')
+                     <p class="fw-bold" href="{{ url('products', $project->slug) }}" >{{ $project->name }}</p>
+                 @elseif(session('locale') === 'ar')
+                     <p href="{{ url('products', $project->slug) }}" >{{$project->name_ar}}</p>
+                 @else
+                     <p href="{{ url('products', $project->slug) }}" >{{ $project->name }}</p>
+                 @endif
+                 <p>{{ $formattedStartDateTimeconvert }} | {{ $formattedEndDateTimeconvert }}</p>
+             </div>
+             <a href="{{ url('products', $project->slug) }}">
+                 <div class="card-body text-success">
+                         @if (!empty($project->image_path))
+                             <img src="{{  asset("img/projects/$project->image_path")}}" class="card-img-top" height="276" width="243"
+                                  alt="{{ $project->title }}">
+                         @else
+                             <img   src="{{ asset('img/default-images/pro-1.png') }}" height="276" width="243"
+                                 alt="Default Image">
+                         @endif
+                 </div>
+             </a>
+
+             <div class="card-footer bg-transparent">
+                 @if ($project->end_date_time>=$currentDateTime)
+                 <p class="text-muted">{{ session('locale') === 'en' ? 'OPEN FOR BIDDING' : (session('locale') === 'ar' ? 'مفتوح للمزايدة' : 'OPEN FOR BIDDING') }}</p>
+
+                 @endif
+                 <a href="{{ url('products', $project->slug) }}" class="text-decoration-">
+                     <span class="view-text my-color">
+                     {{ session('locale') === 'ar' ? 'عرض  '.count($project->products).' قطعة أرض ': 'View '.count($project->products).' lots'   }}
+                     </span>
+                 </a>
+             </div>
+         </div>
+     </div>
+
+
+
+
+
+ @endforeach
       </div>
-      
+
+
+
+
         <ul class="pagination">
-        {{ $projects->appends($_GET)->links('pagination::bootstrap-5') }} 
+        {{ $projects->appends($_GET)->links('pagination::bootstrap-5') }}
         </ul>
-       
+
     </div>
   </section>
   <section class="product-list-man mt-5">
-   
+
 
    @if($projects->isEmpty())
        <div class="no-products-found">
@@ -213,11 +279,11 @@
    @endif
 </section>
 
-  
+
   <div class="modal fade" id="prtyfilter" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          
+
           <div class="modal-body">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="prty-filter p-4">
@@ -237,7 +303,7 @@
                         <span>Min Price</span>
 
                         <input type="number" class="input-min" value="2500">
-                      </div> 
+                      </div>
                       <div class="field">
                         <span>Max Price</span>
                         <input type="number" class="input-max" value="7500">
@@ -316,7 +382,7 @@
               </form>
             </div>
           </div>
-           
+
         </div>
       </div>
     </div>
@@ -328,7 +394,7 @@
     <!-- <script src="{{asset('frontend/js/main.js')}}"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
  <script>
-  
+
 
   const rangeInput = document.querySelectorAll(".range-input input"),
   priceInput = document.querySelectorAll(".price-input input"),
@@ -394,26 +460,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function submitSearchForm() {
     var searchInputValue = document.getElementById('searchInput').value.trim();
-    
+
     // Check if the search input is not empty
     if (searchInputValue !== '') {
       // Get the current URL
       var currentUrl = window.location.href;
-  
+
       // Check if the URL already has parameters
       var separator = currentUrl.includes('?') ? '&' : '?';
-  
+
       // Add the search parameter to the current URL
       var newUrl = currentUrl + separator + 'search=' + encodeURIComponent(searchInputValue);
-  
+
       // Redirect to the new URL
       window.location.href = newUrl;
     }
   }
  </script>
 
- 
+
 @include('frontend.layouts.requestbidscript')
 
 @include('frontend.layouts.footer')
- 
