@@ -2583,19 +2583,23 @@ section.account-hero-section h1 {
 .policy-content{
     margin: 50px 0;
 }
-.policy-content h2{
+/* .policy-content h2{
     font-size: 40px;
     margin: 40px 0;
     font-weight: 600;
-}
-.policy-content h4{
+} */
+/* .policy-content h4{
     font-size: 24px;
     font-weight: 600;
-}
-.policy-content p{
+} */
+/* .policy-content p{
     line-height: 30px;
     color: #575757;
     margin-bottom: 30px;
+} */
+
+.policy-content .container{
+    width: 90%;
 }
 .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 1520px;
@@ -3225,10 +3229,10 @@ span.header_nm {
 .accordion-button {
     font-size: 15px;
 }
-.policy-content h2 {
+/* .policy-content h2 {
     font-size: 28px;
     margin: 40px 0 20px;
-}
+} */
 }
 
 
@@ -3534,9 +3538,9 @@ footer h3 {
 .contact-img {
     text-align: center;
 }
-.outr-box {
+/* .outr-box {
     width: 100%;
-}
+} */
 .home_slider .hero-section {
     min-height: 250px;
 }
@@ -3567,9 +3571,9 @@ input#outbidCheckbox {
 .outr-box {
     border-radius: 20px;
     padding: 20px;
-    box-shadow: 0 0 20px #7710cf45;
+    /* box-shadow: 0 0 20px #7710cf45; */
     margin: auto;
-    width: 80%;
+    /* width: 80%; */
 }
 .outr-box h2{
     margin-top: 0;
@@ -3636,6 +3640,8 @@ input#outbidCheckbox {
 .product-item p {
     color: #777;
 }
+
+
 
 
 
