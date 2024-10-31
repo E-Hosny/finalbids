@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Models\Gallery;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Builder;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // $galleries = DB::table('product_galleries')->get();
+        // View::share('galleries', $galleries);
         Builder::useVite();
     }
 }
