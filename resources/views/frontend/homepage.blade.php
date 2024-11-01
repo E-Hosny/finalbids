@@ -196,7 +196,7 @@
     <div class="container">
         <h2 class="fw-bold px-3 pb-4 ">{{ session('locale') === 'en' ? 'Bid Now' : (session('locale') === 'ar' ? 'زاود الآن' : 'Bid Now') }}</h2>
 
-        <div class="row gy-4 mx-1">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
             @foreach($homeProducts as $product)
                @php
                $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
@@ -212,7 +212,7 @@
                @endphp
 
 
-              <div class="col-md-3">
+              <div>
                 <a href="{{ url('productsdetail', $product->slug) }}">
                   <div class="card-product mx-auto" style="max-width: 19rem;">
                     <div class="product-image  text-center">
@@ -221,9 +221,9 @@
                                   @endphp
 
                               @if ($imagePath)
-                                  <img src="{{ asset($imagePath) }}" alt="Product Image"  width="268" height="276"  >
+                                  <img class="w-100" src="{{ asset($imagePath) }}" alt="Product Image"  width="268" height="276"  >
                               @else
-                                  <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image" width="268" height="276" >
+                                  <img class="w-100" src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image" width="268" height="276" >
                               @endif
                               @auth
                       {{-- <div class="heat-like wishlist-heart @if(in_array($product->id, $wishlist)) active @endif" data-product-id="{{ $product->id }}">
@@ -368,6 +368,7 @@
                   </div>
                 </a>
               </div>
+
 
 
 

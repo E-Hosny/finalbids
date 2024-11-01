@@ -235,7 +235,7 @@ button.text-btns {
 
   <section class="product-list-man">
     <div class="container px-5">
-      <div class="row gy-4">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
       @foreach($products as $product)
          @php
          $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
@@ -251,7 +251,7 @@ button.text-btns {
          @endphp
 
 
-        <div class="col-md-3">
+        <div>
           <a href="{{ url('productsdetail', $product->slug) }}">
             <div class="card-product mx-auto" style="max-width: 19rem;">
               <div class="product-image  text-center">
