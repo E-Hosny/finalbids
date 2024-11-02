@@ -147,7 +147,7 @@
                     @endphp
 
                     <div class="col d-flex justify-content-center">
-                        <div class="card mb-3" style="max-width: 19rem;">
+                        <div class="card mb-3 w-100" style="max-width: 19rem;">
                             <div class="card-header bg-transparent">
 
                                 @if(session('locale') === 'en')

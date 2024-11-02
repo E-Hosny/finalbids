@@ -234,7 +234,7 @@ button.text-btns {
   </section>
 
   <section class="product-list-man">
-    <div class="container px-5">
+    <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
       @foreach($products as $product)
          @php

@@ -85,10 +85,10 @@
                         <input type="number" class="otpValue" name="otp" id="third" maxlength="1" oninput="moveToNextInput(this, 'fourth')" onkeydown="moveToPreviousInput(this, 'second')" />
                         <input type="number" class="otpValue" name="otp" id="fourth" maxlength="1" onkeydown="moveToPreviousInput(this, 'third')" />
                     </form>
-                    <p>{{__('Didn’t Receive the Code?')}} <a href="#" class="text-btn edit-number" id="resend-code">{{__('Resend')}}</a></p>
+                    <p>{{__('Didn’t Receive the Code?')}} <a href="#" class="text-btn edit-number my-text-color" id="resend-code">{{__('Resend')}}</a></p>
 
 
-                    <button type="button" name="verify-otp" class="mt-4 btn btn-secondary px-5 btn-verify-otp">{{__('Verify')}}</button>
+                    <button type="button" name="verify-otp" class="mt-4 btn text-white  px-5 btn-verify-otp">{{__('Verify')}}</button>
                 </div>
             </div>
 
@@ -97,6 +97,14 @@
 </div>
 
 <style>
+
+    .btn-verify-otp{
+        background-color: #0B3058 !important;
+    }
+
+     .my-text-color{
+        color: #0B3058 !important;
+     }
     .login-mdl {
         padding: 20px 60px 20px 80px;
     }

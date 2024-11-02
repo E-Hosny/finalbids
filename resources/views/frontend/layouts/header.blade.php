@@ -228,8 +228,11 @@ if (Auth::check()) {
                     </li>
 
                     @auth
-                    <li class="group-hidden"><a  class="profile-hdr" href="{{route('userdashboard')}}" >{{ Auth::user()->first_name }}<span class="header_nm">{{Auth::user()->first_name}}</span>
-                        <img src="{{asset('frontend/images/dummyuser.png')}}" alt=""></a></li>
+                       <div class="me-auto">
+                            <li class="group-hidden  "><a  class="profile-hdr" href="{{route('userdashboard')}}" >{{ Auth::user()->first_name }}<span class="header_nm">{{Auth::user()->first_name}}</span>
+                            <img src="{{asset('frontend/images/dummyuser.png')}}" alt=""></a></li>
+                       </div>
+
                         <li class="group-hidden"><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
 
                     @endauth

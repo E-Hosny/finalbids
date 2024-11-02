@@ -3646,6 +3646,16 @@ input#outbidCheckbox {
     /* width: 173px; */
 }
 
+/* @media screen and (max-width:1000px) {
+   .card{
+     background-color: #00A510;
+     width:120%;
+   }
+   .card-product{
+    width: 100% !important;
+   }
+} */
+
 
 
 
