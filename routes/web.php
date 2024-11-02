@@ -29,6 +29,7 @@ use App\Http\Controllers\Frontend\DashboardController;
 use App\Http\Controllers\Frontend\ProductWishController;
 use App\Http\Controllers\Frontend\LangController;
 use App\Http\Controllers\Frontend\BiddingController;
+use App\Http\Controllers\Frontend\UserCategoryController;
 
 
 
@@ -78,6 +79,10 @@ Route::get('/productslive/{user_id}/{auction_id}/{project_id}', [HomepageControl
 
 // based on categorys
 Route::get('/category/{categories_slug}', [HomepageController::class,'projectByCategory'])->name('projectByCategory');
+
+Route::get('/categories/index', [UserCategoryController::class,'index'])->name('categories.index');
+
+
 
 Route::get('/productsdetail/{slug}', [HomepageController::class,'productsdetail'])->name('productsdetail');
 Route::get('signin', [HomepageController::class,'login'])->name('signin');

@@ -165,7 +165,7 @@ if (Auth::check()) {
               <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }}</a></li>
 
               <li class="category-menu">
-              <a href="#">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? 'الصنف' : 'Category') }}</a>
+              <a href="/categories/index">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? 'الصنف' : 'Category') }}</a>
                     <div class="category-list">
                         <ul>
                         @foreach($categories as $category)
