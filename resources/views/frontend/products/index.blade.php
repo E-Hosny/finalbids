@@ -307,13 +307,13 @@ button.text-btns {
                                   id="countdown-{{ $product->id }}">
                                   <ul>
                                       @if ($product->auctionType->name == 'Private'|| $product->auctionType->name == 'Timed')
-                                          <li class="days-wrapper"><span class="days"></span>days</li>
+                                          <li class="days-wrapper"><span class="days"></span>{{ session('locale')=='en' ? 'Days' : 'أيام' }}</li>
                                       @endif
 
-                                      <li ><span class="hours"></span>Hours</li>
+                                      <li ><span class="hours"></span>{{ session('locale')=='en' ? 'Hours' : 'ساعات' }}</li>
 
-                                      <li><span class="minutes"></span>Minutes</li>
-                                      <li><span class="seconds"></span>Seconds </li>
+                                      <li><span class="minutes"></span>{{ session('locale')=='en' ? 'Minutes' : 'دقائق' }}</li>
+                                      <li><span class="seconds"></span>{{ session('locale')=='en' ? 'Seconds' : 'ثواني' }} </li>
                                   </ul>
                               </div>
                         @endif
