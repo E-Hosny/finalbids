@@ -149,7 +149,7 @@ if (Auth::check()) {
              @endif
             </div>
           @else --}}
-          <div class="logo">
+          <div class="">
               <a href="{{url('/')}}"><img src="{{asset('logo.png')}}" alt="" class="w-100"></a>
             </div>
 
@@ -195,7 +195,7 @@ if (Auth::check()) {
                     </div>
                 </li>
 
-                   <li><a href="{{route('pastauction')}}">{{ session('locale') === 'en' ? 'Past Auction' : (session('locale') === 'ar' ? 'المزادات السابقة' : 'Past Auction') }}</a></li>
+                   {{-- <li><a href="{{route('pastauction')}}">{{ session('locale') === 'en' ? 'Past Auction' : (session('locale') === 'ar' ? 'المزادات السابقة' : 'Past Auction') }}</a></li> --}}
 
                     <li><a href="{{ route('about-us') }}">{{ session('locale') === 'en' ? 'About Us' : (session('locale') === 'ar' ? 'من نحن' : 'About Us') }}</a></li>
 
