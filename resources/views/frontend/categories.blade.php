@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                             <a href="{{ url('category', $category->slug) }}">
-                                <img class="w-100 h-100" src="{{ asset('img/users/' . $category->image_path) }}" alt="category-img">
+                                <img class="" src="{{ asset('img/users/' . $category->image_path) }}" alt="category-img">
                             </a>
                         </div>
                         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-xl-8  px-4">
@@ -60,5 +60,14 @@
     .categories-card{
         border: 1px solid #d3d3d3;
     }
+    .categories-card img{
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            background-color: green;
+    }
+
+
 
 </style>
