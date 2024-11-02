@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use App\Models\Useraddress;
-use App\Traits\ImageTrait;
-use Hash;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Validator;
-use App\Models\{BidRequest,BidPlaced,User,Wishlist};
-use App\Models\City;
-use App\Models\State;
-use App\Models\Notification;
-use App\Models\Country;
-use App\Mail\ProfileupdateMail;
-use Illuminate\Support\Facades\Mail;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Models\City;
+use App\Models\State;
+use App\Models\Country;
+use App\Traits\ImageTrait;
+use App\Models\Useraddress;
+use App\Models\Notification;
+use Illuminate\Http\Request;
+use App\Mail\ProfileupdateMail;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
+use App\Models\{BidRequest,BidPlaced,User,Wishlist};
 
 
 
@@ -35,12 +36,12 @@ class DashboardController extends Controller
         $users = Auth::user();
         return view('frontend.dashboard.myaccount', compact('users'));
     }
-    
+
     public function auction(){
 
         $currency = session()->get('currency');
         $user_id = Auth::id();
-      
+
         $bids = BidPlaced::with(['product.project.auctionType'])
                             ->where('sold', 1)
                             ->whereIn('product_id', function($query) use ($user_id) {
@@ -83,13 +84,13 @@ class DashboardController extends Controller
         $options = new Options();
         $options->set('isRemoteEnabled', true);
         $options->set('isHtml5ParserEnabled', true);
-      
+
         $dompdf = new Dompdf($options);
         $dompdf->setBasePath('https://bid.sa/img/settings/');
         $dompdf->loadHtml(View::make($view, $data)->render());
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        
+
         return $dompdf->stream($filename);
     }
 
@@ -114,7 +115,7 @@ class DashboardController extends Controller
                     $invoiceData = [
                         'invoiceNumber' => $invoiceNumber,
                         'date' => $currentDate,
-                        
+
                     ];
 
         return $this->generatePdf('frontend.invoice', compact('invoiceData', 'bidspast'), 'invoice.pdf');
@@ -125,7 +126,7 @@ class DashboardController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required',
-            'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = auth()->user();
@@ -133,7 +134,7 @@ class DashboardController extends Controller
 
         $todo = User::find($user_id);
 
-    
+
         if ($request->hasFile('profile_image')) {
             $data['profile_image'] = $this->verifyAndUpload($request, 'profile_image', $user->profile_image);
             $data['profile_image'] = asset('img/users/' . $data['profile_image']);
@@ -234,10 +235,10 @@ class DashboardController extends Controller
         $cities = City::all();
         $userAddresses = [];
         $selectedAddress = null;
-    
+
         if (Auth::check()) {
             $userAddresses = UserAddress::where('user_id', auth()->user()->id)->get();
-    
+
             $selectedCountryId = $userAddresses->pluck('country')->first();
             $selectedAddress = $userAddresses->where('country', $selectedCountryId)->first();
             $selectedStateId = $userAddresses->pluck('state')->first();
@@ -245,20 +246,20 @@ class DashboardController extends Controller
             $selectedCityId = $userAddresses->pluck('city')->first();
             $selectedAddress = $userAddresses->where('city', $selectedCityId)->first();
         }
-    
+
         if ($selectedAddress === null) {
-            $defaultCountryId = 247; 
+            $defaultCountryId = 247;
             $defaultCountry = Country::find($defaultCountryId);
-    
+
             $defaultAddress = new UserAddress();
             $defaultAddress->country = $defaultCountryId;
-    
+
             $selectedAddress = $defaultAddress;
         }
 
         return view('frontend.dashboard.useraddress', compact('userAddresses','selectedAddress','userAddresses','countries','states','cities'));
     }
-    
+
 
     // addaddress
 
@@ -301,10 +302,10 @@ class DashboardController extends Controller
         $cities = City::all();
         $userAddresses = [];
         $selectedAddress = null;
-    
+
         if (Auth::check()) {
             $userAddresses = UserAddress::where('user_id', auth()->user()->id)->get();
-    
+
             $selectedCountryId = $userAddresses->pluck('country')->first();
             $selectedAddress = $userAddresses->where('country', $selectedCountryId)->first();
             $selectedStateId = $userAddresses->pluck('state')->first();
@@ -312,14 +313,14 @@ class DashboardController extends Controller
             $selectedCityId = $userAddresses->pluck('city')->first();
             $selectedAddress = $userAddresses->where('city', $selectedCityId)->first();
         }
-    
+
         if ($selectedAddress === null) {
-            $defaultCountryId = 247; 
+            $defaultCountryId = 247;
             $defaultCountry = Country::find($defaultCountryId);
-    
+
             $defaultAddress = new UserAddress();
             $defaultAddress->country = $defaultCountryId;
-    
+
             $selectedAddress = $defaultAddress;
         }
         return view ('frontend.dashboard.editaddress',compact('data','selectedAddress','userAddresses','countries','states','cities'));
@@ -351,7 +352,7 @@ class DashboardController extends Controller
     $userId = $userAddress->user_id;
 
     Useraddress::where('user_id', $userId)
-        ->where('id', '!=', $id) 
+        ->where('id', '!=', $id)
         ->update(['is_primary' => 0]);
 
     // Set the selected address as primary
@@ -386,18 +387,18 @@ class DashboardController extends Controller
             'state' => $request->input('state'),
             'zipcode' => $request->input('zipcode'),
         ]);
-    
+
         // Return JSON response indicating success
         return response()->json(['success' => true]);
     }
     public function validateCurrentPassword(Request $request)
     {
-        
+
         $currentPassword = $request->input('current_password');
-        $user = auth()->user(); 
+        $user = auth()->user();
 
         if (!password_verify($currentPassword, $user->password)) {
-            return response('invalid', 422); 
+            return response('invalid', 422);
         }
 
         return response('valid');
@@ -407,20 +408,20 @@ class DashboardController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            $wishlistItems = Wishlist::with('products')->where('user_id', $user->id)->paginate(10); 
+            $wishlistItems = Wishlist::with('products')->where('user_id', $user->id)->paginate(10);
             return view('frontend.products.wishlist', ['wishlistItems' => $wishlistItems]);
         }
-        
-        return view('frontend.products.wishlist'); 
+
+        return view('frontend.products.wishlist');
     }
-    
+
         // bid store
         public function bidstore(Request $request)
         {
             $existingBid = BidRequest::where('user_id', $request->user_id)
             ->where('project_id', $request->project_id)
             ->exists();
-    
+
                 if ($existingBid) {
                     return response()->json(['error' => 'You have already placed a bid for this project']);
                 }
@@ -430,7 +431,7 @@ class DashboardController extends Controller
                 'auction_type_id' => $request->auction_type_id,
                 'deposit_amount' => $request->deposit_amount,
             ]);
-    
+
             return response()->json(['message' => 'Bid request stored successfully']);
         }
 
@@ -445,14 +446,14 @@ class DashboardController extends Controller
              'bid_amount' => 'required',
              'product_id' => 'required'
          ]);
-     
+
          try {
-             
+
             $bid= BidPlaced::create($validatedData);
-     
+
              return response()->json(['message' => 'Bid request stored successfully','bid'=>$bid]);
          } catch (\Exception $e) {
-             \Log::error('An error occurred: ' . $e->getMessage());
+             Log::error('An error occurred: ' . $e->getMessage());
              return response()->json(['message' => 'Failed to store bid request'], 500);
          }
      }
@@ -461,11 +462,11 @@ class DashboardController extends Controller
     public function paynow(Request $request){
         $productId = $request->input('product_id');
 
-       
+
         BidPlaced::where('product_id', $productId)->update(['sold' => 2]);
-    
+
         return response()->json(['success' => true]);
     }
- 
+
 
 }

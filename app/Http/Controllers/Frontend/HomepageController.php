@@ -2,46 +2,46 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use App\Models\Auctiontype;
-use App\Models\Banner;
-use App\Models\BidPlaced;
-use App\Models\BidRequest;
-use App\Models\Bidvalue;
-use App\Models\Category;
 use App\Models\City;
-use App\Models\ContactUs;
-use App\Models\Country;
 use App\Models\News;
+use App\Models\Page;
+use App\Models\User;
+use App\Models\Banner;
+use App\Models\Country;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\{State,StartBid};
-use App\Models\User;
-use App\Models\Page;
+use App\Mail\ForgotMail;
+use App\Models\Bidvalue;
+use App\Models\Category;
 use App\Models\Wishlist;
+use App\Mail\WelcomeMail;
+use App\Models\BidPlaced;
+use App\Models\ContactUs;
 use App\Models\TempUsers;
+use App\Models\BidRequest;
+use App\Models\Auctiontype;
 use App\Models\Useraddress;
 use Illuminate\Http\Request;
+use App\Mail\ResetPasswordMail;
+use App\Models\Appnotification;
+use Illuminate\Validation\Rule;
+use App\Models\{State,StartBid};
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Redirect;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPasswordMail;
-use App\Mail\WelcomeMail;
-use App\Mail\ForgotMail;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use App\Models\Appnotification;
+use Illuminate\Support\Facades\Redirect;
 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 
 class HomepageController extends Controller
 {
 
-    
+
     public function markAsRead($notificationId)
     {
         $notification = Appnotification::find($notificationId);
@@ -75,8 +75,8 @@ class HomepageController extends Controller
         }
     //   echo('payment Successfully');
     //    return redirect()->route('auction')->with('success', 'Payment Successfully Initiated.');
-       
-       
+
+
     }
     public function homepage(Request $request)
     {
@@ -118,7 +118,7 @@ class HomepageController extends Controller
                 });
 
         // p($auctionTypesWithProject);
-         
+
         $banners = Banner::where('status', 1)->take(4)->get();
         // $productauction = AuctionType::with(['products' => function ($query) use ($langId) {
         //                 $query->where('status', 1)
@@ -138,8 +138,8 @@ class HomepageController extends Controller
                                     ->orderBy('max_bid_amount', 'desc')
                                     ->with('product', 'auctionType')
                                     ->get();
-        
-        
+
+
         $wishlist = [];
         if (Auth::check()) {
             $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
@@ -147,7 +147,7 @@ class HomepageController extends Controller
 
         return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'productauction', 'wishlist','mostRecentBids','currency'));
     }
-  
+
     public function projectByAuctionType($slug, Request $request)
     {
         $currency = session()->get('currency');
@@ -156,19 +156,19 @@ class HomepageController extends Controller
         $currentDateTime = now();
         $projects = Project::where('end_date_time', '>=', $currentDateTime)->orderBy('start_date_time', 'ASC')->with('products')
             ->where('auction_type_id', $auctionType->id);
-    
+
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
             $projects->where(function ($query) use ($searchTerm) {
                 $query->where('name', 'like', '%' . $searchTerm . '%');
             });
         }
-    
+
         $projects->whereHas('products', function ($query) {
         });
-    
+
         $projects = $projects->paginate(10);
-        
+
         return view('frontend.projects.index', ['projects' => $projects],['currency'=>$currency]);
     }
 
@@ -185,7 +185,7 @@ class HomepageController extends Controller
     //                     ->with('products') // Eager load products relationship
     //                     ->get();
 
-            
+
     //             return view('frontend.pastauctionlist',compact('projects','currency'));
     //         }
     public function pastauction(Request $request) {
@@ -196,21 +196,21 @@ class HomepageController extends Controller
         }
         $currency = session()->get('currency');
         $currentDateTime = now();
-    
+
         // Query to fetch projects
         $query = Project::where('end_date_time', '<=', $currentDateTime)
                         ->orderBy('start_date_time', 'ASC')
                         ->with('products');
-    
+
         // Apply search filter if search term exists
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
-    
+
         // Fetch paginated projects
         $projects = $query->paginate(10);
-    
+
         return view('frontend.pastauctionlist', compact('projects', 'currency'));
     }
 
@@ -240,7 +240,7 @@ class HomepageController extends Controller
         }
 
         $products = $productsQuery->paginate(10);
-       
+
         $totalItems = $products->total();
 
         $wishlist = [];
@@ -258,7 +258,7 @@ class HomepageController extends Controller
                 ->pluck('status', 'project_id')
                 ->toArray();
         }
-       
+
         return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
     }
 //
@@ -288,7 +288,7 @@ class HomepageController extends Controller
             $lastBid = BidPlaced::where('product_id', $product->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
-          
+
             $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
             // return  $lastBid->bid_amount ;
 
@@ -308,17 +308,17 @@ class HomepageController extends Controller
                             ->where('status', '!=', 0)
                             ->first();
         $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
-         
+
         //  p($lastBidAmount);
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
         $userAddresses = [];
         $selectedAddress = null;
-    
+
         if (Auth::check()) {
             $userAddresses = UserAddress::where('user_id', auth()->user()->id)->get();
-    
+
             $selectedCountryId = $userAddresses->pluck('country')->first();
             $selectedAddress = $userAddresses->where('country', $selectedCountryId)->first();
             $selectedStateId = $userAddresses->pluck('state')->first();
@@ -326,24 +326,24 @@ class HomepageController extends Controller
             $selectedCityId = $userAddresses->pluck('city')->first();
             $selectedAddress = $userAddresses->where('city', $selectedCityId)->first();
         }
-    
+
         if ($selectedAddress === null) {
-            $defaultCountryId = 1; 
+            $defaultCountryId = 1;
             $defaultCountry = Country::find($defaultCountryId);
-    
+
             $defaultAddress = new UserAddress();
             $defaultAddress->country = $defaultCountryId;
-    
+
             $selectedAddress = $defaultAddress;
         }
-        $user_id = Auth::id(); 
-        $product_id = $product->id; 
-        
+        $user_id = Auth::id();
+        $product_id = $product->id;
+
         $bidPlacedId = BidPlaced::where('user_id', $user_id)
                 ->where('product_id', $product_id)
                 ->where('status',1)
                 ->first();
-         
+
         if (!$product) {
             abort(404);
         }
@@ -382,7 +382,7 @@ class HomepageController extends Controller
             });
          // dd($projects);//
         $projects = $projects->paginate(10);
-         
+
         return view('frontend.projects.index', ['projects' => $projects],['currency'=>$currency]);
     }
 
@@ -414,14 +414,14 @@ class HomepageController extends Controller
           $privacy = Page::where('id', 3)->first();
           return view('frontend.privacypolicy',compact('privacy'));
       }
-  
+
       public function termsconditions(Request $request)
       {
           $langId = session('locale');
           $terms = Page::where('id', 1)->first();
           return view('frontend.termscondition',compact('terms'));
       }
-      // 
+      //
     // about
     public function about(Request $request)
     {
@@ -488,14 +488,14 @@ class HomepageController extends Controller
         }
         if (Auth::attempt($credentials)) {
             $previousUrl = Session::get('previousUrl');
-           
+
             if ($previousUrl) {
                 Session::forget('previousUrl');
                 // return redirect()->to($previousUrl);
             }
             return redirect()->intended('/');
         }
-       
+
 
         return back()->withErrors(['email' => 'These credentials do not match our records.']);
     }
@@ -525,7 +525,7 @@ class HomepageController extends Controller
                     'message' => 'Validation error',
                     'error' => $firstErrorMessage,
                 ]);
-               
+
             }
 
             $otp = rand(1000, 9999);
@@ -547,8 +547,8 @@ class HomepageController extends Controller
             $msg = $otp . ' is your Verification code for Bids.Sa ';
             // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
             $first_name = $request->input('first_name');
-            
-        
+
+
             Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
 
             Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
@@ -568,9 +568,9 @@ class HomepageController extends Controller
             $rules = [
                 'email' => 'required',
             ];
-    
+
             $validator = Validator::make($request->all(), $rules);
-    
+
             if ($validator->fails()) {
                 $firstErrorMessage = $validator->errors()->first();
                 // dd($firstErrorMessage);
@@ -581,24 +581,24 @@ class HomepageController extends Controller
                 ]);
             }
             $user = TempUsers::where('email', $request->email)->first();
-             
+
             if ($user) {
-    
+
                 $otp = rand(1000, 9999);
                 $msg = $otp . ' is your Verification code for Bids.Sa ';
                 $first_name = $user->first_name;
-            
-        
+
+
                 Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
                 // Mail::to($user->email)->send(new ResetPasswordMail( $otp));
-          
+
                 TempUsers::where('id', $user->id)->update(['otp' => $otp]);
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Success',
                     'error' => 'Otp sent successfully',
                 ]);
-    
+
             } else {
                 return response()->json([
                     'status' => 'error',
@@ -662,9 +662,9 @@ class HomepageController extends Controller
     public function checkEmailUnique(Request $request)
     {
         $email = $request->input('email');
-    
+
         $userExists = User::where('email', $email)->exists();
-    
+
         return response()->json(!$userExists);
     }
     public function verifyOTP(Request $request)
@@ -710,15 +710,15 @@ class HomepageController extends Controller
                 $existingUser->update($userData);
                 $first_name = $user->first_name;
                 $subject = "Welcome to Bid.sa – Registration Successful!";
-               
-              
+
+
             } else {
                 // Create new user
                 $newUser = User::create($userData);
                 $first_name = $user->first_name;
                 $subject = "Welcome to Bid.sa – Registration Successful!";
-            
-               
+
+
             }
 
             $first_name = $user->first_name;
@@ -802,7 +802,7 @@ class HomepageController extends Controller
             // return redirect()->route('registration-form')->with('error', $firstErrorMessage);
         }
         $user = User::where('email', $request->email)->first();
-         
+
         if ($user) {
 
             $otp = rand(1000, 9999);
@@ -931,11 +931,11 @@ class HomepageController extends Controller
     {
         $promo_id = $request->input('promo-id');
         $promo_type = $request->input('promo-type');
-        
+
         return view('shareproduct', ['promo_id' => $promo_id, 'promo_type' => $promo_type]);
     }
 
-    
+
 
     public function invoice(Request $request){
         return view('frontend.invoice');
@@ -952,16 +952,16 @@ class HomepageController extends Controller
 
         $products = $productsQuery->get();
         $bidProduct = StartBid::whereProjectId($projects->id)->whereStatus(1)->first();
-        // get product 
+        // get product
         $pid = $bidProduct->product_id;
-        
-        
+
+
         $product = Product::find($pid);
         // p ($product);
         $lastBid = BidPlaced::where('product_id', $product['id'])
                 ->orderBy('created_at', 'desc')
                 ->first();
-        
+
         $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
 
         $wishlist = [];
@@ -987,22 +987,22 @@ class HomepageController extends Controller
      {
 
         $user = User::find($user_id);
-        $langId = $user->lang_id; 
+        $langId = $user->lang_id;
         $currency = $user->currency_code;
         $projects = Project::where('id', $project_id)->first();
         $productsQuery = Product::where('project_id', $projects->id);
 
         $products = $productsQuery->get();
         $bidProduct = StartBid::whereProjectId($projects->id)->whereStatus(1)->first();
-        // get product 
+        // get product
         $pid = $bidProduct->product_id;
-        
+
         $product = Product::find($pid);
         // p ($product);
         $lastBid = BidPlaced::where('product_id', $product['id'])
                 ->orderBy('created_at', 'desc')
                 ->first();
-        
+
         $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
 
         $wishlist = [];
@@ -1024,6 +1024,6 @@ class HomepageController extends Controller
 
 
 
-    
+
 
 }

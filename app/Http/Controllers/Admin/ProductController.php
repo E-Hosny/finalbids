@@ -58,24 +58,24 @@ class ProductController extends Controller
             'auction_type_id' => 'required',
             'auction_end_date' => [
                 '',
-              
+
                 function ($attribute, $value, $fail) use ($request) {
                     $auctionTypeId = $request->input('auction_type_id');
                     if ($auctionTypeId == 2) {
-                        return; 
+                        return;
                     }
                     $projectId = $request->input('project_id');
-    
+
                     $project = Project::find($projectId);
-    
+
                     if (!$project) {
                         $fail('Invalid project selected.');
                         return;
                     }
-    
+
                     $startDate = $project->start_date_time;
                     $endDate = $project->end_date_time;
-    
+
                     if ($value < $startDate) {
                         $fail("The $attribute must not be less than the project start date and time ($startDate).");
                     } elseif ($value > $endDate) {
@@ -92,7 +92,7 @@ class ProductController extends Controller
             'end_price' =>'required',
             'start_price' => 'required',
             'minsellingprice' => '',
-            
+
         ]);
           // Check if any files are present
           if (!$request->hasFile('image_path')) {
@@ -100,27 +100,27 @@ class ProductController extends Controller
                 'image_path.*' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             ]);
         }
-      
+
         $lastLot = Product::orderBy('id', 'desc')->first();
-        $lastLotNumber = $lastLot ? intval(substr($lastLot->lot_no, 4)) : 0; 
-        $identifier = sprintf('%03d', $lastLotNumber + 1); 
+        $lastLotNumber = $lastLot ? intval(substr($lastLot->lot_no, 4)) : 0;
+        $identifier = sprintf('%03d', $lastLotNumber + 1);
         $lotNumber = 'Lot-' . $identifier;
         $data['lot_no'] = $lotNumber;
 
-        
+
         $data['slug'] = $this->getUniqueSlug($data['title']);
-       
+
        if ($request->has('start_price')) {
         $data['start_price'] = $request->input('start_price');
         } else {
-            $data['start_price'] = null; 
+            $data['start_price'] = null;
         }
         if ($request->has('is_popular')) {
             $data['is_popular'] = $request->input('is_popular');
         } else {
-            $data['is_popular'] = false; 
+            $data['is_popular'] = false;
         }
-      
+
          // Check if any files are present
             if (!$request->hasFile('image_path')) {
                 $validator = Validator::make([], []);
@@ -158,7 +158,7 @@ class ProductController extends Controller
                 $filename = date('YmdHi') . "-" . uniqid() . "." . $file->extension();
                 $filePath = $file->move(public_path('product/gallery'), $filename);
                 $url = asset('product/gallery/' . $filename);
-    
+
                 Gallery::create([
                     'product_id' => $pro->id,
                     'image_path' => $url,
@@ -166,14 +166,14 @@ class ProductController extends Controller
                 ]);
             }
         }
-        
-    
+
+
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
     /**
      * Display the specified resource.
      */
-    // 
+    //
     public function show(string $id)
     {
         //
@@ -184,7 +184,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-       
+
         $projects = Project::where('status', 1)->get();
         $projectCategoryIds = $projects->pluck('category_id')->toArray();
         $auctiontype = Auctiontype::where('status', 1)->get();
@@ -201,24 +201,24 @@ class ProductController extends Controller
             'auction_type_id' => 'required',
             'auction_end_date' => [
                 '',
-               
+
                 function ($attribute, $value, $fail) use ($request) {
                     $auctionTypeId = $request->input('auction_type_id');
                     if ($auctionTypeId == 2) {
-                        return; 
+                        return;
                     }
                     $projectId = $request->input('project_id');
-    
+
                     $project = Project::find($projectId);
-    
+
                     if (!$project) {
                         $fail('Invalid project selected.');
                         return;
                     }
-    
+
                     $startDate = $project->start_date_time;
                     $endDate = $project->end_date_time;
-    
+
                     if ($value < $startDate) {
                         $fail("The $attribute must not be less than the project start date and time ($startDate).");
                     } elseif ($value > $endDate) {
@@ -241,7 +241,7 @@ class ProductController extends Controller
                     'image_path.*' => 'required|image|mimes:jpeg,png,jpg|max:2048',
                 ]);
             }
-       
+
         $data['is_popular']= $request->get('is_popular',0) ? 1 : 0;
 
         $product->update($data);
@@ -250,7 +250,7 @@ class ProductController extends Controller
                 $filename = date('YmdHi') . "-" . uniqid() . "." . $file->extension();
                 $filePath = $file->move(public_path('product/gallery'), $filename);
                 $url = asset('product/gallery/' . $filename);
-    
+
                 Gallery::create([
                     'product_id' => $product->id,
                     'image_path' => $url,
@@ -258,7 +258,7 @@ class ProductController extends Controller
                 ]);
             }
         }
-        
+
         return redirect()->route('admin.products.index')->with('success', 'Product Updated Successfully!');
     }
 
@@ -302,8 +302,8 @@ class ProductController extends Controller
 
     public function deleteImage($id)
     {
-        $image = Gallery::where('id',$id)->first();    
-        if ($image) {            
+        $image = Gallery::where('id',$id)->first();
+        if ($image) {
             $image->delete();
             return response()->json(['success' => true]);
         }

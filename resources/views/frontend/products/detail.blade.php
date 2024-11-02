@@ -32,6 +32,7 @@
         overflow: hidden;
     }
 </style>
+
 <style>
     img {
         max-width: 100%;
@@ -254,6 +255,7 @@
         }
     }
 </style>
+
 <style type="text/css">
     /*----------------------*/
     .popup-data {
@@ -414,6 +416,7 @@
         width: 100%;
     }
 </style>
+
 <style>
     * {
         box-sizing: border-box;
@@ -581,22 +584,35 @@
 
 
                     <div class="details col-md-6">
-                        <h3 class="product-title">Art decorat bronze sculpture</h3>
-                        <p class="product-description">This cup of old nation for the Italy family.</p>
+                        <h3 class="product-title">
+                            {{ session('locale') == 'ar' ? $product->title_ar : $product->title }}
+                        </h3>
 
-                        <h4 class="price" style="font-weight:600">Description about this product. This is from 1945,
-                            very good and old.</h4>
-                        <p class="product-description">This auction ending from 31 October 2024, 12 PDT online, Los
-                            Angeles.</p>
+                        <h4 class="price" style="font-weight:600">
+                            {!! session('locale') == 'ar' ? $product->description_ar : $product->description !!}
+                        </h4>
 
-                        <h4 class="price"><span>150$ - 200$</span></h4>
-                        <h4 class="price"><span style="color: #82828b;">EGP 9536 - EGP 6987</span></h4>
+                        <p class="product-description">
+                            {{ session('locale') == 'ar' ? $product->auctiontype->name_ar : $product->auctiontype->name }}
+                        </p>
 
-                        <p class="vote">STARTING BID <strong>$20</strong></p>
+                        <h4 class="price">
+                            <span>{{ $product->reserved_price }}$</span>
+                        </h4>
 
-                        <a style="width: 163px!important;" class="btn btn-secondary px-5 w-25"
-                            href="{{ route('signin') }}">
-                            {{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}
+                        <h4 class="price">
+                            <span style="color: #82828b;">
+                                EG{{ $product->start_price }} - EG{{ $product->end_price }}
+                            </span>
+                        </h4>
+
+                        <p class="vote">
+                            {{ session('locale') == 'ar' ? 'الحد الأدنى للمزايدة' : 'STARTING BID' }}
+                            <strong>{{ $product->minsellingprice }}$</strong>
+                        </p>
+
+                        <a style="width: 163px!important;" class="btn btn-secondary px-5 w-25" href="{{ route('signin') }}">
+                            {{ session('locale') == 'ar' ? 'تسجيل الدخول' : 'Login' }}
                         </a>
 
                         <!-- Social Media Icons -->
@@ -613,6 +629,8 @@
                                 <i style="color: #000;padding: 0 5px 0 0;font-size: 20px" class="fa fa-instagram"
                                     style="font-size: 1.5em;"></i>
                             </a>
+
+
                             <a href="https://twitter.com" title="Twitter">
                                 <i style="color: #000;padding: 0 5px 0 0;font-size: 20px" class="fa fa-twitter-square"
                                     style="font-size: 1.5em;"></i>
