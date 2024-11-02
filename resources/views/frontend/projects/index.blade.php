@@ -24,10 +24,11 @@
         <div class="col-lg-5 col-md-6 text-center">
            <h1>{{ session('locale') === 'en' ? 'Projects' : (session('locale') === 'ar' ? 'مشاريع': 'Projects') }}</h1>
 
-            <form action="" class="search-frm-prdt" id="searchForm">
-            <input type="text" name="search" id="searchInput" placeholder="{{ session('locale') === 'en' ? 'Search projects...' : (session('locale') === 'ar' ? 'ابحث عن المشاريع...' : 'Search projects...') }}">
+            <form action="" class="search-frm-prdt " id="searchForm">
+                <input type="text" name="search" id="searchInput" placeholder="{{ session('locale') === 'en' ? 'Search projects...' : (session('locale') === 'ar' ? 'ابحث عن المشاريع...' : 'Search projects...') }}">
 
-              <button type="button" onclick="submitSearchForm()"><img class="w-100" src="{{ asset('frontend/images/rounded-sr.svg') }}" alt=""></button>
+              <button type="button" onclick="submitSearchForm()">
+                <i class="fa fa-search mt-3 fs-4"></i>
             </form>
         </div>
       </div>
