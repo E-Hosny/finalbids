@@ -1208,13 +1208,13 @@ section.most-view-product .row::-webkit-scrollbar-thumb {
     object-fit: cover;
 }
 
-.contact-us {
+/* .contact-us {
     background-image: url(../images/contact-bg.png);
     background-position: bottom;
     background-repeat: no-repeat;
     padding-bottom: 100px;
     margin-top: 100px;
-}
+} */
 
 .outer-box {
     width: 90%;
@@ -1228,7 +1228,7 @@ section.most-view-product .row::-webkit-scrollbar-thumb {
     padding: 60px 40px 60px 0px;
 }
 
-.contact-frm {
+/* .contact-frm {
     margin-top: 80px;
 }
 
@@ -1243,7 +1243,7 @@ section.most-view-product .row::-webkit-scrollbar-thumb {
 .rtl .contact-frm input,
 .rtl .contact-frm textarea {
     padding: 10px 60px 10px 10px;
-}
+} */
 
 .lft-icon-ipt {
     position: absolute;
@@ -3501,9 +3501,9 @@ footer h3 {
 .search-frm-prdt button {
     width: 49px;
 }
-.contact-frm {
+/* .contact-frm {
     margin-top: 20px;
-}
+} */
 .outer-box {
     padding: 40px 20px;
 }
@@ -3655,6 +3655,10 @@ input#outbidCheckbox {
     width: 100% !important;
    }
 } */
+
+.btn-color{
+    background-color: #0D3858;
+}
 
 
 
