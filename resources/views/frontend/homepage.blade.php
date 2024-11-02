@@ -39,8 +39,28 @@
 
     .card {
         border: 0;
-        width: 300px;
+        width: 304px;
+        max-width: 19rem;
     }
+     @media screen and (max-width:768px) {
+   .card{
+        width: 90% !important;
+        max-width: 25rem;
+   }
+}
+    .card-product {
+        /* border: 0;
+        width: 304px; */
+        max-width: 19rem;
+    }
+     @media screen and (max-width:768px) {
+   .card-product{
+        width: 90% !important;
+        max-width: 25rem;
+   }
+}
+
+
 
     .card-body {
         border: 0;
@@ -123,7 +143,7 @@
                 </div>
 </section>
 <section class="trending-auction-section mb-5">
-    <div class="container ">
+    <div class="container  ">
         <div class="section-heading px-4">
             <h2>{{ session('locale') === 'en' ? 'Recommended Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Recommended Auctions') }}</h2>
         </div>
@@ -147,7 +167,7 @@
                     @endphp
 
                     <div class="col d-flex justify-content-center">
-                        <div class="card mb-3 w-100" style="max-width: 19rem;">
+                        <div class="card mb-3">
                             <div class="card-header bg-transparent">
 
                                 @if(session('locale') === 'en')
@@ -214,7 +234,7 @@
 
               <div>
                 <a href="{{ url('productsdetail', $product->slug) }}">
-                  <div class="card-product mx-auto" style="max-width: 19rem;">
+                  <div class="card-product mx-auto">
                     <div class="product-image  text-center">
                                  @php
                                       $imagePath = \App\Models\Gallery::where('lot_no', $product->lot_no)->orderBy('id')->value('image_path');
