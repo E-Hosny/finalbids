@@ -1465,7 +1465,7 @@ form.news-letter button {
     margin-bottom: 30px;
     border: 1px solid #C2C2C2;
     padding: 14px 10px;
-    border-radius: 10px;
+    border-radius: 0px;
     background-color: transparent;
     color: #000;
 }
@@ -2147,12 +2147,12 @@ section.account-hero-section h1 {
     border-radius:  10px;
     background: #FFF;
     margin-top: 230px;
-    box-shadow: 0 0 10px #740fc957;
+    /* box-shadow: 0 0 10px #740fc957; */
 }
 
 .profile-sidebar {
-    border-radius: 10px 0px 0px 10px;
-    background: #FBF8FF;
+    border-radius: 0;
+    /* background: #FBF8FF; */
     height: 100%;
 }
 
@@ -2211,13 +2211,13 @@ section.account-hero-section h1 {
 }
 
 .account-menu ul li a {
-    background-image: url(../images/double-arrow.svg);
+    /* background-image: url(../images/double-arrow.svg); */
     background-repeat: no-repeat;
     background-position: 24px;
 }
 
 .account-menu ul li a {
-    padding: 14px 10px 14px 50px;
+    padding: 15px 0px 14px 30px;
     color: #000;
     font-size: 16px;
     display: block;
@@ -2256,7 +2256,7 @@ section.account-hero-section h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 40px 22px 40px 0;
+    margin: 40px 22px 40px 22px;
     font-size: 26px;
     font-weight: 800;
 }

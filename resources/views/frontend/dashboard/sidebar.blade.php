@@ -1,5 +1,18 @@
-<div class="col-md-3">
-    <div class="profile-sidebar">
+<style>
+    .active-menu-item {
+        background: #0D3858;
+        color: white;
+    }
+
+    .white-icon {
+        filter: brightness(0) invert(1);
+    }
+
+</style>
+<div class="col-md-3"
+     style="padding: 0 {{ session('locale') === 'en' ? '33px 0 0px' : '0px 0 33px' }};">
+
+    <div class="profile-sidebar card">
         <div class="profile-side">
             {{-- <div class="img-prfe">
                 @if (Auth::user()->profile_image)
@@ -12,32 +25,49 @@
             <a href="">{{ Auth::user()->email }}</a> --}}
         </div>
         <div class="account-menu">
-            <h5>Menu Profile <button class="menu-show-mn" type="button"><img style="width: 30px;"
-                        src="{{ asset('frontend/images/menu.svg') }}" alt=""></button></h5>
+            <h5>Menu Profile
+                <button class="menu-show-mn" type="button">
+                    <img style="width: 30px;" src="{{ asset('frontend/images/menu.svg') }}" alt="">
+                </button>
+            </h5>
 
             @if (session('locale') === 'en')
                 <ul class="menu-ul">
-                    <li><a href="{{ route('userdashboard') }}">Edit Profile</a></li>
-                    <!-- <li><a href="#">My Orders</a></li> -->
-                    {{-- <li><a href="{{ route('useraddress') }}">Manage Address </a></li> --}}
-                    <li><a href="{{ route('auction') }}">Auctions</a></li>
-                    {{-- <li><a href="{{ route('logouts') }}">Logout</a></li> --}}
+                    <li style="margin-top: -10px !important;">
+                        <a href="{{ route('userdashboard') }}"
+                            style="{{ request()->routeIs('userdashboard') ? 'background: #0D3858; color: white;' : '' }}">
+                            <img src="{{ asset('frontend/user.png') }}"
+                                class="{{ request()->routeIs('userdashboard') ? 'white-icon' : '' }}"
+                                style="width: 30px; margin-right: 5px;" alt="Edit Profile Icon"> Edit Profile
+                        </a>
+                    </li>
+                    <li style="margin-top: -10px !important;">
+                        <a href="{{ route('auction') }}"
+                            style="{{ request()->routeIs('auction') ? 'background: #0D3858; color: white;' : '' }}">
+                            <img src="{{ asset('frontend/hammer.png') }}"
+                                class="{{ request()->routeIs('auction') ? 'white-icon' : '' }}"
+                                style="width: 30px; margin-right: 5px;" alt="Auction Icon"> Auctions
+                        </a>
+                    </li>
                 </ul>
             @elseif(session('locale') === 'ar')
                 <ul class="menu-ul">
-                <li><a href="{{route('userdashboard')}}"> تعديل البروفايل</a></li>
-                <!-- <li><a href="#">My Orders</a></li> -->
-                {{-- <li><a href="{{route('useraddress')}}">إدارة العنوان </a></li> --}}
-                <li><a href="{{route('auction')}}">المزادات</a></li>
-                {{-- <li><a href="{{route('logouts')}}">الخروج</a></li> --}}
-            </ul>
-            @else
-                <ul class="menu-ul">
-                    <li><a href="{{ route('userdashboard') }}">My Account</a></li>
-                    <li><a href="#">My Orders</a></li>
-                    <li><a href="{{ route('useraddress') }}">Manage Address </a></li>
-                    <li><a href="{{ route('auction') }}">Auctions</a></li>
-                    <li><a href="{{ route('logouts') }}">Logout</a></li>
+                    <li style="margin-top: -10px !important;">
+                        <a href="{{ route('userdashboard') }}"
+                            style="{{ request()->routeIs('userdashboard') ? 'background: #0D3858; color: white;' : '' }}">
+                            <img src="{{ asset('frontend/user.png') }}"
+                                class="{{ request()->routeIs('userdashboard') ? 'white-icon' : '' }}"
+                                style="width: 30px; margin-right: 5px;" alt="Edit Profile Icon"> تعديل البروفايل
+                        </a>
+                    </li>
+                    <li style="margin-top: -10px !important;">
+                        <a href="{{ route('auction') }}"
+                            style="{{ request()->routeIs('auction') ? 'background: #0D3858; color: white;' : '' }}">
+                            <img src="{{ asset('frontend/hammer.png') }}"
+                                class="{{ request()->routeIs('auction') ? 'white-icon' : '' }}"
+                                style="width: 30px; margin-right: 5px;" alt="Auction Icon"> المزادات
+                        </a>
+                    </li>
                 </ul>
             @endif
         </div>

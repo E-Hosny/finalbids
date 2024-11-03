@@ -1,5 +1,9 @@
 @include('frontend.layouts.header')
-
+<style>
+    /* .heading-act h2{
+        margin: 0;
+    } */
+</style>
 <section class="dtl-user-box">
     <div class="container">
         <div class="account-outer-box">
@@ -8,8 +12,9 @@
 
                 @include('frontend.dashboard.sidebar')
 
-                <div class="col-md-9">
-                    <div class="heading-act">
+                <div class="col-md-9 card" style="border-radius: 0px;padding: 0px;">
+
+                    <div class="heading-act" style="margin-top: 40px">
                         <h2>
                             @if (session('locale') === 'en')
                                 Personal Info
@@ -56,7 +61,6 @@
 
                                 </div>
 
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="email">
@@ -74,7 +78,7 @@
 
                                 <div class="col-md-6 text-end my-4">
                                     <button type="submit" class="btn btn-purple"
-                                        style="background-color: purple; color: white;">
+                                        style="border-radius: 0px;background-color: #0D3858; color: white;     padding: 15px 15px 15px 15px;">
                                         @if (session('locale') === 'ar')
                                             حفظ التغيير
                                         @else
@@ -82,91 +86,85 @@
                                         @endif
                                     </button>
                                 </div>
+                            </div>
+                        </form>
+                    </div>
 
-                                <hr>
-                                    <div class="heading-act">
-                                        <h2>
+                    <hr>
+
+                    <div class="heading-act">
+                        <h2>
+                            @if (session('locale') === 'ar')
+                                تغيير كلمة المرور
+                            @else
+                                Change Password
+                            @endif
+                        </h2>
+                    </div>
+
+                    <div class="profile-detail-section">
+                        <form action="{{ route('change-password') }}" class="cmn-frm px-4" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="current_password">
                                             @if (session('locale') === 'ar')
-                                                تغيير كلمة المرور
+                                                كلمة المرور القديمة
                                             @else
-                                                Change Password
+                                                Old Password
                                             @endif
-                                        </h2>
+                                        </label>
+                                        <input type="password" name="current_password" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password">
+                                            @if (session('locale') === 'ar')
+                                                كلمة مرور جديدة
+                                            @else
+                                                New Password
+                                            @endif
+                                        </label>
+                                        <input type="password" name="password" class="form-control">
                                     </div>
 
-                                    <div class="profile-detail-section">
-                                        <form action="{{ route('change-password') }}" class="cmn-frm px-4" method="POST">
-                                            @csrf
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="current_password">
-                                                            @if (session('locale') === 'ar')
-                                                                كلمة المرور القديمة
-                                                            @else
-                                                                Old Password
-                                                            @endif
-                                                        </label>
-                                                        <input type="password" name="current_password" class="form-control">
-                                                    </div>
-                                                </div>
 
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="password">
-                                                            @if (session('locale') === 'ar')
-                                                                كلمة مرور جديدة
-                                                            @else
-                                                                New Password
-                                                            @endif
-                                                        </label>
-                                                        <input type="password" name="password" class="form-control">
-                                                    </div>
+                                </div>
 
 
-                                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="confirm_password">
+                                            @if (session('locale') === 'ar')
+                                                تأكيد كلمة المرور
+                                            @else
+                                                Confirm Password
+                                            @endif
+                                        </label>
+                                        <input type="password" name="confirm_password" class="form-control">
+                                    </div>
+                                </div>
 
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="confirm_password">
-                                                            @if (session('locale') === 'ar')
-                                                                تأكيد كلمة المرور
-                                                            @else
-                                                                Confirm Password
-                                                            @endif
-                                                        </label>
-                                                        <input type="password" name="confirm_password" class="form-control">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6 text-end my-4">
-                                                    <button type="submit" class="btn btn-purple"
-                                                        style="background-color: purple; color: white;">
-                                                        @if (session('locale') === 'ar')
-                                                            حفظ التغيير
-                                                        @else
-                                                            Save Changes
-                                                        @endif
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                <div class="col-md-6 text-end my-4">
+                                    <button type="submit" class="btn btn-purple"
+                                    style="border-radius: 0px;background-color: #0D3858; color: white;     padding: 15px 15px 15px 15px;">
+                                        @if (session('locale') === 'ar')
+                                            حفظ التغيير
+                                        @else
+                                            Save Changes
+                                        @endif
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
+
                 </div>
             </div>
-            <section class="dtl-user-box">
-                <div class="account-outer-box">
-                    <div class="row">
-
-                    </div>
-                </div>
-            </section>
         </div>
-    </div>
 </section>
 
 
