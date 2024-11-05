@@ -701,33 +701,29 @@
                             <hr style="margin-top: 35px!important;">
 
                             <!-- Sentences with Icons -->
-                            <div class="row" style="margin-top: 10px;"> <!-- Adjusted margin-top -->
+                            <div class="row" style="margin-top: -5px;"> <!-- Adjusted margin-top to a smaller value -->
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                            class="fa fa-question-circle-o mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-question-circle-o mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'كيف تزايد' : 'How to bid' }}</span>
                                     </div>
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                            class="fa fa-eye mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-eye mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'مشاهدة المزاد' : 'Auction Viewings' }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                            class="fa fa-user-plus mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-user-plus mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'طلب تقرير الحالة' : 'Request condition report' }}</span>
                                     </div>
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                            class="fa fa-shopping-bag mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-shopping-bag mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'كيف تشتري' : 'How to buy' }}</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                                                    </div>
                     </div>
                     <div class="row mt-5">
                         <div class="col-md-12">
