@@ -36,7 +36,7 @@
                                                 @endif
 
                                             </div>
-                                           
+
                                             <div class="col-12 col-sm-6 mb-3">
                                                 <label><strong>Choose AuctionType <span class="star">*</span>:</strong></label>
                                                 <select name="auction_type_id"
@@ -51,7 +51,7 @@
                                                 <div class="error">{{$errors->first('auction_type_id')}}</div>
                                                 @endif
                                             </div>
-                                          
+
                                             <div class="col-12 col-sm-6 mb-3">
                                                 <label><strong>Choose Project <span class="star">*</span>:</strong></label>
                                                 <select name="project_id"
@@ -66,7 +66,7 @@
                                                 <div class="error">{{$errors->first('project_id')}}</div>
                                                 @endif
                                             </div>
-                                          
+
 
                                             <div class="col-12 col-sm-6 mb-3" id="end-date-container">
                                                 <label><strong>End Date & Time </strong></label>
@@ -77,12 +77,12 @@
                                                 <div class="error">{{ $errors->first('auction_end_date') }}</div>
                                                 @endif
                                             </div>
-                                            
+
                                             <div class="col-12 col-sm-6 mb-3 test">
                                                 <label><strong>Is Popular:</strong></label>
                                                 <input type="checkbox" name="is_popular" value="1">
                                             </div>
-                                           
+
                                             <div class="col-12 col-sm-6 mb-3">
                                                 <label><strong> Price <span class="star">*</span></strong></label>
                                                 <input class="multisteps-form__input form-control" type="number"
@@ -140,6 +140,8 @@
 
                                         </div>
 
+
+
                                         <div class="col-12 col-sm-12 mb-3">
                                             <label>Description (EN)<span class="star">*</span></label>
                                             @php $description = old('description') @endphp
@@ -169,7 +171,7 @@
             </div>
         </div>
     </main>
-   
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>

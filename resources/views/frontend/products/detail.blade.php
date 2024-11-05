@@ -1,4 +1,6 @@
 @include('frontend.layouts.header')
+
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 
@@ -69,6 +71,32 @@
         width: 170%;
     }
 
+    .accordion-button::after {
+        display: none;
+        /* إخفاء السهم الافتراضي */
+    }
+
+
+
+
+    .accordion-button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .accordion-icon {
+        margin-left: auto;
+        font-size: 1.5em;
+        color: #000;
+    }
+
+    .custom-bg-white {
+        background-color: white !important;
+        padding: 10px;
+    }
+
+
     .preview-thumbnail.nav-tabs li {
         width: 18%;
         margin-right: 2.5%;
@@ -78,6 +106,13 @@
         max-width: 100%;
         display: block;
     }
+
+
+
+    .col-md-12 {
+        background-color: white !important;
+    }
+
 
     .preview-thumbnail.nav-tabs li a {
         padding: 0;
@@ -508,11 +543,11 @@
             <div class="col-md-12">
                 <!-- <div class="product-imgs mt-4">
                 @auth
-                                                            <div class="heat-like wishlist-heart @if (in_array($product->id, $wishlist)) active @endif"
-                                                                data-product-id="{{ $product->id }}">
-                                                                <input type="checkbox" name="" id="" @if (in_array($product->id, $wishlist)) checked @endif>
-                                                                <img src="{{ asset('frontend/images/heart.png') }}" alt="">
-                                                            </div>
+                                                                                                                                    <div class="heat-like wishlist-heart @if (in_array($product->id, $wishlist)) active @endif"
+                                                                                                                                        data-product-id="{{ $product->id }}">
+                                                                                                                                        <input type="checkbox" name="" id="" @if (in_array($product->id, $wishlist)) checked @endif>
+                                                                                                                                        <img src="{{ asset('frontend/images/heart.png') }}" alt="">
+                                                                                                                                    </div>
 @else
     <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a>
                         @endauth
@@ -584,17 +619,16 @@
 
 
                     <div class="details col-md-6">
-                        <h3 class="product-title">
+                        <h1 class="product-title">
                             {{ session('locale') == 'ar' ? $product->title_ar : $product->title }}
-                        </h3>
+                        </h1>
 
                         <h4 class="price" style="font-weight:600">
                             {!! session('locale') == 'ar' ? $product->description_ar : $product->description !!}
                         </h4>
-
-                        <p class="product-description">
+                        <h3 class="product-description">
                             {{ session('locale') == 'ar' ? $product->auctiontype->name_ar : $product->auctiontype->name }}
-                        </p>
+                        </h3>
 
                         <h4 class="price">
                             <span>{{ $product->reserved_price }}$</span>
@@ -602,282 +636,365 @@
 
                         <h4 class="price">
                             <span style="color: #82828b;">
-                                EG{{ $product->start_price }} - EG{{ $product->end_price }}
+                                EGP{{ $product->start_price }} - EGP{{ $product->end_price }}
                             </span>
                         </h4>
 
-                        <p class="vote">
+                        <p class="vote" style="color: #0D3858; font-size: 1.5em;">
                             {{ session('locale') == 'ar' ? 'الحد الأدنى للمزايدة' : 'STARTING BID' }}
-                            <strong>{{ $product->minsellingprice }}$</strong>
+                            <strong style="margin-left: 30px; color: #0D3858;">${{ $product->minsellingprice }}</strong> <!-- زيادة المسافة -->
                         </p>
 
-                        <a style="width: 163px!important;" class="btn btn-secondary px-5 w-25" href="{{ route('signin') }}">
-                            {{ session('locale') == 'ar' ? 'تسجيل الدخول' : 'Login' }}
+                        <a style="width: 163px!important; text-align: center; position: relative; top: 30px; background-color: #0D3858; color: #fff;" class="btn btn-secondary px-5 w-25 d-flex justify-content-center" href="{{ route('signin') }}">
+                            {{ session('locale') == 'ar' ? 'تسجيل الدخول' : 'LOGIN TO bID' }}
                         </a>
 
-                        <!-- Social Media Icons -->
-                        <div class="social-icons mt-5">
-                            <a href="https://example.com/share" class="mr-3" title="Share">
-                                <i style="color: #000;padding: 0 5px 0 0;font-size: 20px" class="fa fa-share-square-o"
-                                    style="font-size: 1.5em;">Share</i>
-                            </a>
-                            <a href="https://facebook.com" class="mr-3" title="Facebook">
-                                <i style="color: #000;padding: 0 5px 0 0;font-size: 20px" class="fa fa-facebook-square"
-                                    style="font-size: 1.5em;"></i>
-                            </a>
-                            <a href="https://instagram.com" class="mr-3" title="Instagram">
-                                <i style="color: #000;padding: 0 5px 0 0;font-size: 20px" class="fa fa-instagram"
-                                    style="font-size: 1.5em;"></i>
-                            </a>
+                        <div class="row" style="margin-top: 40px;"> <!-- Adjusted margin-top -->
+                            <div class="social-icons" style="display: flex; align-items: center; margin-top: 20px; position: relative; top: 20px;"> <!-- Increased top value -->
+                                <a href="https://example.com/share" class="mr-3" title="Share"
+                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-share-square-o"></i>
+                                    <span style="color: #000;">Share</span>
+                                </a>
+                                <a href="https://facebook.com" class="mr-3" title="Facebook"
+                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-facebook-square"></i>
+                                </a>
+                                <a href="https://instagram.com" class="mr-3" title="Instagram"
+                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-instagram"></i>
+                                </a>
+                                <a href="https://X.com" title="X"
+                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-twitter"></i>
+                                </a>
+                            </div>
 
+                            <hr style="margin-top: 35px!important;">
 
-                            <a href="https://twitter.com" title="Twitter">
-                                <i style="color: #000;padding: 0 5px 0 0;font-size: 20px" class="fa fa-twitter-square"
-                                    style="font-size: 1.5em;"></i>
-                            </a>
+                            <!-- Sentences with Icons -->
+                            <div class="row" style="margin-top: 10px;"> <!-- Adjusted margin-top -->
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-question-circle-o mr-2"></i>
+                                        <span>{{ session('locale') == 'ar' ? 'كيف تزايد' : 'How to bid' }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-eye mr-2"></i>
+                                        <span>{{ session('locale') == 'ar' ? 'مشاهدة المزاد' : 'Auction Viewings' }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-user-plus mr-2"></i>
+                                        <span>{{ session('locale') == 'ar' ? 'طلب تقرير الحالة' : 'Request condition report' }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-shopping-bag mr-2"></i>
+                                        <span>{{ session('locale') == 'ar' ? 'كيف تشتري' : 'How to buy' }}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <hr style="margin-top: 22px!important;">
-                        <!-- Sentences with Icons -->
+                                                                    </div>
+                                        <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
+                                {{ session('locale') == 'ar' ? 'تمثال برونزي مزخرف' : 'Art decorat bronze sculpture' }}
+                            </h3>
+
+                            <p class="mt-3">
+                                Bronze sculptures are a common feature in art decor, known for their timeless beauty,
+                                durability, and intricate detail. Bronze is an alloy primarily consisting of copper,
+                                often
+                                combined with tin, which gives sculptures a warm, reddish-brown hue that ages
+                                beautifully,
+                                developing a natural patina over time.
+                            </p>
+
+                            <p class="mt-3">
+                                In terms of style, bronze sculptures have been a part of various movements:
+                            </p>
+                            <p>Art Deco: Characterized by geometric shapes, clean lines, and a sleek, modern feel, often
+                                featuring stylized human figures, animals, or abstract forms. <br>
+                            <p>Classical: Inspired by ancient Greek and Roman art, featuring realistic depictions of the
+                                human form or mythological figures. <br>
+                            <p>Modern and Abstract: Featuring more fluid, minimalist, or experimental forms.
+                            <p class="mt-3">
+                                Bronze is often used in outdoor art decor for gardens, parks, or monumental statues due
+                                to
+                                its
+                                resistance to weathering. Indoors, smaller bronze sculptures serve as striking decor
+                                pieces,
+                                adding a sense of elegance and history to a space.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
+                                {{ session('locale') == 'ar' ? 'تمثال برونزي مزخرف' : 'Art decorat bronze sculpture' }}
+                            </h3>
+
+                            <p class="mt-3">
+                                Bronze sculptures are a common feature in art decor, known for their timeless beauty,
+                                durability, and intricate detail. Bronze is an alloy primarily consisting of copper,
+                                often
+                                combined with tin, which gives sculptures a warm, reddish-brown hue that ages
+                                beautifully,
+                                developing a natural patina over time.
+                            </p>
+
+                            <p class="mt-3">
+                                In terms of style, bronze sculptures have been a part of various movements:
+                            </p>
+                            <p>Art Deco: Characterized by geometric shapes, clean lines, and a sleek, modern feel, often
+                                featuring stylized human figures, animals, or abstract forms. <br>
+                            <p>Classical: Inspired by ancient Greek and Roman art, featuring realistic depictions of the
+                                human form or mythological figures. <br>
+                            <p>Modern and Abstract: Featuring more fluid, minimalist, or experimental forms.
+                            <p class="mt-3">
+                                Bronze is often used in outdoor art decor for gardens, parks, or monumental statues due
+                                to
+                                its
+                                resistance to weathering. Indoors, smaller bronze sculptures serve as striking decor
+                                pieces,
+                                adding a sense of elegance and history to a space.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
+                                {{ session('locale') == 'ar' ? 'معلومات إضافية' : 'Additional information' }}
+                            </h3>
+                        </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseOne" aria-expanded="true"
+                                        aria-controls="collapseOne">
+                                        Auction information
+                                        <span class="accordion-icon">+</span>
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>This is the first item's accordion body.</strong> It is shown by
+                                        default,
+                                        until
+                                        the collapse plugin adds the appropriate classes that we use to style each
+                                        element.
+                                        These classes control the overall appearance, as well as the showing and hiding
+                                        via
+                                        CSS
+                                        transitions. You can modify any of this with custom CSS or overriding our
+                                        default
+                                        variables. It's also worth noting that just about any HTML can go within the
+                                        <code>.accordion-body</code>, though the transition does limit overflow.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                                        aria-controls="collapseTwo">
+                                        Accordion Item #2
+                                        <span class="accordion-icon">+</span>
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>This is the second item's accordion body.</strong> It is hidden by
+                                        default,
+                                        until the collapse plugin adds the appropriate classes that we use to style each
+                                        element. These classes control the overall appearance, as well as the showing
+                                        and
+                                        hiding
+                                        via CSS transitions. You can modify any of this with custom CSS or overriding
+                                        our
+                                        default variables. It's also worth noting that just about any HTML can go within
+                                        the
+                                        <code>.accordion-body</code>, though the transition does limit overflow.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                        aria-expanded="false" aria-controls="collapseThree">
+                                        Accordion Item #3
+                                        <span class="accordion-icon">+</span> <!-- علامة (+) هنا -->
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by
+                                        default,
+                                        until
+                                        the collapse plugin adds the appropriate classes that we use to style each
+                                        element.
+                                        These classes control the overall appearance, as well as the showing and hiding
+                                        via
+                                        CSS
+                                        transitions. You can modify any of this with custom CSS or overriding our
+                                        default
+                                        variables. It's also worth noting that just about any HTML can go within the
+                                        <code>.accordion-body</code>, though the transition does limit overflow.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
+                                {{ session('locale') == 'ar' ? 'المزيد من القطع من هذا المزاد' : 'More lots from this auction' }}
+                            </h3>
+
+                        </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                        class="fa fa-question-circle-o mr-2" style="font-size: 1.2em;"></i>
-                                    <span>{{ session('locale') == 'ar' ? 'كيف تزايد' : 'How to bid' }}</span>
-                                </div>
-                                <div class="d-flex align-items-center mb-2">
-                                    <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-eye mr-2"
-                                        style="font-size: 1.2em;"></i>
-                                    <span>{{ session('locale') == 'ar' ? 'مشاهدة المزاد' : 'Auction Viewings' }}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                        class="fa fa-user-plus mr-2" style="font-size: 1.2em;"></i>
-                                    <span>{{ session('locale') == 'ar' ? 'طلب تقرير الحالة' : 'Request condition report' }}</span>
-                                </div>
-                                <div class="d-flex align-items-center mb-2">
-                                    <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
-                                        class="fa fa-shopping-bag mr-2" style="font-size: 1.2em;"></i>
-                                    <span>{{ session('locale') == 'ar' ? 'كيف تشتري' : 'How to buy' }}</span>
+                            <!-- Card 1 -->
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 1">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 1</h5>
+                                        <p class="card-text">Short description of product 1. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 1.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-
-                </div>
-
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-md-12">
-                    <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
-                        {{ session('locale') == 'ar' ? 'تمثال برونزي مزخرف' : 'Art decorat bronze sculpture' }}
-                    </h3>
-
-                    <p class="mt-3">
-                        Bronze sculptures are a common feature in art decor, known for their timeless beauty,
-                        durability, and intricate detail. Bronze is an alloy primarily consisting of copper, often
-                        combined with tin, which gives sculptures a warm, reddish-brown hue that ages beautifully,
-                        developing a natural patina over time.
-                    </p>
-
-                    <p class="mt-3">
-                        In terms of style, bronze sculptures have been a part of various movements:
-                    </p>
-                    <p>Art Deco: Characterized by geometric shapes, clean lines, and a sleek, modern feel, often
-                        featuring stylized human figures, animals, or abstract forms. <br>
-                    <p>Classical: Inspired by ancient Greek and Roman art, featuring realistic depictions of the
-                        human form or mythological figures. <br>
-                    <p>Modern and Abstract: Featuring more fluid, minimalist, or experimental forms.
-                    <p class="mt-3">
-                        Bronze is often used in outdoor art decor for gardens, parks, or monumental statues due to its
-                        resistance to weathering. Indoors, smaller bronze sculptures serve as striking decor pieces,
-                        adding a sense of elegance and history to a space.
-                    </p>
-                </div>
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-md-12">
-                    <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
-                        {{ session('locale') == 'ar' ? 'معلومات إضافية' : 'Additional information' }}
-                    </h3>
-
-                </div>
-                <div class="accordion" id="accordionExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Accordion Item #1
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <strong>This is the first item's accordion body.</strong> It is shown by default, until
-                                the collapse plugin adds the appropriate classes that we use to style each element.
-                                These classes control the overall appearance, as well as the showing and hiding via CSS
-                                transitions. You can modify any of this with custom CSS or overriding our default
-                                variables. It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
+                            <!-- Card 2 -->
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 2</h5>
+                                        <p class="card-text">Short description of product 2. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 2.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Accordion Item #2
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <strong>This is the second item's accordion body.</strong> It is hidden by default,
-                                until the collapse plugin adds the appropriate classes that we use to style each
-                                element. These classes control the overall appearance, as well as the showing and hiding
-                                via CSS transitions. You can modify any of this with custom CSS or overriding our
-                                default variables. It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Accordion Item #3
-                            </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until
-                                the collapse plugin adds the appropriate classes that we use to style each element.
-                                These classes control the overall appearance, as well as the showing and hiding via CSS
-                                transitions. You can modify any of this with custom CSS or overriding our default
-                                variables. It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row mt-5">
-                <div class="col-md-12">
-                    <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
-                        {{ session('locale') == 'ar' ? 'المزيد من القطع من هذا المزاد' : 'More lots from this auction' }}
-                    </h3>
+                            <!-- Card 3 -->
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 3</h5>
+                                        <p class="card-text">Short description of product 3. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 3.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
+                            </div>
 
-                </div>
-                <div class="row">
-                    <!-- Card 1 -->
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 1">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 1</h5>
-                                <p class="card-text">Short description of product 1. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 1.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
+                            <!-- Card 4 -->
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 4</h5>
+                                        <p class="card-text">Short description of product 4. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 4.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 4</h5>
+                                        <p class="card-text">Short description of product 4. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 4.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 4</h5>
+                                        <p class="card-text">Short description of product 4. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 4.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 4</h5>
+                                        <p class="card-text">Short description of product 4. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 4.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="{{ url('frontend/product.png') }}" class="card-img-top"
+                                        alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product Title 4</h5>
+                                        <p class="card-text">Short description of product 4. Lorem
+                                            ipsum dolor sit amet.
+                                        </p>
+                                        <p class="small">Additional details about product 4.</p>
+                                        <h3 class="px-2">150$ - 200$</h3>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 2 -->
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 2">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 2</h5>
-                                <p class="card-text">Short description of product 2. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 2.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 3">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 3</h5>
-                                <p class="card-text">Short description of product 3. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 3.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 4">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 4</h5>
-                                <p class="card-text">Short description of product 4. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 4.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 4">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 4</h5>
-                                <p class="card-text">Short description of product 4. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 4.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 4">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 4</h5>
-                                <p class="card-text">Short description of product 4. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 4.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 4">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 4</h5>
-                                <p class="card-text">Short description of product 4. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 4.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="{{ url('frontend/product.png') }}" class="card-img-top" alt="Product 4">
-                            <div class="card-body">
-                                <h5 class="card-title">Product Title 4</h5>
-                                <p class="card-text">Short description of product 4. Lorem ipsum dolor sit amet.</p>
-                                <p class="small">Additional details about product 4.</p>
-                                <h3 class="px-2">150$ - 200$</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- @php
+                    {{-- @php
             $currentBid = \App\Models\BidPlaced::where('product_id', $product->id)
                             ->where('sold', 1)
                             ->where('status', '!=', 0)
@@ -891,7 +1008,7 @@
 
             @endphp --}}
 
-            {{-- <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                 <div class="bid-and-time">
                 <div id="myresult" class="img-zoom-result" ></div>
 
@@ -941,12 +1058,12 @@
             </div> --}}
 
 
-            {{-- @php
+                    {{-- @php
             $currentTime = now()->timestamp;
               $auctionEndTime = strtotime($product->auction_end_date);
             @endphp --}}
 
-            {{-- <div class="bid-now-container">
+                    {{-- <div class="bid-now-container">
                 <div class="product-feature-box">
                     @if ($bidPlacedId)
                     <h4>
@@ -1103,8 +1220,8 @@
                 </div>
             </div> --}}
 
-            {{-- details --}}
-            {{-- <div class="product-feature-box">
+                    {{-- details --}}
+                    {{-- <div class="product-feature-box">
                 @if (session('locale') === 'en')
                 <h4>{{$product->project->name}} </h4>
                 @elseif(session('locale') === 'ar')
@@ -1135,7 +1252,7 @@
                     @endif
             </div> --}}
 
-            {{-- <div class="product-feature-box">
+                    {{-- <div class="product-feature-box">
                 <h4>{{ session('locale') === 'en' ? 'Share Now' : (session('locale') === 'ar' ? 'المشاركة الان' : 'Share Now') }}</h4>
 
                 <ul class="social-link mt-4">
@@ -1167,9 +1284,10 @@
 
 
 
+                </div>
+            </div>
         </div>
-    </div>
-    </div>
+
 </section>
 
 <script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
@@ -1695,10 +1813,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
-<script>
-    // Initiate zoom effect:
-    // imageZoom("myimage", "myresult");
-</script>
 {{-- <script>
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -1726,3 +1840,16 @@ document.addEventListener('DOMContentLoaded', function() {
 <script type="text/javascript" src="https://hammerjs.github.io/dist/hammer.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/js/foundation.min.js"></script> --}}
 @include('frontend.products.script.addToWishListScript')
+<script>
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const icon = button.querySelector('.accordion-icon');
+            // إذا كان العنصر مفتوحًا، قم بتغيير العلامة إلى -
+            if (button.getAttribute('aria-expanded') === 'true') {
+                icon.textContent = '+'; // تغيير إلى +
+            } else {
+                icon.textContent = '-'; // تغيير إلى -
+            }
+        });
+    });
+</script>

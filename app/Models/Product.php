@@ -19,8 +19,8 @@ class Product extends Model
         'project_id',
         'reserved_price',
         'description',
-        'is_popular', 
-        'slug', 
+        'is_popular',
+        'slug',
         'lot_no',
         'start_price',
         'end_price',
@@ -30,7 +30,11 @@ class Product extends Model
         'description_ar',
     ];
 
-   
+
+
+    
+
+
     public function setPriceAttribute($value)
     {
         if (session()->get('currency') == 'usd' || session()->get('currency') == 'USD') {
@@ -44,7 +48,7 @@ class Product extends Model
             $this->attributes['reserved_price'] = $value;
         }
     }
-     
+
 
     public function category()
     {
@@ -69,7 +73,7 @@ class Product extends Model
     {
         return $this->hasMany(Gallery::class, 'product_id');
     }
-   
+
     public function specifications()
     {
         return $this->hasMany(Specification::class, 'product_id');
@@ -83,6 +87,6 @@ class Product extends Model
     {
         return $this->hasMany(BidPlaced::class, 'product_id');
     }
-    
+
 
 }
