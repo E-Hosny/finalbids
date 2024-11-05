@@ -22,6 +22,24 @@
         transition: 0.4s;
     }
 
+
+    .accordion-button {
+        background-color: transparent !important;
+        /* جعل الخلفية شفافة */
+        border: none !important;
+        /* إزالة الحدود */
+        color: #000;
+        /* اختيار لون النص، يمكنك تغييره حسب الحاجة */
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: transparent !important;
+        /* إزالة الخلفية عند الضغط */
+        color: #0D3858;
+        /* يمكنك تغيير اللون هنا */
+    }
+
+
     .active,
     .accordion:hover {
         /* background-color: #ccc; */
@@ -543,11 +561,11 @@
             <div class="col-md-12">
                 <!-- <div class="product-imgs mt-4">
                 @auth
-                                                                                                                                    <div class="heat-like wishlist-heart @if (in_array($product->id, $wishlist)) active @endif"
-                                                                                                                                        data-product-id="{{ $product->id }}">
-                                                                                                                                        <input type="checkbox" name="" id="" @if (in_array($product->id, $wishlist)) checked @endif>
-                                                                                                                                        <img src="{{ asset('frontend/images/heart.png') }}" alt="">
-                                                                                                                                    </div>
+                                                                                                                                            <div class="heat-like wishlist-heart @if (in_array($product->id, $wishlist)) active @endif"
+                                                                                                                                                data-product-id="{{ $product->id }}">
+                                                                                                                                                <input type="checkbox" name="" id="" @if (in_array($product->id, $wishlist)) checked @endif>
+                                                                                                                                                <img src="{{ asset('frontend/images/heart.png') }}" alt="">
+                                                                                                                                            </div>
 @else
     <a href="{{ route('signin') }}"> <i class="fa fa-heart-o "></i></a>
                         @endauth
@@ -642,31 +660,41 @@
 
                         <p class="vote" style="color: #0D3858; font-size: 1.5em;">
                             {{ session('locale') == 'ar' ? 'الحد الأدنى للمزايدة' : 'STARTING BID' }}
-                            <strong style="margin-left: 30px; color: #0D3858;">${{ $product->minsellingprice }}</strong> <!-- زيادة المسافة -->
+                            <strong
+                                style="margin-left: 30px; color: #0D3858;">${{ $product->minsellingprice }}</strong>
+                            <!-- زيادة المسافة -->
                         </p>
 
-                        <a style="width: 163px!important; text-align: center; position: relative; top: 30px; background-color: #0D3858; color: #fff;" class="btn btn-secondary px-5 w-25 d-flex justify-content-center" href="{{ route('signin') }}">
+                        <a style="width: 163px!important; text-align: center; position: relative; top: 30px; background-color: #0D3858; color: #fff;"
+                            class="btn btn-secondary px-5 w-25 d-flex justify-content-center"
+                            href="{{ route('signin') }}">
                             {{ session('locale') == 'ar' ? 'تسجيل الدخول' : 'LOGIN TO bID' }}
                         </a>
 
                         <div class="row" style="margin-top: 40px;"> <!-- Adjusted margin-top -->
-                            <div class="social-icons" style="display: flex; align-items: center; margin-top: 20px; position: relative; top: 20px;"> <!-- Increased top value -->
+                            <div class="social-icons"
+                                style="display: flex; align-items: center; margin-top: 20px; position: relative; top: 20px;">
+                                <!-- Increased top value -->
                                 <a href="https://example.com/share" class="mr-3" title="Share"
-                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
-                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-share-square-o"></i>
+                                    style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;"
+                                        class="fa fa-share-square-o"></i>
                                     <span style="color: #000;">Share</span>
                                 </a>
                                 <a href="https://facebook.com" class="mr-3" title="Facebook"
-                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
-                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-facebook-square"></i>
+                                    style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;"
+                                        class="fa fa-facebook-square"></i>
                                 </a>
                                 <a href="https://instagram.com" class="mr-3" title="Instagram"
-                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
-                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-instagram"></i>
+                                    style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;"
+                                        class="fa fa-instagram"></i>
                                 </a>
                                 <a href="https://X.com" title="X"
-                                   style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
-                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;" class="fa fa-twitter"></i>
+                                    style="margin-right: 15px; text-decoration: none; display: flex; align-items: center;">
+                                    <i style="color: #000; font-size: 1.5em; margin-right: 5px;"
+                                        class="fa fa-twitter"></i>
                                 </a>
                             </div>
 
@@ -676,28 +704,32 @@
                             <div class="row" style="margin-top: 10px;"> <!-- Adjusted margin-top -->
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-question-circle-o mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
+                                            class="fa fa-question-circle-o mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'كيف تزايد' : 'How to bid' }}</span>
                                     </div>
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-eye mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
+                                            class="fa fa-eye mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'مشاهدة المزاد' : 'Auction Viewings' }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-user-plus mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
+                                            class="fa fa-user-plus mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'طلب تقرير الحالة' : 'Request condition report' }}</span>
                                     </div>
                                     <div class="d-flex align-items-center mb-2">
-                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px" class="fa fa-shopping-bag mr-2"></i>
+                                        <i style="color: #000; padding: 0 5px 0 0; font-size: 20px"
+                                            class="fa fa-shopping-bag mr-2"></i>
                                         <span>{{ session('locale') == 'ar' ? 'كيف تشتري' : 'How to buy' }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                                                                    </div>
-                                        <div class="row mt-5">
+                    </div>
+                    <div class="row mt-5">
                         <div class="col-md-12">
                             <h3 class="{{ session('locale') == 'ar' ? 'text-end' : 'text-start' }}">
                                 {{ session('locale') == 'ar' ? 'تمثال برونزي مزخرف' : 'Art decorat bronze sculpture' }}
@@ -786,19 +818,18 @@
                                     <div class="accordion-body">
                                         <strong>This is the first item's accordion body.</strong> It is shown by
                                         default,
-                                        until
-                                        the collapse plugin adds the appropriate classes that we use to style each
-                                        element.
-                                        These classes control the overall appearance, as well as the showing and hiding
-                                        via
-                                        CSS
-                                        transitions. You can modify any of this with custom CSS or overriding our
-                                        default
-                                        variables. It's also worth noting that just about any HTML can go within the
+                                        until the collapse plugin adds the appropriate classes that we use to style each
+                                        element. These classes control the overall appearance, as well as the showing
+                                        and hiding
+                                        via CSS transitions. You can modify any of this with custom CSS or overriding
+                                        our
+                                        default variables. It's also worth noting that just about any HTML can go within
+                                        the
                                         <code>.accordion-body</code>, though the transition does limit overflow.
                                     </div>
                                 </div>
                             </div>
+
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button collapsed" type="button"
@@ -812,43 +843,39 @@
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <strong>This is the second item's accordion body.</strong> It is hidden by
-                                        default,
-                                        until the collapse plugin adds the appropriate classes that we use to style each
+                                        default, until the collapse plugin adds the appropriate classes that we use to
+                                        style each
                                         element. These classes control the overall appearance, as well as the showing
-                                        and
-                                        hiding
-                                        via CSS transitions. You can modify any of this with custom CSS or overriding
-                                        our
-                                        default variables. It's also worth noting that just about any HTML can go within
-                                        the
-                                        <code>.accordion-body</code>, though the transition does limit overflow.
+                                        and hiding via CSS transitions. You can modify any of this with custom CSS or
+                                        overriding
+                                        our default variables. It's also worth noting that just about any HTML can go
+                                        within
+                                        the <code>.accordion-body</code>, though the transition does limit overflow.
                                     </div>
                                 </div>
                             </div>
+
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button collapsed" type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseThree"
                                         aria-expanded="false" aria-controls="collapseThree">
                                         Accordion Item #3
-                                        <span class="accordion-icon">+</span> <!-- علامة (+) هنا -->
+                                        <span class="accordion-icon">+</span>
                                     </button>
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <strong>This is the third item's accordion body.</strong> It is hidden by
-                                        default,
-                                        until
-                                        the collapse plugin adds the appropriate classes that we use to style each
-                                        element.
-                                        These classes control the overall appearance, as well as the showing and hiding
-                                        via
-                                        CSS
-                                        transitions. You can modify any of this with custom CSS or overriding our
-                                        default
-                                        variables. It's also worth noting that just about any HTML can go within the
-                                        <code>.accordion-body</code>, though the transition does limit overflow.
+                                        default, until the collapse plugin adds the appropriate classes that we use to
+                                        style each
+                                        element. These classes control the overall appearance, as well as the showing
+                                        and hiding
+                                        via CSS transitions. You can modify any of this with custom CSS or overriding
+                                        our default variables. It's also worth noting that just about any HTML can go
+                                        within
+                                        the <code>.accordion-body</code>, though the transition does limit overflow.
                                     </div>
                                 </div>
                             </div>
