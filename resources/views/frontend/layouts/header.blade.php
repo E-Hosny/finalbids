@@ -162,10 +162,10 @@ if (Auth::check()) {
 
           <div id="mainListDiv" class="main_list  w-100 d-flex px-4  ">
               <ul class="navlinks  px-2">
-              <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }}</a></li>
+              <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Auctions' : (session('locale') === 'ar' ? 'الرئيسية' : 'Auctions') }}</a></li>
 
               <li class="category-menu">
-              <a href="/categories/index">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? 'الصنف' : 'Category') }}</a>
+              <a href="/categories/index">{{ session('locale') === 'en' ? 'Departments' : (session('locale') === 'ar' ? 'الصنف' : 'Departments') }}</a>
                     <div class="category-list">
                         <ul>
                         @foreach($categories as $category)
@@ -381,7 +381,7 @@ if (Auth::check()) {
 
     .nav a{
         font-size: 20px !important;
-        margin: 0px 7px;
+        /* margin: 0px 7px; */
     }
     .nav select{
         font-size: 20px !important;
