@@ -78,13 +78,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="login-mdl text-center">
                     <img src="{{asset('logo.png')}}" alt="">
-                    <p>{{__('Please enter 4-digit verification code that was send to your Email')}}</p>
+                    <p>{{ __('Please enter the 4-digit verification code that was sent to your phone via SMS') }}</p>
                     <form action="{{ route('verify-otp') }}" method="post" class="cmn-frm otp-filds" id="otp-verification-form">
-                        <input type="number" class="otpValue" name="otp" id="first" maxlength="1" oninput="moveToNextInput(this, 'second')" onkeydown="moveToPreviousInput(this, '')" />
-                        <input type="number" class="otpValue" name="otp" id="second" maxlength="1" oninput="moveToNextInput(this, 'third')" onkeydown="moveToPreviousInput(this, 'first')" />
-                        <input type="number" class="otpValue" name="otp" id="third" maxlength="1" oninput="moveToNextInput(this, 'fourth')" onkeydown="moveToPreviousInput(this, 'second')" />
-                        <input type="number" class="otpValue" name="otp" id="fourth" maxlength="1" onkeydown="moveToPreviousInput(this, 'third')" />
+                        <input type="number" class="otpValue" name="otp" id="first" maxlength="1" oninput="moveToNextInput(this, 'second')" onkeydown="moveToPreviousInput(this, '')" dir="ltr" />
+                        <input type="number" class="otpValue" name="otp" id="second" maxlength="1" oninput="moveToNextInput(this, 'third')" onkeydown="moveToPreviousInput(this, 'first')" dir="ltr" />
+                        <input type="number" class="otpValue" name="otp" id="third" maxlength="1" oninput="moveToNextInput(this, 'fourth')" onkeydown="moveToPreviousInput(this, 'second')" dir="ltr" />
+                        <input type="number" class="otpValue" name="otp" id="fourth" maxlength="1" onkeydown="moveToPreviousInput(this, 'third')" dir="ltr" />
                     </form>
+
                     <p>{{__('Didn’t Receive the Code?')}} <a href="#" class="text-btn edit-number my-text-color" id="resend-code">{{__('Resend')}}</a></p>
 
 
@@ -339,7 +340,7 @@
                 },
                 success: function(response) {
                     if (response.status === 'success') {
-                        alert("{{__('Verification code has been resent to your email.')}}");
+                        alert("{{__('Verification code has been resent to your phone via SMS.')}}");
                     } else {
                         alert("{{__('Failed to resend verification code. Please try again later.')}}");
                     }
