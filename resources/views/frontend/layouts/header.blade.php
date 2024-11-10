@@ -214,7 +214,7 @@ if (Auth::check()) {
                         <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="group-hidden">
-                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Create Account' : (session('locale') === 'ar' ? 'تسجيل حساب جديد' : 'Create Account') }}</a>
                     </li>
                  @endguest
 
@@ -262,7 +262,7 @@ if (Auth::check()) {
                         <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="d-flex align-items-center">
-                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Create Account' : (session('locale') === 'ar' ? 'تسجيل حساب جديد' : 'Create Account') }}</a>
                     </li>
 
                     <li>
