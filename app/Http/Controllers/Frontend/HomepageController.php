@@ -611,9 +611,10 @@ class HomepageController extends Controller
     $token = env('TAQNYAT_BEARER_TOKEN');
     $sender = env('TAQNYAT_SENDER');
     if(session('locale')=='ar'){
-       $body="رمز التحقق:$otp لدخول منصة bid.sa";
+        $body="رمز التحقق: $otp لدخول منصة bid.sa";
     }else{
         $body = "Your verification code: $otp For login bid.sa portal";
+
     }
 
     $client = new \GuzzleHttp\Client();
