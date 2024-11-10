@@ -610,7 +610,11 @@ class HomepageController extends Controller
     $url = env('TAQNYAT_API_URL');
     $token = env('TAQNYAT_BEARER_TOKEN');
     $sender = env('TAQNYAT_SENDER');
-    $body = "Your OTP is: $otp";
+    if(session('locale')=='ar'){
+       $body="رمز التحقق:$otp لدخول منصة bid.sa";
+    }else{
+        $body = "Your verification code: $otp For login bid.sa portal";
+    }
 
     $client = new \GuzzleHttp\Client();
     $response = $client->post($url, [
