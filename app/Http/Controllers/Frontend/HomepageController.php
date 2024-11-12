@@ -607,9 +607,10 @@ class HomepageController extends Controller
 
     private function sendOtpViaTaqnyat($phone, $otp)
 {
-    $url = env('TAQNYAT_API_URL');
-    $token = env('TAQNYAT_BEARER_TOKEN');
-    $sender = env('TAQNYAT_SENDER');
+    // $url = env('TAQNYAT_API_URL');
+    // $token = env('TAQNYAT_BEARER_TOKEN');
+    // $sender = env('TAQNYAT_SENDER');
+
     if(session('locale')=='ar'){
         $body="رمز التحقق: $otp لدخول منصة bid.sa";
     }else{
@@ -617,16 +618,18 @@ class HomepageController extends Controller
 
     }
 
+
+
     $client = new \GuzzleHttp\Client();
-    $response = $client->post($url, [
+    $response = $client->post('https://api.taqnyat.sa/v1/messages', [
         'headers' => [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . 'c933affa6c2314484d105c45a0e1adc7',
             'Content-Type' => 'application/json',
         ],
         'json' => [
             'recipients' => '966' . ltrim($phone, '0'),
             'body' => $body,
-            'sender' => $sender,
+            'sender' => "MazadBid",
         ],
     ]);
 
