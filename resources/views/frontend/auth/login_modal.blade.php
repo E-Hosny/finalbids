@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-body border-0">
                 <div class="login-mdl text-center">
-                    <span class="login-title">{{__('Login')}}</span>
+                    <span class="login-title">{{session('ar')?'تسجيل الدخول':'Login'}}</span>
                     <div class="numberArea mt-3">
                         <form id="loginForm" class="cmn-frm" method="POST" novalidate>
                             @csrf
