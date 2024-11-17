@@ -52,6 +52,29 @@
                                                 <div class="error">{{$errors->first('auction_type_id')}}</div>
                                                 @endif
                                             </div>
+                                           
+                                                <div class="col-12 col-sm-6 mb-3">
+                                                    <label><strong>Status</strong></label>
+                                                    <select name="status" class="form-control">
+                                                        <option value="new" {{ old('status', $product->status) == 'new' ? 'selected' : '' }}>
+                                                            {{ session('locale') === 'ar' ? 'جديد' : 'New' }}
+                                                        </option>
+                                                        <option value="open" {{ old('status', $product->status) == 'open' ? 'selected' : '' }}>
+                                                            {{ session('locale') === 'ar' ? 'مفتوح' : 'Open' }}
+                                                        </option>
+                                                        <option value="suspended" {{ old('status', $product->status) == 'suspended' ? 'selected' : '' }}>
+                                                            {{ session('locale') === 'ar' ? 'معلق' : 'Suspended' }}
+                                                        </option>
+                                                        <option value="closed" {{ old('status', $product->status) == 'closed' ? 'selected' : '' }}>
+                                                            {{ session('locale') === 'ar' ? 'مغلق' : 'Closed' }}
+                                                        </option>
+                                                    </select>
+                                                    @if($errors->has('status'))
+                                                        <div class="error">{{ $errors->first('status') }}</div>
+                                                    @endif
+                                                </div>
+                                           
+                                            
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-12 col-sm-6 mb-3">

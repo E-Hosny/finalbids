@@ -234,6 +234,8 @@ class ProductController extends Controller
             'end_price' =>'required',
             'start_price' => 'required',
             'minsellingprice' => '',
+            'status' => 'required|in:new,open,suspended,closed', // التحقق من الحالة
+
         ]);
              // Check if any files are present
              if (!$request->hasFile('image_path')) {

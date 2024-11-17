@@ -28,6 +28,8 @@ class Product extends Model
         'minsellingprice',
         'title_ar',
         'description_ar',
+        'user_id',
+        'status',
     ];
 
    
@@ -83,6 +85,11 @@ class Product extends Model
     {
         return $this->hasMany(BidPlaced::class, 'product_id');
     }
+
+    public function images()
+{
+    return $this->hasMany(Gallery::class, 'product_id');
+}
     
 
 }
