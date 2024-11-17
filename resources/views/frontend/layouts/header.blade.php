@@ -133,7 +133,7 @@ if (Auth::check()) {
     .sell-link {
         display: flex !important;
         align-items: center;
-        background-color: #007bff;
+        background-color: #0D3858;
         color: white !important;
         padding: 8px 20px !important;
         border-radius: 25px;
@@ -141,7 +141,7 @@ if (Auth::check()) {
     }
     
     .sell-link:hover {
-        background-color: #0056b3;
+        background-color: #0D3858;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
