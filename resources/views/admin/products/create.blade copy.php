@@ -77,22 +77,6 @@
                                                 <div class="error">{{ $errors->first('auction_end_date') }}</div>
                                                 @endif
                                             </div>
-                                            <div class="col-12 col-sm-6 mb-3">
-                                                <label><strong>Status</strong></label>
-                                                <select name="status" class="form-control">
-                                                    <option value="new" {{ old('status') == 'new' ? 'selected' : '' }}>New</option>
-                                                    <option value="open" {{ old('status') == 'open' ? 'selected' : '' }}>Open</option>
-                                                    <option value="suspended" {{ old('status') == 'suspended' ? 'selected' : '' }}>Suspended</option>
-                                                    <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>Closed</option>
-                                                </select>
-                                                @if($errors->has('status'))
-                                                    <div class="error">{{ $errors->first('status') }}</div>
-                                                @endif
-                                            </div>
-                                            <div class="col-12 col-sm-6 mb-3">
-                                                <label><strong>Is Published</strong></label>
-                                                <input type="checkbox" name="is_published" value="1" {{ old('is_published') ? 'checked' : '' }}>
-                                            </div>
                                             
                                             <div class="col-12 col-sm-6 mb-3 test">
                                                 <label><strong>Is Popular:</strong></label>
@@ -155,8 +139,6 @@
                                             </div>
 
                                         </div>
-
-
 
                                         <div class="col-12 col-sm-12 mb-3">
                                             <label>Description (EN)<span class="star">*</span></label>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 17, 2024 at 08:26 AM
+-- Generation Time: Nov 19, 2024 at 07:43 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.24
 
@@ -159,7 +159,8 @@ INSERT INTO `bid_placed` (`id`, `user_id`, `product_id`, `auction_type_id`, `pro
 (104, '51', '47', NULL, '22', '350', NULL, NULL, 0, 0, 0, 1, '2024-11-13 11:44:20', '2024-11-13 11:44:20'),
 (105, '51', '47', NULL, '22', '210', NULL, NULL, 0, 0, 0, 1, '2024-11-13 12:00:04', '2024-11-13 12:00:04'),
 (106, '51', '47', NULL, '22', '400', NULL, NULL, 0, 0, 0, 1, '2024-11-13 12:02:42', '2024-11-13 12:02:42'),
-(107, '51', '47', NULL, '22', '350', NULL, NULL, 0, 0, 0, 1, '2024-11-13 12:10:15', '2024-11-13 12:10:15');
+(107, '51', '47', NULL, '22', '350', NULL, NULL, 0, 0, 0, 1, '2024-11-13 12:10:15', '2024-11-13 12:10:15'),
+(108, '1', '57', NULL, '22', '2100', '4515', '100.00', 0, 1, 0, 1, '2024-11-17 09:43:29', '2024-11-17 09:43:42');
 
 -- --------------------------------------------------------
 
@@ -53272,7 +53273,7 @@ CREATE TABLE `personal_access_tokens` (
 CREATE TABLE `products` (
   `id` bigint UNSIGNED NOT NULL,
   `lot_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -53283,7 +53284,7 @@ CREATE TABLE `products` (
   `end_price` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `minsellingprice` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `auction_end_date` datetime DEFAULT NULL,
-  `is_published` tinyint(1) NOT NULL DEFAULT '0',
+  `is_published` tinyint(1) DEFAULT '0',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `is_popular` tinyint(1) NOT NULL DEFAULT '0',
@@ -53339,10 +53340,17 @@ INSERT INTO `products` (`id`, `lot_no`, `user_id`, `title`, `title_ar`, `slug`, 
 (44, 'Lot-036', 0, 'product10', 'منتج10', 'product10', 3, 21, 100.00, '100', '200', NULL, '2024-11-25 12:00:00', 0, '<p>desc10</p>', '<p>وصف10</p>', 1, 'new', '2024-10-21 15:41:14', '2024-10-25 13:16:41', NULL),
 (45, 'Lot-037', 0, 'any thing', 'أي شئ', 'any-thing', 3, 21, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 0, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'new', '2024-10-25 13:19:04', '2024-10-25 13:19:04', NULL),
 (46, 'Lot-038', 0, 'my product', 'منتجي', 'my-product', 3, 21, 100.00, '200', '300', NULL, '2024-10-25 18:00:00', 0, '<p>some description</p>', '<p>بعض الوصف</p>', 0, 'new', '2024-10-25 13:22:32', '2024-10-25 13:22:32', NULL),
-(47, 'Lot-039', 0, 'product11', 'منتج 11', 'product11', 3, 22, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 1, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'new', '2024-10-25 13:28:21', '2024-11-10 06:36:20', NULL),
+(47, 'Lot-039', 0, 'product11', 'منتج 11', 'product11', 3, 22, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 1, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'open', '2024-10-25 13:28:21', '2024-11-17 09:40:27', NULL),
 (54, 'Lot-040', 51, 'test', 'تجربة', 'product12', 3, 22, 1000.00, '1000', '99997', NULL, '2024-11-18 12:00:00', 0, '<p>d test</p>', '<p>d تجربة</p>', 1, 'open', '2024-11-17 04:36:14', '2024-11-17 05:36:12', NULL),
 (55, 'Lot-041', 51, 'asdasd', 'asdasd', NULL, 3, 22, 150.00, '1500', '1500', NULL, '2024-11-17 12:00:00', 0, '<p>adasd</p>', '<p>asdasd</p>', 1, 'open', '2024-11-17 06:07:59', '2024-11-17 06:22:13', NULL),
-(56, 'Lot-042', 51, 'test', 'تجربة', NULL, NULL, NULL, 1500.00, NULL, NULL, NULL, NULL, 0, 'test test', 'تجربة تجربة', 0, 'new', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL);
+(56, 'Lot-042', 51, 'test', 'تجربة', NULL, NULL, NULL, 1500.00, NULL, NULL, NULL, NULL, 0, 'test test', 'تجربة تجربة', 0, 'new', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(57, 'Lot-043', NULL, 'test', 'تتتتتت', 'test', 3, 22, 1498.00, '1500', '1996', NULL, '2024-11-25 12:00:00', 1, '<p>فففف</p>', '<p>سسسسسس</p>', 1, 'new', '2024-11-17 09:38:55', '2024-11-17 11:57:33', NULL),
+(58, 'Lot-044', NULL, 'tttt', 'tttt', 'tttt', 3, 22, 12.00, '1212', '12121212', NULL, '2024-11-25 12:00:00', 0, '<p>sadd</p>', '<p>asd</p>', 1, 'new', '2024-11-17 12:35:08', '2024-11-17 12:35:08', NULL),
+(59, 'Lot-045', NULL, 'tttt', 'tttt', 'tttt-2', 3, 22, 12.00, '1212', '121212', NULL, '2024-11-23 12:00:00', 1, '<p>asdasd</p>', '<p>asdasdasd</p>', 1, 'open', '2024-11-17 12:41:36', '2024-11-17 12:42:01', NULL),
+(60, 'Lot-046', NULL, 'محمد', 'محمد', 'mhmd', 3, 22, 147.00, '1515', '1515145', NULL, '2024-11-25 12:00:00', 0, '<p>شسي</p>', '<p>شيس</p>', 1, 'new', '2024-11-17 12:45:55', '2024-11-17 12:45:55', NULL),
+(61, 'Lot-047', NULL, 'fsddf', 'sdfsdf', 'fsddf', 3, 22, 555.00, '5555', '555555', NULL, '2024-11-24 12:00:00', 1, '<p>sdf</p>', '<p>sdf</p>', 1, 'new', '2024-11-17 12:58:24', '2024-11-17 12:58:24', NULL),
+(62, 'Lot-048', NULL, 'xcv', 'xcv', 'xcv', 3, 22, 234.00, '234234', '234234234', NULL, '2024-11-24 12:00:00', 1, '<p>sdf</p>', '<p>sdfsdf</p>', 1, 'open', '2024-11-17 13:00:40', '2024-11-19 05:10:42', '2024-11-19 05:10:42'),
+(63, 'Lot-048', NULL, '55555555', '555555555', '55555555', 3, 22, 11111.00, '11111111', '111111111108', NULL, '2024-11-22 12:00:00', 1, '<p>5555555555</p>', '<p>5555555555555</p>', 1, 'open', '2024-11-19 05:41:45', '2024-11-19 05:41:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -53493,7 +53501,23 @@ INSERT INTO `product_galleries` (`id`, `lot_no`, `product_id`, `image_path`, `cr
 (138, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710aac90.png', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
 (139, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710acc70.jpg', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
 (140, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710b05c9.png', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
-(141, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710b9504.jpg', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL);
+(141, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710b9504.jpg', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(142, 'Lot-043', 57, 'http://localhost/bidsa/public/product/gallery/202411171138-6739d5cf8519f.jpg', '2024-11-17 09:38:55', '2024-11-17 09:38:55', NULL),
+(143, 'Lot-043', 57, 'http://localhost/bidsa/public/product/gallery/202411171138-6739d5cf90332.jpg', '2024-11-17 09:38:55', '2024-11-17 09:38:55', NULL),
+(144, 'Lot-043', 57, 'http://localhost/bidsa/public/product/gallery/202411171138-6739d5cf9468f.jpg', '2024-11-17 09:38:55', '2024-11-17 09:38:55', NULL),
+(145, 'Lot-044', 58, 'http://localhost/bidsa/public/product/gallery/202411171435-6739ff1ced465.jpg', '2024-11-17 12:35:08', '2024-11-17 12:35:08', NULL),
+(146, 'Lot-044', 58, 'http://localhost/bidsa/public/product/gallery/202411171435-6739ff1cf179a.jpg', '2024-11-17 12:35:08', '2024-11-17 12:35:08', NULL),
+(147, 'Lot-044', 58, 'http://localhost/bidsa/public/product/gallery/202411171435-6739ff1d01c2c.png', '2024-11-17 12:35:09', '2024-11-17 12:35:09', NULL),
+(148, 'Lot-045', 59, 'http://localhost/bidsa/public/product/gallery/202411171441-673a00a024042.jpg', '2024-11-17 12:41:36', '2024-11-17 12:41:36', NULL),
+(149, 'Lot-045', 59, 'http://localhost/bidsa/public/product/gallery/202411171441-673a00a02b473.jpg', '2024-11-17 12:41:36', '2024-11-17 12:41:36', NULL),
+(150, 'Lot-045', 59, 'http://localhost/bidsa/public/product/gallery/202411171441-673a00a02e642.jpg', '2024-11-17 12:41:36', '2024-11-17 12:41:36', NULL),
+(151, 'Lot-046', 60, 'http://localhost/bidsa/public/product/gallery/202411171445-673a01a33fb70.jpg', '2024-11-17 12:45:55', '2024-11-17 12:45:55', NULL),
+(152, 'Lot-046', 60, 'http://localhost/bidsa/public/product/gallery/202411171445-673a01a344a25.png', '2024-11-17 12:45:55', '2024-11-17 12:45:55', NULL),
+(153, 'Lot-047', 61, 'http://localhost/bidsa/public/product/gallery/202411171458-673a0490bcbea.jpg', '2024-11-17 12:58:24', '2024-11-17 12:58:24', NULL),
+(154, 'Lot-047', 61, 'http://localhost/bidsa/public/product/gallery/202411171458-673a0490c9e41.jpg', '2024-11-17 12:58:24', '2024-11-17 12:58:24', NULL),
+(155, 'Lot-048', 62, 'http://localhost/bidsa/public/product/gallery/202411171500-673a05187d274.jpg', '2024-11-17 13:00:40', '2024-11-17 13:00:40', NULL),
+(156, 'Lot-048', 63, 'http://127.0.0.1:8000/product/gallery/202411190741-673c4139dfb34.png', '2024-11-19 05:41:45', '2024-11-19 05:41:45', NULL),
+(157, 'Lot-048', 63, 'http://127.0.0.1:8000/product/gallery/202411190741-673c4139f2695.png', '2024-11-19 05:41:46', '2024-11-19 05:41:46', NULL);
 
 -- --------------------------------------------------------
 
@@ -57839,7 +57863,8 @@ INSERT INTO `temp_address` (`id`, `bid_placed_id`, `user_id`, `first_name`, `las
 (59, '75', 37, 'pankaj', 'pk', NULL, '302', '101', '3', '302033', '9876543210', '2024-09-26 07:56:20', '2024-09-26 07:57:21'),
 (60, '81', 37, 'pankaj', 'pk', NULL, '706', '101', '10', '302033', '9876543210', '2024-09-26 12:01:40', '2024-09-26 12:01:40'),
 (61, '93', 33, 'ebrahim', 'Hosny', NULL, '37444', '191', '3163', '888', '0542327025', '2024-09-26 12:41:03', '2024-09-26 12:41:03'),
-(62, '94', 33, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, '2024-09-26 12:45:39', '2024-09-26 12:45:39');
+(62, '94', 33, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, '2024-09-26 12:45:39', '2024-09-26 12:45:39'),
+(63, '108', 1, 'sherif', 'hassan', NULL, NULL, '64', NULL, '12222', '01000224341', '2024-11-17 09:43:42', '2024-11-17 09:43:42');
 
 -- --------------------------------------------------------
 
@@ -58998,7 +59023,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `role`, `email`, `country_code`, `phone`, `profile_image`, `status`, `otp`, `device_token`, `lang_id`, `currency_code`, `is_term`, `is_otp_verify`, `refer_code`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `notify_on`) VALUES
-(1, 'Admin', 'Boss', 1, 'admin@admin.com', NULL, '+1-442-877-9035', NULL, 1, NULL, NULL, 'en', 'SAR', 0, 0, NULL, '2023-09-24 17:49:51', '$2y$10$yiAt.RT8Rbt278AFOEdSB.qC5OdkyOOIN3aJ3CfyDiygyMugRbWnq', '2r17NnP943BaTDdoHwgZqL8sFdZQ1TzWSzdyhXiYUN2o0fZbru9bNYTz5IBF', '2023-09-24 17:49:51', NULL, NULL, 1),
+(1, 'Admin', 'Boss', 1, 'admin@admin.com', NULL, '+1-442-877-9035', NULL, 1, NULL, NULL, 'en', 'SAR', 0, 0, NULL, '2023-09-24 17:49:51', '$2y$10$yiAt.RT8Rbt278AFOEdSB.qC5OdkyOOIN3aJ3CfyDiygyMugRbWnq', '01GkkSSGL6q4AiShacD3v67WU1stlweJXGld20eEbSPRjanfjHaXmfzuGyd3', '2023-09-24 17:49:51', NULL, NULL, 1),
 (3, 'Prabhash', 'jha', 2, 'pre@mailinator.com', '+91', '9875213030', 'https://bid.sa/img/users/1712842591profile_image.png', 1, NULL, '', 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$s7hzvijyLBW52.eSDe1JDuVbNA86UdmROyPpfeGcZYO3uEkv764xC', NULL, '2024-04-10 10:54:52', '2024-04-23 06:02:52', NULL, 0),
 (19, 'Prabhash', 'jha', 2, 'jploft@mailinator.com', '+91', '9875213030', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$9o/XLbume7p7JwQKtNdpzOnTdRog8lXtpK1PrEU7T0UOXlw4ht.e6', NULL, '2024-04-11 04:36:34', '2024-04-11 04:36:34', NULL, 0),
 (20, 'sid', 'test', 2, 'sid@mailinator.com', '+91', '9852368952', NULL, 1, 2256, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$.2VML5.9tqlyWgTqPuKsxOEJsgRYeN9kUn4FXKskBEIuqOQYHcKIS', NULL, '2024-04-12 09:56:00', '2024-04-12 10:22:23', NULL, 0),
@@ -59306,7 +59331,7 @@ ALTER TABLE `banners`
 -- AUTO_INCREMENT for table `bid_placed`
 --
 ALTER TABLE `bid_placed`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT for table `bid_requests`
@@ -59420,13 +59445,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `product_galleries`
 --
 ALTER TABLE `product_galleries`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT for table `product_specifications`
@@ -59468,7 +59493,7 @@ ALTER TABLE `subcategories`
 -- AUTO_INCREMENT for table `temp_address`
 --
 ALTER TABLE `temp_address`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `temp_users`

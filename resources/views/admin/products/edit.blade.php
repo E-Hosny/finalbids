@@ -73,6 +73,13 @@
                                                         <div class="error">{{ $errors->first('status') }}</div>
                                                     @endif
                                                 </div>
+                                                <div class="col-12 col-sm-6 mb-3">
+                                                    <label><strong> {{ session('locale') === 'ar' ? 'منشور' : 'Is Published' }}:</strong></label>
+                                                    <!-- الحقل المخفي يضمن إرسال قيمة 0 إذا لم يتم تحديد الـ checkbox -->
+                                                    <input type="hidden" name="is_published" value="0">
+                                                    <input type="checkbox" name="is_published" value="1" 
+                                                        {{ old('is_published', $product->is_published) ? 'checked' : '' }}>
+                                                </div>
                                            
                                             
                                         </div>

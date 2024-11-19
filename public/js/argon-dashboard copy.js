@@ -346,6 +346,10 @@ function navbarBlurOnScroll(id) {
 
 
 // Debounce Function
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
 function debounce(func, wait, immediate) {
   var timeout;
   return function () {
@@ -408,8 +412,6 @@ let referenceButtons = document.querySelector('[data-class]');
 window.addEventListener("resize", navbarColorOnResize);
 
 function navbarColorOnResize() {
-  if (!referenceButtons) return; // إضافة هذا الشرط للتأكد من أن العنصر موجود
-
   if (window.innerWidth > 1200) {
     if (referenceButtons.classList.contains('active') && referenceButtons.getAttribute('data-class') === 'bg-transparent') {
       sidenav.classList.remove('bg-white');
@@ -751,13 +753,13 @@ function darkMode(el) {
   }
 };
 
-$(document).ready(function () {
-  $(".menu-icon").click(function () {
-    $(".sidenav").addClass("menu-opn-side");
-  });
-});
-$(document).ready(function () {
-  $(".menu-icon").click(function () {
-    $(".meni-close-icon").removeClass("menu-opn-side");
-  });
-});
+    $(document).ready(function () {
+        $(".menu-icon").click(function () {
+          $(".sidenav").addClass("menu-opn-side"); 
+        });
+      }); 
+       $(document).ready(function () {
+        $(".menu-icon").click(function () { 
+          $(".meni-close-icon").removeClass("menu-opn-side"); 
+        });
+      }); 

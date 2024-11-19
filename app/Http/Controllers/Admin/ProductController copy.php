@@ -93,7 +93,8 @@ class ProductController extends Controller
             'start_price' => 'required',
             'minsellingprice' => '',
             'status' => 'required|in:new,open,suspended,closed',
-             'is_published' => 'boolean',
+            'is_published' => 'boolean', // التحقق من القيم
+            
         ]);
           // Check if any files are present
           if (!$request->hasFile('image_path')) {
@@ -121,9 +122,10 @@ class ProductController extends Controller
         } else {
             $data['is_popular'] = false; 
         }
-      
+
         $data['is_published'] = $request->input('is_published', 0); // القيمة الافتراضية
 
+      
          // Check if any files are present
             if (!$request->hasFile('image_path')) {
                 $validator = Validator::make([], []);

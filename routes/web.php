@@ -198,6 +198,13 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
 });
 
 
+// Route::get('/add-product', function () {
+//     if (!auth()->check()) {
+//         return redirect()->route('login');
+//     }
+//     return view('frontend.products.add_products');  // يمكنك تغيير هذا لعرض الصفحة التي تريدها
+//     // return "test";  // يمكنك تغيير هذا لعرض الصفحة التي تريدها
+// });
 
 Route::middleware('auth')->group(function () {
     Route::get('/add-product', [FrontendProductController::class, 'create'])->name('frontend.product.create');

@@ -30,6 +30,7 @@ class Product extends Model
         'description_ar',
         'user_id',
         'status',
+        'is_published',
     ];
 
    
