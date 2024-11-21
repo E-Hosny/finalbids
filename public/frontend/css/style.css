@@ -72,7 +72,7 @@ input::-webkit-inner-spin-button {
 }
 .btn.btn-secondary {
     border-radius: 10px;
-    background: linear-gradient(90deg, #3E0269 0%, #7F12DD 100%);
+    background: linear-gradient(90deg, #0d3858 0%, #0d3858 100%) !important;
     padding: 13px 30px;
     color: #fff !important;
     font-size: 16px;
@@ -89,9 +89,9 @@ input::-webkit-inner-spin-button {
     border-radius: 10px;
     background: transparent;
     padding: 12px 30px;
-    color: #3E0269 !important;
+    color: #0d3858 !important;
     font-size: 16px;
-    border: 1px solid #3E0269;
+    border: 1px solid #0d3858;
     text-transform: uppercase;
 }
 
@@ -99,14 +99,14 @@ input::-webkit-inner-spin-button {
     border: 0;
     background-color: transparent;
     padding: 0;
-    color: #7F12DD;
+    color: #0D3858 !important;
     font-size: 16px;
     font-weight: 600;
     text-transform: uppercase;
 }
 
 .text-btn:hover {
-    color: #7F12DD;
+    color: #0D3858 important;
 }
 
 .border-white-btn {
@@ -138,8 +138,8 @@ input[type="checkbox"], input[type="radio"] {
     }
 
     .form-check-input:checked {
-    background-color: #7c12d8;
-    border-color: #7c12d8;
+    background-color: #0D3858;
+    border-color: #0D3858;
 }
 input#flexRadioDefault1{
     padding: 10px;
@@ -1615,7 +1615,7 @@ select {
     font-weight: 600;
 }
 .edit-number{
-    color: #3E0269;
+    color: #0D3858 !important;
 }
 .modal-content {
     border-radius: 20px;

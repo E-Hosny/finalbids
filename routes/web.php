@@ -30,7 +30,7 @@ use App\Http\Controllers\Frontend\ProductWishController;
 use App\Http\Controllers\Frontend\LangController;
 use App\Http\Controllers\Frontend\BiddingController;
 use App\Http\Controllers\Frontend\UserCategoryController;
-
+use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 
 
 
@@ -188,12 +188,43 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::delete('admin/news/{id}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
     Route::resource('bidrequests', BidrequestController::class);
     Route::post('update-status', [BidrequestController::class, 'updateStatus'])->name('bidrequests.updateStatus');
+    // Route::resource('bid-placed', \App\Http\Controllers\Admin\BidPlacedController::class);
+    // Route::post('bid-placed/update-status', [\App\Http\Controllers\Admin\BidPlacedController::class, 'updateStatus'])
+    // ->name('admin.bid-placed.update-status');
+
+    // // Route::post('bidplaced/update-status', [BidrequestController::class, 'updateStatus'])->name('bidplaced.updateStatus');
+    Route::post('bid-placed/update-status', [\App\Http\Controllers\Admin\BidPlacedController::class, 'updateStatus'])
+    ->name('bid-placed.update-status');
+
+Route::resource('bid-placed', \App\Http\Controllers\Admin\BidPlacedController::class);
+
+Route::post('products/close-auction', [ProductController::class, 'closeAuction'])
+->name('products.close-auction');
+
+
     Route::resource('language', LanguageController::class);
     Route::get('/profilesetting', [HomeController::class, 'profilesetting'])->name('profilesetting');
     Route::get('/profilesettingupdate', [HomeController::class, 'profilesettingupdate'])->name('profilesettingupdate');
     Route::resource('helpsupport', HelpsupportController::class);
 
 
+
+});
+
+
+// Route::get('/add-product', function () {
+//     if (!auth()->check()) {
+//         return redirect()->route('login');
+//     }
+//     return view('frontend.products.add_products');  // يمكنك تغيير هذا لعرض الصفحة التي تريدها
+//     // return "test";  // يمكنك تغيير هذا لعرض الصفحة التي تريدها
+// });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/add-product', [FrontendProductController::class, 'create'])->name('frontend.product.create');
+    Route::post('/add-product', [FrontendProductController::class, 'store'])->name('frontend.product.store');
+    Route::get('/user/products', [FrontendProductController::class, 'userProducts'])->name('user.products');
+    Route::get('/user/products/{id}/details', [FrontendProductController::class, 'productDetails'])->name('user.products.details');
 
 });
 

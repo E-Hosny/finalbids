@@ -80,83 +80,193 @@ class HomepageController extends Controller
 
 
     }
+    // public function homepage(Request $request)
+    // {
+
+    //     $langId = session('locale');
+    //     if (!$langId) {
+    //         $langId = 'en';
+    //         $request->session()->put('locale', $langId);
+    //     }
+    //     $currency = session()->get('currency');
+    //     $currentDateTime = now();
+    //     // echo $currentDateTime;
+    //     $auctionTypesWithProject = AuctionType::where('status', 1)
+    //                 ->whereHas('projects', function ($query) use ($langId, $currentDateTime) {
+    //                     $query->where('status', 1)
+    //                         ->where('is_trending', 1)
+    //                         ->whereHas('products')
+    //                         ->orderBy('start_date_time', 'ASC')
+    //                         ->where('end_date_time', '>=', $currentDateTime);
+    //                 })
+    //                 ->with([
+    //                     'projects' => function ($query) use ($langId, $currentDateTime) {
+    //                         $query->where('status', 1)
+    //                             ->where('is_trending', 1)
+    //                             ->has('products')
+    //                             ->orderBy('start_date_time', 'ASC')
+    //                             ->where('end_date_time', '>=', $currentDateTime);
+    //                     }
+    //                 ])
+    //                 ->has('projects')
+    //                 ->get();
+
+    //             // $auctionTypesWithProject->transform(function ($auctionType)  {
+    //             //     $auctionType->projects = $auctionType->projects->filter(function ($project) {
+    //             //         return $project->products->isNotEmpty();
+    //             //     })->take(4);
+    //             $auctionTypesWithProject->transform(function ($auctionType)  {
+    //                 $auctionType->projects = $auctionType->projects->filter(function ($project) {
+    //                     return $project->products->isNotEmpty();
+    //                 });
+
+    //                 return $auctionType;
+    //             });
+
+    //     // p($auctionTypesWithProject);
+
+    //     $banners = Banner::where('status', 1)->take(4)->get();
+    //     // $productauction = AuctionType::with(['products' => function ($query) use ($langId) {
+    //     //                 $query->where('status', 1)
+    //     //                     ->where('is_popular', 1);
+    //     //                 }])->where('status', 1)->get();
+    //     $productauction = AuctionType::with(['products' => function ($query) use ($currentDateTime, $langId) {
+    //                                     $query->where('status', 1)
+    //                                         ->where('is_popular', 1)
+    //                                         ->whereHas('project', function ($subquery) use ($currentDateTime) {
+    //                                             $subquery->where('end_date_time', '>=', $currentDateTime);
+    //                                         });
+    //                                 }])->where('status', 1)->get();
+
+    //     $mostRecentBids = BidPlaced::select('product_id', DB::raw('MAX(bid_amount) as max_bid_amount'), DB::raw('COUNT(DISTINCT user_id) as bid_count'))
+    //                                 ->where('sold', 1)
+    //                                 ->where('status', '!=', 0)
+    //                                 ->groupBy('product_id')
+    //                                 ->orderBy('max_bid_amount', 'desc')
+    //                                 ->with('product', 'auctionType')
+    //                                 ->get();
+
+    //     $homeProducts=Product::where('is_published','1')->get();
+
+
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+
+    //     return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'productauction', 'wishlist','mostRecentBids','currency','homeProducts'));
+    // }
+    // public function homepage(Request $request)
+    // {
+    //     $currentDateTime = now();
+    //     $currency = session()->get('currency', 'USD'); // استرجاع العملة من الجلسة أو تعيين قيمة افتراضية
+    
+    //     $auctionTypesWithProject = AuctionType::where('status', 1)
+    //         ->whereHas('projects', function ($query) use ($currentDateTime) {
+    //             $query->where('status', 1)
+    //                 ->where('end_date_time', '>=', $currentDateTime);
+    //         })
+    //         ->with([
+    //             'projects' => function ($query) use ($currentDateTime) {
+    //                 $query->where('status', 1)
+    //                     ->where('end_date_time', '>=', $currentDateTime);
+    //             }
+    //         ])
+    //         ->get();
+    
+    //     $banners = Banner::where('status', 1)->take(4)->get();
+    //     $homeProducts = Product::where('is_published', 1)
+    //         ->whereIn('status', ['open', 'closed'])
+    //         ->get();
+    
+    //     return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'homeProducts', 'currency'));
+    // }
+    
     public function homepage(Request $request)
     {
-
         $langId = session('locale');
         if (!$langId) {
             $langId = 'en';
             $request->session()->put('locale', $langId);
         }
-        $currency = session()->get('currency');
+    
+        $currency = session()->get('currency', 'USD'); // استرجاع العملة من الجلسة أو تعيين قيمة افتراضية
         $currentDateTime = now();
-        // echo $currentDateTime;
+    
+        // جلب أنواع المزادات مع المشاريع المرتبطة
         $auctionTypesWithProject = AuctionType::where('status', 1)
-                    ->whereHas('projects', function ($query) use ($langId, $currentDateTime) {
-                        $query->where('status', 1)
-                            ->where('is_trending', 1)
-                            ->whereHas('products')
-                            ->orderBy('start_date_time', 'ASC')
-                            ->where('end_date_time', '>=', $currentDateTime);
-                    })
-                    ->with([
-                        'projects' => function ($query) use ($langId, $currentDateTime) {
-                            $query->where('status', 1)
-                                ->where('is_trending', 1)
-                                ->has('products')
-                                ->orderBy('start_date_time', 'ASC')
-                                ->where('end_date_time', '>=', $currentDateTime);
-                        }
-                    ])
-                    ->has('projects')
-                    ->get();
-
-                // $auctionTypesWithProject->transform(function ($auctionType)  {
-                //     $auctionType->projects = $auctionType->projects->filter(function ($project) {
-                //         return $project->products->isNotEmpty();
-                //     })->take(4);
-                $auctionTypesWithProject->transform(function ($auctionType)  {
-                    $auctionType->projects = $auctionType->projects->filter(function ($project) {
-                        return $project->products->isNotEmpty();
-                    });
-
-                    return $auctionType;
-                });
-
-        // p($auctionTypesWithProject);
-
+            ->whereHas('projects', function ($query) use ($langId, $currentDateTime) {
+                $query->where('status', 1)
+                    ->where('is_trending', 1) // المشاريع المتصدرة
+                    ->whereHas('products')
+                    ->orderBy('start_date_time', 'ASC')
+                    ->where('end_date_time', '>=', $currentDateTime);
+            })
+            ->with([
+                'projects' => function ($query) use ($langId, $currentDateTime) {
+                    $query->where('status', 1)
+                        ->where('is_trending', 1)
+                        ->has('products')
+                        ->orderBy('start_date_time', 'ASC')
+                        ->where('end_date_time', '>=', $currentDateTime);
+                }
+            ])
+            ->has('projects')
+            ->get();
+    
+        $auctionTypesWithProject->transform(function ($auctionType) {
+            $auctionType->projects = $auctionType->projects->filter(function ($project) {
+                return $project->products->isNotEmpty(); // المشاريع التي تحتوي على منتجات
+            });
+    
+            return $auctionType;
+        });
+    
+        // جلب البانرات
         $banners = Banner::where('status', 1)->take(4)->get();
-        // $productauction = AuctionType::with(['products' => function ($query) use ($langId) {
-        //                 $query->where('status', 1)
-        //                     ->where('is_popular', 1);
-        //                 }])->where('status', 1)->get();
+    
+        // جلب المنتجات المرتبطة بأنواع المزادات
         $productauction = AuctionType::with(['products' => function ($query) use ($currentDateTime, $langId) {
-                                        $query->where('status', 1)
-                                            ->where('is_popular', 1)
-                                            ->whereHas('project', function ($subquery) use ($currentDateTime) {
-                                                $subquery->where('end_date_time', '>=', $currentDateTime);
-                                            });
-                                    }])->where('status', 1)->get();
-
+            $query->where('status', 1)
+                ->where('is_popular', 1)
+                ->whereHas('project', function ($subquery) use ($currentDateTime) {
+                    $subquery->where('end_date_time', '>=', $currentDateTime);
+                });
+        }])->where('status', 1)->get();
+    
+        // المزايدات الأكثر شيوعًا
         $mostRecentBids = BidPlaced::select('product_id', DB::raw('MAX(bid_amount) as max_bid_amount'), DB::raw('COUNT(DISTINCT user_id) as bid_count'))
-                                    ->where('sold', 1)
-                                    ->where('status', '!=', 0)
-                                    ->groupBy('product_id')
-                                    ->orderBy('max_bid_amount', 'desc')
-                                    ->with('product', 'auctionType')
-                                    ->get();
-
-        $homeProducts=Product::where('is_published','1')->get();
-
-
-
+            ->where('sold', 1)
+            ->where('status', '!=', 0)
+            ->groupBy('product_id')
+            ->orderBy('max_bid_amount', 'desc')
+            ->with('product', 'auctionType')
+            ->get();
+    
+        // جلب المنتجات المعروضة
+        $homeProducts = Product::where('is_published', 1)
+            ->whereIn('status', ['open', 'closed'])
+            ->get();
+    
+        // قائمة التفضيلات للمستخدم الحالي
         $wishlist = [];
         if (Auth::check()) {
             $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
         }
-
-        return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'productauction', 'wishlist','mostRecentBids','currency','homeProducts'));
+    
+        // عرض الصفحة
+        return view('frontend.homepage', compact(
+            'auctionTypesWithProject',
+            'banners',
+            'productauction',
+            'wishlist',
+            'mostRecentBids',
+            'currency',
+            'homeProducts'
+        ));
     }
+     
 
     public function projectByAuctionType($slug, Request $request)
     {
@@ -224,54 +334,136 @@ class HomepageController extends Controller
         return view('frontend.pastauctionlist', compact('projects', 'currency'));
     }
 
-    public function productsByProject($slug, Request $request)
-    {
-        $langId = session('locale');
-        $currency = session()->get('currency');
-        $projects = Project::where('slug', $slug)->first();
-        $productsQuery = Product::where('project_id', $projects->id);
-        // p($mostRecentBids);
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
-        }
+    // public function productsByProject($slug, Request $request)
+    // {
+    //     $langId = session('locale');
+    //     $currency = session()->get('currency');
+    //     $projects = Project::where('slug', $slug)->first();
+    //     $productsQuery = Product::where('project_id', $projects->id);
+    //     // p($mostRecentBids);
+    //     if ($request->has('search') && !empty($request->search)) {
+    //         $searchTerm = $request->search;
+    //         $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+    //     }
 
-        if ($request->has('sort')) {
-            $sortOrder = $request->sort;
+    //     if ($request->has('sort')) {
+    //         $sortOrder = $request->sort;
 
-            if ($sortOrder === 'price_high_low') {
-                $productsQuery->orderBy('reserved_price', 'desc');
-            } elseif ($sortOrder === 'price_low_high') {
-                $productsQuery->orderBy('reserved_price', 'asc');
-            }
-        } else {
+    //         if ($sortOrder === 'price_high_low') {
+    //             $productsQuery->orderBy('reserved_price', 'desc');
+    //         } elseif ($sortOrder === 'price_low_high') {
+    //             $productsQuery->orderBy('reserved_price', 'asc');
+    //         }
+    //     } else {
 
+    //         $productsQuery->orderBy('reserved_price', 'asc');
+    //     }
+
+    //     $products = $productsQuery->paginate(10);
+
+    //     $totalItems = $products->total();
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+    //     $userBidRequests = [];
+    //     if (Auth::check()) {
+    //         $userBidRequests = BidRequest::where('user_id', Auth::id())
+    //             ->pluck('status', 'project_id')
+    //             ->toArray();
+    //     }
+
+    //     return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
+    // }
+//
+// public function productsByProject($slug, Request $request)
+// {
+//     $langId = session('locale');
+//     $currency = session()->get('currency');
+
+//     $projects = Project::where('slug', $slug)->first();
+
+//     $productsQuery = Product::where('project_id', $projects->id)
+//                             ->whereIn('status', ['open', 'closed']); // تصفية المنتجات
+
+//     if ($request->has('search') && !empty($request->search)) {
+//         $searchTerm = $request->search;
+//         $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+//     }
+
+//     if ($request->has('sort')) {
+//         $sortOrder = $request->sort;
+//         if ($sortOrder === 'price_high_low') {
+//             $productsQuery->orderBy('reserved_price', 'desc');
+//         } elseif ($sortOrder === 'price_low_high') {
+//             $productsQuery->orderBy('reserved_price', 'asc');
+//         }
+//     } else {
+//         $productsQuery->orderBy('reserved_price', 'asc');
+//     }
+
+//     $products = $productsQuery->paginate(10);
+
+//     $wishlist = [];
+//     if (Auth::check()) {
+//         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+//     }
+
+//     return view('frontend.products.index', [
+//         'products' => $products,
+//         'projects' => $projects,
+//         'wishlist' => $wishlist,
+//         'currency' => $currency,
+//     ]);
+// }
+public function productsByProject($slug, Request $request)
+{
+    $langId = session('locale');
+    $currency = session()->get('currency', 'USD'); // Default currency is USD
+    $projects = Project::where('slug', $slug)->first();
+
+    $productsQuery = Product::where('project_id', $projects->id);
+
+    if ($request->has('search') && !empty($request->search)) {
+        $searchTerm = $request->search;
+        $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+    }
+
+    if ($request->has('sort')) {
+        $sortOrder = $request->sort;
+        if ($sortOrder === 'price_high_low') {
+            $productsQuery->orderBy('reserved_price', 'desc');
+        } elseif ($sortOrder === 'price_low_high') {
             $productsQuery->orderBy('reserved_price', 'asc');
         }
-
-        $products = $productsQuery->paginate(10);
-
-        $totalItems = $products->total();
-
-        $wishlist = [];
-        if (Auth::check()) {
-            $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-        }
-
-        $wishlist = [];
-        if (Auth::check()) {
-            $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-        }
-        $userBidRequests = [];
-        if (Auth::check()) {
-            $userBidRequests = BidRequest::where('user_id', Auth::id())
-                ->pluck('status', 'project_id')
-                ->toArray();
-        }
-
-        return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
+    } else {
+        $productsQuery->orderBy('reserved_price', 'asc');
     }
-//
+
+    $products = $productsQuery->paginate(10); // Paginate the products
+    $totalItems = $products->total(); // Get the total number of items
+
+    $wishlist = [];
+    if (Auth::check()) {
+        $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    }
+
+    return view('frontend.products.index', [
+        'products' => $products,
+        'projects' => $projects,
+        'wishlist' => $wishlist,
+        'totalItems' => $totalItems,
+        'currency' => $currency,
+    ]);
+}
+
+
     public function productsdetail($slug)
     {
         $currency = session()->get('currency');
@@ -1049,42 +1241,61 @@ class HomepageController extends Controller
 
      //   01 may changes
 
+    //  public function productsByProjectlive($slug, Request $request)
+    //  {
+    //     $langId = session('locale');
+    //     $currency = session()->get('currency');
+    //     $projects = Project::where('slug', $slug)->first();
+    //     $productsQuery = Product::where('project_id', $projects->id);
+
+    //     $products = $productsQuery->get();
+    //     $bidProduct = StartBid::whereProjectId($projects->id)->whereStatus(1)->first();
+    //     // get product
+    //     $pid = $bidProduct->product_id;
+
+
+    //     $product = Product::find($pid);
+    //     // p ($product);
+    //     $lastBid = BidPlaced::where('product_id', $product['id'])
+    //             ->orderBy('created_at', 'desc')
+    //             ->first();
+
+    //     $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+    //     $bidValues = Bidvalue::where('status', 1)
+    //             ->where('cal_amount', '>', $product['reserved_price'])
+    //             ->orderBy('cal_amount')
+    //             ->get();
+
+    //     $bids = BidPlaced::where('sold', 1)
+    //         ->where('product_id', $product->id)
+    //         ->get(['bid_amount', 'status'])->toArray();
+    //     // p($bids);
+    //     return view('frontend.products.indexlive', get_defined_vars());
+    //  }
      public function productsByProjectlive($slug, Request $request)
-     {
-        $langId = session('locale');
-        $currency = session()->get('currency');
-        $projects = Project::where('slug', $slug)->first();
-        $productsQuery = Product::where('project_id', $projects->id);
+{
+    $langId = session('locale');
+    $currency = session()->get('currency');
 
-        $products = $productsQuery->get();
-        $bidProduct = StartBid::whereProjectId($projects->id)->whereStatus(1)->first();
-        // get product
-        $pid = $bidProduct->product_id;
+    $projects = Project::where('slug', $slug)->first();
+    $productsQuery = Product::where('project_id', $projects->id)
+                            ->whereIn('status', ['open', 'closed']); // تصفية المنتجات
 
+    $products = $productsQuery->get();
 
-        $product = Product::find($pid);
-        // p ($product);
-        $lastBid = BidPlaced::where('product_id', $product['id'])
-                ->orderBy('created_at', 'desc')
-                ->first();
+    $wishlist = [];
+    if (Auth::check()) {
+        $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    }
 
-        $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
+    return view('frontend.products.indexlive', compact('products', 'projects', 'wishlist', 'currency'));
+}
 
-        $wishlist = [];
-        if (Auth::check()) {
-            $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-        }
-        $bidValues = Bidvalue::where('status', 1)
-                ->where('cal_amount', '>', $product['reserved_price'])
-                ->orderBy('cal_amount')
-                ->get();
-
-        $bids = BidPlaced::where('sold', 1)
-            ->where('product_id', $product->id)
-            ->get(['bid_amount', 'status'])->toArray();
-        // p($bids);
-        return view('frontend.products.indexlive', get_defined_vars());
-     }
 
 
     //  webview for mobile app

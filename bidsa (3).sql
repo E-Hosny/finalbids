@@ -2,9 +2,9 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 09, 2024 at 09:44 AM
--- Server version: 10.4.32-MariaDB
+-- Host: localhost:3306
+-- Generation Time: Nov 21, 2024 at 09:28 AM
+-- Server version: 8.0.30
 -- PHP Version: 8.2.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bids`
+-- Database: `bidsa`
 --
 
 -- --------------------------------------------------------
@@ -28,15 +28,15 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `app_notification` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `message` text NOT NULL,
-  `product_id` varchar(255) DEFAULT NULL,
-  `project_id` varchar(255) DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
-  `is_read` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `message` text COLLATE utf8mb4_general_ci NOT NULL,
+  `product_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `project_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_read` tinyint NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -58,16 +58,16 @@ INSERT INTO `app_notification` (`id`, `title`, `message`, `product_id`, `project
 --
 
 CREATE TABLE `auction_types` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `name_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Auctiontype Status: true (active) or false (inactive)',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Auctiontype Status: true (active) or false (inactive)',
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `auction_types`
@@ -85,18 +85,18 @@ INSERT INTO `auction_types` (`id`, `name`, `name_ar`, `type`, `status`, `slug`, 
 --
 
 CREATE TABLE `banners` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `lang_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Description Status: true (active) or false (inactive)',
+  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Description Status: true (active) or false (inactive)',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `banners`
@@ -114,21 +114,21 @@ INSERT INTO `banners` (`id`, `lang_id`, `title`, `title_ar`, `url`, `image_path`
 --
 
 CREATE TABLE `bid_placed` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `user_id` varchar(255) NOT NULL,
   `product_id` varchar(255) DEFAULT NULL,
-  `auction_type_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `auction_type_id` bigint UNSIGNED DEFAULT NULL,
   `project_id` varchar(255) DEFAULT NULL,
   `bid_amount` varchar(255) DEFAULT NULL,
   `total_amount` varchar(255) DEFAULT NULL,
   `buyers_premium` varchar(255) DEFAULT NULL,
-  `mail_sent` tinyint(4) NOT NULL DEFAULT 0,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `outbid` tinyint(4) NOT NULL DEFAULT 0,
-  `sold` int(11) NOT NULL DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `mail_sent` tinyint NOT NULL DEFAULT '0',
+  `status` tinyint NOT NULL DEFAULT '0',
+  `outbid` tinyint NOT NULL DEFAULT '0',
+  `sold` int NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bid_placed`
@@ -150,7 +150,21 @@ INSERT INTO `bid_placed` (`id`, `user_id`, `product_id`, `auction_type_id`, `pro
 (95, '33', '30', NULL, '9', '17000', NULL, NULL, 0, 0, 0, 1, '2024-09-27 07:38:17', '2024-09-27 07:38:17'),
 (96, '33', '31', NULL, '9', '3800', NULL, NULL, 0, 0, 0, 1, '2024-09-27 07:56:58', '2024-09-27 07:56:58'),
 (97, '1', '34', NULL, '13', '190', NULL, NULL, 0, 0, 0, 1, '2024-10-18 18:42:02', '2024-10-18 18:42:02'),
-(98, '43', '47', NULL, '22', '110', NULL, NULL, 0, 0, 0, 1, '2024-10-26 07:18:51', '2024-10-26 07:18:51');
+(98, '43', '47', NULL, '22', '110', NULL, NULL, 0, 0, 0, 1, '2024-10-26 07:18:51', '2024-10-26 07:18:51'),
+(99, '51', '47', NULL, '22', '1000', NULL, NULL, 0, 0, 0, 1, '2024-11-13 04:33:28', '2024-11-13 04:33:28'),
+(100, '51', '47', NULL, '22', '1100', NULL, NULL, 0, 0, 0, 1, '2024-11-13 04:34:16', '2024-11-13 04:34:16'),
+(101, '51', '47', NULL, '22', '3800', NULL, NULL, 0, 0, 0, 1, '2024-11-13 11:22:42', '2024-11-13 11:22:42'),
+(102, '51', '47', NULL, '22', '120', NULL, NULL, 0, 0, 0, 1, '2024-11-13 11:39:14', '2024-11-13 11:39:14'),
+(103, '51', '47', NULL, '22', '210', NULL, NULL, 0, 0, 0, 1, '2024-11-13 11:41:54', '2024-11-13 11:41:54'),
+(104, '51', '47', NULL, '22', '350', NULL, NULL, 0, 0, 0, 1, '2024-11-13 11:44:20', '2024-11-13 11:44:20'),
+(105, '51', '47', NULL, '22', '210', NULL, NULL, 0, 0, 0, 1, '2024-11-13 12:00:04', '2024-11-13 12:00:04'),
+(106, '51', '47', NULL, '22', '400', NULL, NULL, 0, 1, 0, 1, '2024-11-13 12:02:42', '2024-11-19 14:32:30'),
+(107, '51', '47', NULL, '22', '350', NULL, NULL, 0, 1, 0, 1, '2024-11-13 12:10:15', '2024-11-19 14:21:36'),
+(108, '1', '57', NULL, '22', '2100', '4515', '100.00', 0, 1, 0, 1, '2024-11-17 09:43:29', '2024-11-17 09:43:42'),
+(109, '51', '64', NULL, '24', '1100', '1375', '10.00', 0, 1, 1, 1, '2024-11-19 09:36:43', '2024-11-19 09:36:55'),
+(110, '52', '64', NULL, '24', '1400', '1750', '10.00', 0, 1, 1, 1, '2024-11-19 09:38:54', '2024-11-19 09:39:14'),
+(111, '51', '61', 3, '22', '8500', '18275', '100.00', 0, 1, 0, 0, '2024-11-20 06:39:27', '2024-11-20 06:39:54'),
+(112, '1', '82', 3, '22', '230', NULL, NULL, 0, 0, 0, 1, '2024-11-21 07:22:28', '2024-11-21 07:22:28');
 
 -- --------------------------------------------------------
 
@@ -159,15 +173,15 @@ INSERT INTO `bid_placed` (`id`, `user_id`, `product_id`, `auction_type_id`, `pro
 --
 
 CREATE TABLE `bid_requests` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `auction_type_id` int(11) NOT NULL,
-  `deposit_amount` int(11) NOT NULL,
-  `status` tinyint(1) DEFAULT 0 COMMENT 'Description Status: 0=not approve,\r\n1= approved',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `project_id` int NOT NULL,
+  `auction_type_id` int NOT NULL,
+  `deposit_amount` int NOT NULL,
+  `status` tinyint(1) DEFAULT '0' COMMENT 'Description Status: 0=not approve,\r\n1= approved',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -176,14 +190,14 @@ CREATE TABLE `bid_requests` (
 --
 
 CREATE TABLE `bid_values` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `bidvalue` bigint(20) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `bidvalue` bigint NOT NULL,
   `increment` varchar(255) NOT NULL,
-  `cal_amount` int(11) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `cal_amount` int DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bid_values`
@@ -308,17 +322,17 @@ INSERT INTO `bid_values` (`id`, `bidvalue`, `increment`, `cal_amount`, `status`,
 --
 
 CREATE TABLE `blogs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `author` bigint(20) UNSIGNED NOT NULL,
+  `author` bigint UNSIGNED NOT NULL,
   `status` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -327,14 +341,14 @@ CREATE TABLE `blogs` (
 --
 
 CREATE TABLE `brands` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `brands`
@@ -351,18 +365,18 @@ INSERT INTO `brands` (`id`, `name`, `slug`, `description`, `status`, `created_at
 --
 
 CREATE TABLE `categories` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `type` varchar(255) NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `name_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Category Status: true (active) or false (inactive)',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Category Status: true (active) or false (inactive)',
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `categories`
@@ -380,10 +394,10 @@ INSERT INTO `categories` (`id`, `type`, `name`, `name_ar`, `status`, `slug`, `de
 --
 
 CREATE TABLE `cities` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(30) NOT NULL,
-  `state_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `state_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `cities`
@@ -48362,16 +48376,16 @@ INSERT INTO `cities` (`id`, `name`, `state_id`) VALUES
 --
 
 CREATE TABLE `contact_us` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subject_id` bigint(20) DEFAULT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subject_id` bigint DEFAULT NULL,
+  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `contact_us`
@@ -52445,13 +52459,13 @@ INSERT INTO `contact_us` (`id`, `name`, `email`, `phone`, `subject_id`, `message
 --
 
 CREATE TABLE `contact_us_subjects` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sort_desc` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -52460,15 +52474,15 @@ CREATE TABLE `contact_us_subjects` (
 --
 
 CREATE TABLE `countries` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `shortname` varchar(3) NOT NULL,
   `name` varchar(150) NOT NULL,
-  `phonecode` int(11) NOT NULL,
-  `status` tinyint(4) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `deleted_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `phonecode` int NOT NULL,
+  `status` tinyint DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `countries`
@@ -52730,11 +52744,11 @@ INSERT INTO `countries` (`id`, `shortname`, `name`, `phonecode`, `status`, `crea
 --
 
 CREATE TABLE `currencies` (
-  `id` int(11) NOT NULL,
-  `code` varchar(255) NOT NULL,
-  `currency` varchar(100) DEFAULT NULL,
-  `symbol` varchar(100) DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT 1
+  `id` int NOT NULL,
+  `code` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `currency` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `symbol` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -52752,14 +52766,14 @@ INSERT INTO `currencies` (`id`, `code`, `currency`, `symbol`, `status`) VALUES
 --
 
 CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -52768,15 +52782,15 @@ CREATE TABLE `failed_jobs` (
 --
 
 CREATE TABLE `help_support` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mobile` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `help_support`
@@ -52793,14 +52807,14 @@ INSERT INTO `help_support` (`id`, `name`, `user_id`, `email`, `mobile`, `descrip
 --
 
 CREATE TABLE `languages` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `short_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '1:active , 0:inactive',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '1:active , 0:inactive',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `languages`
@@ -52817,10 +52831,10 @@ INSERT INTO `languages` (`id`, `image_path`, `name`, `short_name`, `status`, `cr
 --
 
 CREATE TABLE `migrations` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `batch` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `migrations`
@@ -52897,12 +52911,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `newslatters` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `ip_address` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `newslatters`
@@ -52960,18 +52974,18 @@ INSERT INTO `newslatters` (`id`, `email`, `ip_address`, `created_at`, `updated_a
 --
 
 CREATE TABLE `notifications` (
-  `id` int(11) NOT NULL,
-  `sender_id` int(11) NOT NULL COMMENT 'user',
-  `receiver_id` varchar(255) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `message` text NOT NULL,
-  `product_id` varchar(255) DEFAULT NULL,
-  `project_id` varchar(255) DEFAULT NULL,
-  `is_read` int(11) DEFAULT 0,
-  `type` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `id` int NOT NULL,
+  `sender_id` int NOT NULL COMMENT 'user',
+  `receiver_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `message` text COLLATE utf8mb4_general_ci NOT NULL,
+  `product_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `project_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_read` int DEFAULT '0',
+  `type` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -53201,18 +53215,18 @@ INSERT INTO `notifications` (`id`, `sender_id`, `receiver_id`, `title`, `message
 --
 
 CREATE TABLE `pages` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `content_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_static` tinyint(1) NOT NULL DEFAULT 0,
+  `is_static` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `pages`
@@ -53233,7 +53247,7 @@ CREATE TABLE `password_reset_tokens` (
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -53242,17 +53256,17 @@ CREATE TABLE `password_reset_tokens` (
 --
 
 CREATE TABLE `personal_access_tokens` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -53261,75 +53275,105 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 CREATE TABLE `products` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `lot_no` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `title_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `auction_type_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `reserved_price` decimal(10,2) NOT NULL,
+  `auction_type_id` int DEFAULT NULL,
+  `project_id` int DEFAULT NULL,
+  `reserved_price` decimal(10,2) DEFAULT NULL,
   `start_price` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `end_price` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `minsellingprice` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `auction_end_date` datetime DEFAULT NULL,
-  `is_published` tinyint(1) NOT NULL DEFAULT 0,
+  `is_published` tinyint(1) DEFAULT '0',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_popular` tinyint(1) NOT NULL DEFAULT 0,
+  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `is_popular` tinyint(1) NOT NULL DEFAULT '0',
   `status` enum('new','open','suspended','closed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_closed` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `lot_no`, `title`, `title_ar`, `slug`, `auction_type_id`, `project_id`, `reserved_price`, `start_price`, `end_price`, `minsellingprice`, `auction_end_date`, `is_published`, `description`, `description_ar`, `is_popular`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Lot-001', 'GREG HANSELL, (1949 -), Vaucluse House, 1986, pastel, 79 x 99 cm. (31.1 x 38.9 in.), frame: 99 x 119 x 4 cm. (38.9 x 46.8 x 1.5 in.)', 'جريج هانسيل، (1949 -)، بيت فوكلوز، 1986، باستيل، 79 × 99 سم. (31.1 × 38.9 بوصة)، الإطار: 99 × 119 × 4 سم. (38.9 × 46.8 × 1.5 بوصة)', 'greg-hansell-1949-vaucluse-house-1986-pastel-79-x-99-cm-311-x-389-in-frame-99-x-119-x-4-cm-389-x-468-x-15-in', 1, 1, 100.00, '100', '500', NULL, '2024-05-06 12:00:00', 0, '<div>\r\n<h4>Description</h4>\r\n<div><strong>GREG HANSELL</strong> <br>(1949 - ) <br><strong>Vaucluse House, 1986</strong> <br>pastel <br>signed and dated lower right, titled verso</div>\r\n</div>\r\n<div>\r\n<h4>Dimensions</h4>\r\n<div>79 x 99 cm. (31.1 x 38.9 in.), frame: 99 x 119 x 4 cm. (38.9 x 46.8 x 1.5 in.)</div>\r\n</div>\r\n<div>\r\n<h4>Artist or Maker</h4>\r\n<div class=\"artist-info\"><a href=\"https://www.invaluable.com/artist/hansell-greg-fwao3atmdj\" target=\"_blank\" rel=\"noopener noreferrer\">\r\n<div>Greg Hansell</div>\r\n</a></div>\r\n</div>\r\n<div>\r\n<h4>Medium</h4>\r\n<div>pastel</div>\r\n</div>\r\n<div>\r\n<h4>Condition Report</h4>\r\n<div>Please note that whilst we endeavour to mention any imperfection, the absence of this information in the catalogue does not automatically imply that the lot is free from defect.</div>\r\n</div>', '<div id=\"KnM9nf\" class=\"PZPZlf\" data-attrid=\"tw-sourceArea\" data-entityname=\"Google Translate\">\r\n<div id=\"tw-source\">\r\n<div id=\"tw-source-text-container\" class=\"tw-ta-container F0azHf tw-nfl\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3OwLegQIBRAK\"><textarea id=\"tw-source-text-ta\" class=\"tw-ta tw-text-large q8U8x goog-textarea\" dir=\"ltr\" lang=\"en\" style=\"overflow: auto hidden; box-sizing: border-box; padding-top: 2px; height: 1048px;\" spellcheck=\"false\" rows=\"1\" placeholder=\"Enter text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQsaQCegQIBRAL\"></textarea></div>\r\n<div id=\"tw-source-rmn-container\" class=\"tw-ta-container F0azHf tw-nfl\">\r\n<pre id=\"tw-source-rmn\" class=\"tw-data-placeholder tw-text-small tw-ta\" dir=\"ltr\" style=\"text-align: left;\" data-placeholder=\"\"></pre>\r\n</div>\r\n</div>\r\n</div>\r\n<p><span id=\"tw-src-spkr-button\" class=\"tw-menu-btn za3ale\" tabindex=\"0\" role=\"button\" data-action-target=\"source\" data-sttse=\"true\" aria-label=\"Listen to source text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQv7cBegQIBRAR\"></span></p>\r\n<div id=\"tw-smenu\" class=\"tw-menu\"><span id=\"tw-src-spkr-button\" class=\"tw-menu-btn za3ale\" tabindex=\"0\" role=\"button\" data-action-target=\"source\" data-sttse=\"true\" aria-label=\"Listen to source text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQv7cBegQIBRAR\"></span></div>\r\n<p><span id=\"tw-cst\" class=\"tw-menu-btn KTDgic\" tabindex=\"0\" role=\"button\" aria-label=\"Clear source text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQxZgCegQIBRAS\"></span></p>\r\n<div class=\"QmZWSe\">\r\n<div class=\"DHcWmd\">&nbsp;</div>\r\n</div>\r\n<div class=\"oSioSc\">\r\n<div id=\"tw-target\">\r\n<div id=\"kAz1tf\" class=\"g9WsWb PZPZlf\" data-attrid=\"tw-targetArea\" data-entityname=\"Google Translate\">\r\n<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">وصف\r\nجريج هانسيل\r\n(1949 - )\r\nبيت فوكلوز، 1986\r\nباستيل\r\nموقعة ومؤرخة أسفل اليمين، بعنوان الظهر\r\nأبعاد\r\n79 &times; 99 سم. (31.1 &times; 38.9 بوصة)، الإطار: 99 &times; 119 &times; 4 سم. (38.9 &times; 46.8 &times; 1.5 بوصة)\r\nفنان أو صانع\r\nجريج هانسيل\r\nواسطة\r\nباستيل\r\nتقرير الحالة\r\nيرجى ملاحظة أنه بينما نسعى إلى ذكر أي عيوب، فإن غياب هذه المعلومات في الكتالوج لا يعني تلقائيًا أن الكمية خالية من العيوب.</span></pre>\r\n</div>\r\n</div>\r\n</div>\r\n</div>', 1, 'new', '2024-04-24 08:56:44', '2024-04-30 10:54:40', NULL),
-(5, 'Lot-002', 'MAYNARD DIXON \"NUDE STUDY\" GRAPHITE ON PAPER', 'ماينارد ديكسون \"دراسة عارية\" الجرافيت على الورق', 'maynard-dixon-nude-study-graphite-on-paper', 2, 3, 100.00, '100', '500', '850', NULL, 0, '<p>Maynard Dixon (1875 - 1946) \"Nude Study\" Graphite on Paper. Initialed and dated 1929 lower right. Born in Fresno, California in the San Joaquin Valley, Maynard Dixon, originally named Henry St. John Dixon, became a noted illustrator, landscape, and mural painter of the early 20th-century American West, especially the desert, Indians, early settlers, and cowboys. Maynard Dixon lived most of his life in the West, living at times in Mount Carmel, Utah; Tucson, Arizona; and the desert of California near Mecca and Indio. His close friends were artists Jimmy Swinnerton, John Hilton, and Clyde Forsythe. Dixon\'s works were known for a unique and universally known style with its strong, dramatic forms and clear, vivid colors. Artist: Maynard Dixon Title: \"Nude Study\" Medium: Graphite on Paper Circa/Year: 1929 Signature Type: Hand Signed Signature Location: Lower Right Site Measurement: 10.75\" x 13.75\" Image Keywords: Southwestern, Western Artwork, Art; Ref: BD1942</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">ماينارد ديكسون (1875 - 1946) \"دراسة عارية\" جرافيت على ورق. تم التوقيع عليه بالأحرف الأولى وتاريخه عام 1929 أسفل اليمين. ولد ماينارد ديكسون في فريسنو، كاليفورنيا في وادي سان جواكين، وأصبح رسامًا توضيحيًا ومناظر طبيعية ورسامًا جداريًا مشهورًا في الغرب الأمريكي في أوائل القرن العشرين، وخاصة الصحراء والهنود والمستوطنين الأوائل. ورعاة البقر. عاش ماينارد ديكسون معظم حياته في الغرب، حيث عاش أحيانًا في جبل الكرمل بولاية يوتا؛ توكسون، أريزونا؛ وصحراء كاليفورنيا بالقرب من مكة والهند. كان أصدقاؤه المقربون هم الفنانين جيمي سوينرتون وجون هيلتون وكلايد فورسيث. اشتهرت أعمال ديكسون بأسلوب فريد ومعروف عالميًا بأشكاله الدرامية القوية وألوانه الواضحة النابضة بالحياة. الفنان: ماينارد ديكسون العنوان: \"دراسة عارية\" الوسيط: جرافيت على ورق حوالي / السنة: 1929 نوع التوقيع: موقع التوقيع يدويًا موقع التوقيع: قياس الموقع الأيمن السفلي: 10.75 &times; 13.75 الكلمات الرئيسية للصورة: جنوب غربي، عمل فني غربي، فن؛ المرجع: 1942 دينار بحريني</span></pre>\r\n</div>', 1, 'new', '2024-04-24 10:06:18', '2024-04-24 10:06:18', NULL),
-(6, 'Lot-003', 'OLAF WIEGHORST HORSE PENCIL ON PAPER', 'قلم رصاص أولاف فيجورست هورس على الورق', 'olaf-wieghorst-horse-pencil-on-paper', 3, 5, 100.00, '100', '850', NULL, '2024-05-07 12:00:00', 0, '<p>Olaf Carl Wieghorst (1899 - 1988) Horse Pencil on Paper. Acclaimed by critics as the outstanding contemporary Western artist, Olaf Wieghorst earned these accolades during a lifetime of observing, handling and painting horses and the American West. He was a man deeply in love with the West, its people, and its way of life. Olaf\'s paintings are in the great private collections of Western art including those of Clint Murchison, Leonard Firestone, Barry Goldwater, Earl Adams, Sam Campbell, Jack Goodman, Read Mullan, C.R. Smith, Bruce Gelker, Fred Utter as well as The Eisenhower Library, Abilene, Kansas, and the Whitney Gallery, Cody, Wyoming. Artist: Olaf Wieghorst Title: Horse Medium: Pencil on Paper Signature Type: Hand Signed Signature Location: Lower Center Site Measurement: 3.5\" x 4\" Image Keywords: Southwestern, Western Artwork, Art; Ref: BD1667</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">أولاف كارل ويغورست (1899 - 1988) قلم رصاص على ورق. حاز أولاف ويغورست، الذي نال استحسان النقاد باعتباره الفنان الغربي المعاصر المتميز، على هذه الأوسمة خلال حياته التي قضاها في مراقبة الخيول والغرب الأمريكي والتعامل معها ورسمها. لقد كان رجلاً يحب الغرب بشدة وشعبه وأسلوب حياته. لوحات أولاف موجودة في المجموعات الخاصة العظيمة للفن الغربي بما في ذلك لوحات كلينت مورشيسون، وليونارد فايرستون، وباري جولد ووتر، وإيرل آدامز، وسام كامبل، وجاك جودمان، وريد مولان، وسي آر سميث، وبروس جيلكر، وفريد ​​أوتر، بالإضافة إلى مكتبة أيزنهاور. أبيلين، كانساس، ومعرض ويتني، كودي، وايومنغ. الفنان: Olaf Wieghorst العنوان: حصان متوسط: قلم رصاص على ورق نوع التوقيع: موقع التوقيع اليدوي الموقع: قياس الموقع المركزي السفلي: 3.5 &times; 4 كلمات الصورة الرئيسية: جنوب غربي، عمل فني غربي، فن؛ المرجع: BD1667</span></pre>\r\n</div>', 1, 'new', '2024-04-24 10:15:00', '2024-04-24 10:15:00', NULL),
-(7, 'Lot-004', 'Mies van der Rohe x Knoll \"Barcelona\" Daybed', 'سرير نهاري Mies van der Rohe x Knoll \"Barcelona\".', 'mies-van-der-rohe-x-knoll-barcelona-daybed', 2, 6, 500.00, '200', '1100', '900', NULL, 0, '<div>\r\n<div>Ludwig Mies van der Rohe (German/American, 1886-1969) for Knoll \"Barcelona\" Daybed, with black tufted leather cushion on wood and chrome base, printed \"Knoll\" to underside of cushion and marked \"Knoll Studio / Mies van der Rohe\" on proper front left leg. 25\" H x 78\" W x 38.5\" D; bed: 16\" H. Provenance: From an Upper East Side Collection. Keywords: Furniture, Seating, Mid-Century Modern design, MCM, Lounge, Upholstery, Designer, Chaise longue, Bench</div>\r\n</div>\r\n<div>\r\n<h4>Artist or Maker</h4>\r\n<div class=\"artist-info\"><a href=\"https://www.invaluable.com/artist/van-der-rohe-ludwig-mies-qh76fdyaug\" target=\"_blank\" rel=\"noopener noreferrer\">\r\n<div>Ludwig Mies van der Rohe</div>\r\n</a></div>\r\n</div>\r\n<div>\r\n<h4>Condition Report</h4>\r\n<div>Notice to bidders: The absence of a condition report does not imply that the lot is in perfect condition. Complete condition information is available by request, no later than 24 hours prior to the auction. All lots are offered and sold \"as is\", and Auctions at Showplace will not provide refunds based on condition. Timepiece movements, lighting and electrics have not been tested, and art has not been examined out of the frame unless otherwise stated. Auctions at Showplace does not provide any shipping or packing services. We happily provide a list of recommended shippers who can provide shipping quotes prior to bidding.</div>\r\n</div>', '<p>Ludwig Mies van der Rohe (ألماني/أمريكي، 1886-1969) لسرير Knoll \"Barcelona\" النهاري، مع وسادة جلدية سوداء معنقدة على قاعدة من الخشب والكروم، وطبعة \"Knoll\" على الجانب السفلي من الوسادة وعلامة \"Knoll Studio / Mies van der Rohe\" \"على الساق اليسرى الأمامية اليمنى. 25 بوصة ارتفاع &times; 78 بوصة عرض &times; 38.5 بوصة عمق؛ السرير: 16 بوصة ارتفاع. المصدر: من مجموعة الجهة الشرقية العليا. الكلمات الرئيسية: الأثاث، المقاعد، التصميم الحديث لمنتصف القرن، MCM، الصالة، المفروشات، المصمم، كرسي استرخاء، مقعد</p>\r\n<p><br>فنان أو صانع</p>\r\n<p>لودفيج ميس فان دير روه</p>\r\n<p>تقرير الحالة</p>\r\n<p>إشعار لمقدمي العروض: عدم وجود تقرير الحالة لا يعني أن الكمية في حالة ممتازة. تتوفر معلومات الحالة الكاملة عند الطلب، في موعد لا يتجاوز 24 ساعة قبل المزاد. يتم عرض جميع القطع وبيعها \"كما هي\"، ولن توفر المزادات في Showplace المبالغ المستردة بناءً على الحالة. لم يتم اختبار حركات الساعة والإضاءة والكهرباء، ولم يتم فحص الفن خارج الإطار ما لم يُنص على خلاف ذلك. المزادات في Showplace لا توفر أي خدمات شحن أو تعبئة. يسعدنا تقديم قائمة بالشاحنين الموصى بهم الذين يمكنهم تقديم عروض أسعار الشحن قبل تقديم العطاءات.</p>', 1, 'new', '2024-04-30 10:44:01', '2024-04-30 10:44:01', NULL),
-(8, 'Lot-005', 'Qing Dynasty Huanghua Pear Lifting Box', 'صندوق رفع الكمثرى Huanghua من أسرة تشينغ', 'qing-dynasty-huanghua-pear-lifting-box', 2, 6, 300.00, '300', '1100', '699', NULL, 0, '<p>Ancient art pieces from the 18th to 461th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن 461، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', '2024-04-30 11:22:36', '2024-04-30 11:22:36', NULL),
-(9, 'Lot-006', 'Qing Dynasty Shoushan Tian Huangshi Animal Flower Pattern Shanzi', 'سلالة تشينغ شوشان تيان هوانغشي نمط زهرة الحيوان شانزي', 'qing-dynasty-shoushan-tian-huangshi-animal-flower-pattern-shanzi', 2, 6, 100.00, '300', '1500', '750', NULL, 0, '<p>Ancient art pieces from the 18th to 465th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن 465، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', '2024-04-30 11:24:34', '2024-04-30 11:24:34', NULL),
-(10, 'Lot-007', 'Hotan Jade Lid Box in Qing Dynasty', 'صندوق غطاء اليشم Hotan في عهد أسرة تشينغ', 'hotan-jade-lid-box-in-qing-dynasty', 3, 5, 100.00, '100', '1000', NULL, '2024-05-07 12:00:00', 0, '<p>Ancient art pieces from the 18th to 464th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن الرابع والستين، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', '2024-04-30 11:27:01', '2024-04-30 11:27:01', NULL),
-(11, 'Lot-008', 'Hotan Jade in the Qing Dynasty was a group of jade wearers with luck changing', 'كان Hotan Jade في عهد أسرة تشينغ عبارة عن مجموعة من مرتدي اليشم ذوي الحظ المتغير', 'hotan-jade-in-the-qing-dynasty-was-a-group-of-jade-wearers-with-luck-changing', 3, 5, 200.00, '100', '500', NULL, '2024-05-07 12:00:00', 0, '<p>Ancient art pieces from the 18th to 463th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن 463، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', '2024-04-30 11:29:01', '2024-04-30 11:29:01', NULL),
-(12, 'Lot-009', 'ANDIRAN, FRÉDÉRIC-FRANÇOIS D\': \"Jardin du Luxembourg', 'أنديران، فريدريك فرانسوا د: \"حديقة لوكسمبورغ', 'andiran-frederic-francois-d-jardin-du-luxembourg', 2, 6, 100.00, '100', '800', '750', NULL, 0, '<p>ANDIRAN, FR&Eacute;D&Eacute;RIC-FRAN&Ccedil;OIS D\' (Bordeaux 1802 - 1876 Lausanne) : \"Jardin du Luxembourg\"; Feder in Braun und Aquarell; 20x27 cm (LM), gerahmt; sig. \"Fr. d\'Andiran\" u. betitelt u.l.</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiki4qXgu-FAxVSbvUHHTbLDekQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">أنديران، فريدريك فرانسوا د\' (بوردو 1802 - 1876 لوزان) : \"حديقة لوكسمبورغ\"؛ فيدر في براون وأكواريل؛ 20x27 سم (LM)، جيراهمت؛ سيج. \"الأب دانديران\" ش. بيتيتيلت ش.</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-02 12:58:13', '2024-05-02 12:58:13', NULL),
-(13, 'Lot-010', 'WELCOME TO THE AUCTION', 'مرحبا بكم في المزاد', 'welcome-to-the-auction', 2, 6, 100.00, '100', '900', '850', NULL, 0, '<p>DESCRIPTION: Original drawing in pen on a single graph-paper sheet with perforated edges measuring 11 5/8 x 8 1/4 inches ( 29.5 x 21cm). SIGNED and INSCRIBED with title and date to Frank Dunphy (1937-2020; the Irish-born business brain behind Hirst\'s multimillion-pound career who also represented Tracey Emin, Jake and Dinos Chapman and Ray Winstone); housed in its original frame with Sotheby\'s inventory, collocation and lot stickers attached to the frame recto. In this original, hand-drawn design by Damien Hirst, the artist revisits his Catholic upbringing by re-imagining his earlier work, The Evangelists, that debuted only a few months earlier in 2003. In that work, Hirst combined his previous interests in the collection, composition and organization of elaborate medical curio cabinets with his groundbreaking presentations of animals locked in formaldehyde aquariums, yet did so in a manner that places both of those conceptual themes within a specifically religious set of perameters. Here then, by revisiting The Evangelists once more within this original drawing (2004), Hirst offers another insightful, original work of art that is intricately woven by and into some of the larger, seminal aspets of his early thought and artistic production; and one that likewise finds him combining his constant and continued fascination with the psychology of life and death (as represented through the lenses of medicine, zoology and taxidermy) with a specifically religious set of colorings to create an open and vibrant dialogue with his own Catholic upbringing (and by extension similar Christian influences experienced by others around the globe). The Evangelists (as drawing, 2004), therefore presents us with an energetic, vibrant and vivid artistic gesture, a provocative window through which we can readily observe and discuss the groundbreaking artistic output Hirst produced up until the moment in which he penned this fascinating work of art. CONDITION: Fine; clean and bright with mere hints of wear when observed upon extremely close and careful inspection. The sheet is hinged verso to the backing board and the simple white frame is in excellent condition. Overall, The Evangelists (2004) is a vibrant, edgy and provocative artwork, a great conversation piece perfect for any Damien Hirst enthusiast or collector. OTHER ARTISTS IN OUR AUCTION INCLUDE: Mr. Brainwash Penn, Irving Meyerowitz, Joel Warhol, Andy Crewdson, Gregory Prince, Richard Weiwei, Ai McShine, Kynaston; Serra, Richard Cartier-Bresson, Henri Hirst, Damien Gehry, Frank Ruscha, Ed; Ban, Shigeru;</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">الوصف: رسم أصلي بالقلم على ورقة رسم بياني واحدة ذات حواف مثقوبة بقياس 11 5/8 &times; 8 1/4 بوصة (29.5 &times; 21 سم). تم التوقيع والمدونة بعنوان وتاريخ لفرانك دنفي (1937-2020؛ العقل التجاري الأيرلندي المولد وراء مسيرة هيرست المهنية التي تقدر بملايين الجنيهات الاسترلينية والذي مثل أيضًا تريسي إيمين وجيك ودينوس تشابمان وراي وينستون)؛ موجودة في إطارها الأصلي مع مخزون Sotheby\'s وملصقات المجموعة المرفقة بالصفحة اليمنى للإطار. في هذا التصميم الأصلي المرسوم يدويًا لداميان هيرست، يعيد الفنان النظر في نشأته الكاثوليكية من خلال إعادة تصور عمله السابق، الإنجيليون، الذي ظهر لأول مرة قبل بضعة أشهر فقط في عام 2003. في هذا العمل، جمع هيرست اهتماماته السابقة في جمع وتكوين وتنظيم خزائن التحف الطبية المتقنة مع عروضه الرائدة للحيوانات المحبوسة في أحواض السمك الفورمالديهايد، ومع ذلك فعل ذلك بطريقة تضع كلا هذين الموضوعين المفاهيميين ضمن مجموعة دينية محددة من المحيطات. هنا إذن، من خلال إعادة النظر في الإنجيليين مرة أخرى ضمن هذا الرسم الأصلي (2004)، يقدم هيرست عملاً فنيًا أصليًا آخر ثاقبًا تم نسجه بشكل معقد من خلال بعض الجوانب الأكبر والأكثر أهمية في فكره المبكر وإنتاجه الفني؛ وهو أيضًا يجده يجمع بين افتتانه المستمر والمستمر بعلم نفس الحياة والموت (كما هو ممثل من خلال عدسات الطب وعلم الحيوان والتحنيط) مع مجموعة دينية محددة من الألوان لخلق حوار مفتوح وحيوي مع كاثوليكي خاص به. التنشئة (وبالتالي التأثيرات المسيحية المماثلة التي يعاني منها الآخرون في جميع أنحاء العالم). يقدم لنا الإنجيليون (كرسم، 2004)، لفتة فنية مفعمة بالحيوية والحيوية، ونافذة استفزازية يمكننا من خلالها مراقبة ومناقشة الإنتاج الفني الرائد الذي أنتجه هيرست حتى اللحظة التي كتب فيها هذا العمل الرائع. من الفن. الحالة: جيدة؛ نظيفة ومشرقة مع مجرد تلميحات من التآكل عند ملاحظتها عند الفحص الدقيق والدقيق للغاية. يتم تعليق الورقة على الجانب الخلفي من اللوحة الخلفية والإطار الأبيض البسيط في حالة ممتازة. بشكل عام، يعد The Evangelists (2004) عملًا فنيًا نابضًا بالحياة ومثيرًا واستفزازيًا، وهو قطعة محادثة رائعة مثالية لأي متحمس أو جامع داميان هيرست. يشمل الفنانون الآخرون في مزادنا: السيد برين واش بن، إيرفينغ ميرويتز، جويل وارهول، آندي كرودسون، جريجوري برينس، ريتشارد ويوي، آي ماكشين، كيناستون؛ سيرا، ريتشارد كارتييه بريسون، هنري هيرست، داميان جيري، فرانك روشا، إد؛ بان، شيجيرو؛</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 04:43:28', '2024-05-03 04:43:28', NULL),
-(14, 'Lot-011', 'Hilda Rix Nicholas, forest scene, pastel on paper, 29cm x 43cm frame 41.5cm x 57cm, some foxing', 'هيلدا ريكس نيكولاس، مشهد غابة، باستيل على ورق، إطار 29 سم × 43 سم، 41.5 سم × 57 سم، بعض الثعالب', 'hilda-rix-nicholas-forest-scene-pastel-on-paper-29cm-x-43cm-frame-415cm-x-57cm-some-foxing', 2, 6, 100.00, '100', '700', '650', NULL, 0, '<p>Eric Michaels (Born 1949) \"Morning In The Village\" Pastel on Paper. Eric Michaels is a plein-air landscape painter of Southwestern and European subjects using watercolors, pastels and primarily oils. Perhaps the most distinctive feature of Eric Michaels\' work is its international flavor. The subject matter spans four continents and both hemispheres. Painting in these various locations enables him to achieve an understanding of local light conditions and to participate in the native experience. Michaels has exhibited at the Royal Watercolour Society in London, nine years in the Artists of America Show in Denver, and is a regular exhibitor in the Great American Artists Exhibition in Cincinnati. His paintings hang in private, corporate, museum and state collections; including the Albuquerque Museum of Fine Art, the Americana Museum, the Institute of American Indian Arts, Phillips Petroleum, IBM, Honeywell-Sperry Inc., and the State Collection of the Governor\'s Gallery, Santa Fe, NM. Artist: Eric Michaels Title: \"Morning In The Village\" Medium: Pastel on Paper Signature Type: Hand Signed Signature Location: Lower Left Site Measurement: 17.5\" x 23.5\" Image Keywords: Southwestern, Western Artwork, Art; Ref: BD1942</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">إريك مايكلز (مواليد 1949) \"صباح في القرية\" باستيل على ورق. إريك مايكلز هو رسام للمناظر الطبيعية في الهواء الطلق للمواضيع الجنوبية الغربية والأوروبية باستخدام الألوان المائية والباستيل والزيوت في المقام الأول. ربما تكون السمة الأكثر تميزًا في عمل إريك مايكلز هي نكهته العالمية. يمتد الموضوع إلى أربع قارات ونصفي الكرة الأرضية. يمكّنه الرسم في هذه المواقع المختلفة من تحقيق فهم لظروف الإضاءة المحلية والمشاركة في التجربة المحلية. عرض مايكلز أعماله في الجمعية الملكية للألوان المائية في لندن، وشارك لمدة تسع سنوات في معرض فناني أمريكا في دنفر، وهو عارض منتظم في معرض الفنانين الأمريكيين العظماء في سينسيناتي. لوحاته معلقة في المجموعات الخاصة والشركات والمتاحف والدولة. بما في ذلك متحف البوكيرك للفنون الجميلة، ومتحف أمريكانا، ومعهد الفنون الهندية الأمريكية، وفيليبس بتروليوم، وآي بي إم، وشركة هانيويل سبيري، ومجموعة الدولة لمعرض الحاكم، سانتا في، نيو مكسيكو. الفنان: إريك مايكلز العنوان: \"Morning In The Village\" الوسيط: باستيل على ورق نوع التوقيع: موقع التوقيع اليدوي: قياس الموقع السفلي الأيسر: 17.5 &times; 23.5 الكلمات الرئيسية للصورة: جنوب غربي، عمل فني غربي، فن؛ المرجع: 1942 دينار بحريني</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 04:47:43', '2024-05-03 04:47:43', NULL),
-(15, 'Lot-012', 'Giuseppe Armani La Pieta Figurine', 'تمثال جوزيبي أرماني لا بيتا', 'giuseppe-armani-la-pieta-figurine', 2, 6, 100.00, '100', '800', '750', NULL, 0, '<p>Giuseppe Armani La Pieta Figurine. Art 802-C - 1993 - Limited Edition #1164/5000. Made in Italy. Measures 19.75\" tall. Comes with original box and COA. All invoices must be paid within 24 hours of the sale. We offer multiple shipping options, We also offer Pick-Ups Thursday, Friday, Saturday, and Monday immediately following the sale. BY APPOINTMENT ONLY.</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">تمثال جوزيبي أرماني لا بيتا. المادة 802-C - 1993 - إصدار محدود رقم 1164/5000. صنع في ايطاليا. يبلغ طوله 19.75 بوصة. ويأتي مع الصندوق الأصلي وشهادة توثيق البرامج. يجب دفع جميع الفواتير خلال 24 ساعة من البيع. نحن نقدم خيارات شحن متعددة، كما نقدم خدمة الاستلام يوم الخميس والجمعة والسبت والاثنين مباشرة بعد البيع. موعد فقط.</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 04:50:43', '2024-05-03 04:50:43', NULL),
-(16, 'Lot-013', 'A Norman Rockwell \"The Weigh In\" Figural Group', 'مجموعة مجسمة لنورمان روكويل \"The Weigh In\".', 'a-norman-rockwell-the-weigh-in-figural-group', 2, 6, 100.00, '100', '5100', '5000', NULL, 0, '<div>\r\n<div><strong>A Norman Rockwell \"The Weigh In\" Figural Group</strong></div>\r\n</div>\r\n<div>\r\n<h4>Dimensions</h4>\r\n<div>h. 17 cms</div>\r\n</div>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">مجموعة مجسمة لنورمان روكويل \"The Weigh In\".\r\nأبعاد\r\n</span><span class=\"Y2IQFc\" lang=\"ar\">ح. 17 سم</span></pre>', 1, 'new', '2024-05-03 04:54:27', '2024-05-03 04:54:27', NULL),
-(17, 'Lot-014', 'R. Diane Martinez Signed Black On Black Ceramic Bear Figurine', 'ر. ديان مارتينيز موقعة باللون الأسود على تمثال دب من السيراميك الأسود', 'r-diane-martinez-signed-black-on-black-ceramic-bear-figurine', 2, 6, 500.00, '100', '900', '850', NULL, 0, '<p>R. Diane Martinez innovated her award-winning style of pottery 34 years ago. As a member of the Tarahumara Indian Tribe, her one-of-a-kind pieces are all hand-made and free-hand painted inside and out.</p>\r\n<p>Pickup on Monday, May 6, 2024 from 2:00 pm to 6:00 pm</p>\r\n<p>All items are sold as-is.&nbsp;<em>The absence of a condition report does not imply that the lot is in perfect condition or completely free of defects, imperfections, or wear and tear.</em></p>\r\n<p>The pickup address will be released on your invoice. Invoices are sent after the entire auction has ended.&nbsp;<em>Be sure to bring boxes and packing material to pickup. If you purchase a large item, be sure to bring moving help.</em></p>\r\n<p>Large items cannot be shipped.<strong>&nbsp;Items not picked up by the pickup deadline, NOT requiring shipping will be forfeited and you will still be charged.</strong> Items cannot be held after the pickup date. Items not paid for will be automatically charged to the card on file.</p>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">R. Diane Martinez أسلوبها الفخاري الحائز على جوائز منذ 34 عامًا. باعتبارها عضوًا في قبيلة تاراهومارا الهندية، فإن جميع قطعها الفريدة من نوعها مصنوعة يدويًا ومرسومة يدويًا من الداخل والخارج.\r\nالاستلام يوم الاثنين 6 مايو 2024 من الساعة 2:00 ظهرًا حتى 6:00 مساءً\r\n\r\nوتباع جميع البنود كما هو. لا يعني عدم وجود تقرير الحالة أن الكمية في حالة ممتازة أو خالية تمامًا من العيوب أو العيوب أو البلى.\r\n\r\nسيتم نشر عنوان الالتقاط في فاتورتك. يتم إرسال الفواتير بعد انتهاء المزاد بأكمله. تأكد من إحضار الصناديق ومواد التعبئة والتغليف لالتقاطها. إذا قمت بشراء عنصر كبير، تأكد من إحضار المساعدة المتحركة.\r\n\r\nلا يمكن شحن العناصر الكبيرة. سيتم مصادرة العناصر التي لم يتم استلامها بحلول الموعد النهائي للاستلام، والتي لا تتطلب الشحن، وسيتم فرض رسوم عليك. لا يمكن الاحتفاظ بالعناصر بعد تاريخ الاستلام. سيتم خصم العناصر التي لم يتم دفع ثمنها تلقائيًا من البطاقة الموجودة في الملف.</span></pre>', 1, 'new', '2024-05-03 04:59:57', '2024-05-03 04:59:57', NULL),
-(18, 'Lot-015', 'Giuseppe Armani Lady with Peacock Figurine', 'سيدة جوزيبي أرماني مع تمثال الطاووس', 'giuseppe-armani-lady-with-peacock-figurine', 2, 6, 800.00, '100', '1500', '1200', NULL, 0, '<p>Giuseppe Armani Lady with Peacock Figurine. Art 385-C - 1987 - Limited Edition #2957/5000. Hand Signed by Armani. Made in Italy. Measures 19.5\" tall. Comes with original box and COA. All invoices must be paid within 24 hours of the sale. We offer multiple shipping options, We also offer Pick-Ups Thursday, Friday, Saturday, and Monday immediately following the sale. BY APPOINTMENT ONLY.</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">سيدة جوزيبي أرماني مع تمثال الطاووس. المادة 385-C - 1987 - إصدار محدود رقم 2957/5000. توقيع أرماني. صنع في ايطاليا. يبلغ طوله 19.5 بوصة. ويأتي مع الصندوق الأصلي وشهادة توثيق البرامج. يجب دفع جميع الفواتير خلال 24 ساعة من البيع. نحن نقدم خيارات شحن متعددة، كما نقدم خدمة الاستلام يوم الخميس والجمعة والسبت والاثنين مباشرة بعد البيع. موعد فقط.</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 05:03:00', '2024-05-03 05:03:00', NULL),
-(19, 'Lot-016', 'Lustiger Marsch (Lena Amstel)', 'لوستيجر مارش (لينا أمستل)', 'lustiger-marsch-lena-amstel', 2, 6, 550.00, '100', '900', '800', NULL, 0, '<p><strong>Lustiger Marsch (Lena Amstel)</strong>&nbsp;Rosenthal 1919<br>Nach einem Entwurf von Constantin Holzer-Defanti. Manufakturmarke. Modellnr. K 551. H 36 cm.</p>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">لوستيجر مارش (لينا أمستل) روزنتال 1919\r\nناتش إينم إنتورف فون كونستانتين هولزر ديفانتي. تصنيع. موديللنر. ك 551. </span></pre>', 1, 'new', '2024-05-03 05:05:13', '2024-05-03 05:05:13', NULL),
-(20, 'Lot-017', '(83pc) Villeroy & Boch New Wave Porcelain China', '(83 قطعة) بورسلين الموجة الجديدة من فيليروي آند بوش الصين', '83pc-villeroy-boch-new-wave-porcelain-china', 2, 6, 550.00, '100', '1000', '950', NULL, 0, '<div class=\"collapse show\">\r\n<div class=\"card\">\r\n<div class=\"card-body\">\r\n<div>\r\n<div>3 Boxes In This Lot, Including Plates, Bowls, Mugs, Teacups, Espresso Cups &amp; Saucers, In Used Condition, Marked On Bottoms. Nr30219 Js</div>\r\n</div>\r\n<button class=\"btn btn-link\" type=\"button\">Request more information</button></div>\r\n</div>\r\n</div>\r\n<div id=\"paymentNShipmentToggler\" class=\"accordion-heading\" tabindex=\"0\" role=\"button\"></div>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">3 صناديق في هذه المجموعة، بما في ذلك الأطباق والأوعية والأكواب وأكواب الشاي وأكواب الإسبريسو والصحون، في حالة مستعملة، ومُحددة على الجزء السفلي. رقم 30219 شبيبة</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 05:08:48', '2024-05-03 05:08:48', NULL),
-(22, 'Lot-019', 'Pablo Picasso \"Visage Noir Putoise\" Platter', 'طبق بابلو بيكاسو \"فيساج نوير بوتواز\".', 'pablo-picasso-visage-noir-putoise-platter', 2, 6, 100.00, '100', '1200', '1150', NULL, 0, '<div>\r\n<div>Pablo Picasso (Spanish, 1881-1973), \"Visage Noir Putoise\", 1948, Glazed White Earthenware Ceramic Platter, stamped \"Madoura / Plein / Feu / Edition / Picasso\", marked \"I 105\" and numbered \"77/200\" to underside. 1.5\" H x 15.25\" W x 12.5\" D. Provenance: From an Upper East Side townhouse. Keywords: Art pottery, Hand-painted, Mid-Century Modern, MCM, Stippling, Blue, Faune, Fawn, Tray</div>\r\n</div>\r\n<div>\r\n<h4>Artist or Maker</h4>\r\n<div class=\"artist-info\"><a href=\"https://www.invaluable.com/artist/picasso-pablo-nvddduiinb\" target=\"_blank\" rel=\"noopener noreferrer\">\r\n<div>Pablo Picasso</div>\r\n</a></div>\r\n</div>\r\n<div>\r\n<h4>Condition Report</h4>\r\n<div>Notice to bidders: The absence of a condition report does not imply that the lot is in perfect condition. Complete condition information is available by request, no later than 24 hours prior to the auction. All lots are offered and sold \"as is\", and Auctions at Showplace will not provide refunds based on condition. Timepiece movements, lighting and electrics have not been tested, and art has not been examined out of the frame unless otherwise stated. Auctions at Showplace does not provide any shipping or packing services. We happily provide a list of recommended shippers who can provide shipping quotes prior to bidding.</div>\r\n</div>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">بابلو بيكاسو (إسباني، 1881-1973)، \"Visage Noir Putoise\"، 1948، طبق خزفي خزفي أبيض مزجج، مختوم \"Madoura / Plein / Feu / Edition / Picasso\"، مع علامة \"I 105\" ومرقمة \"77/200\" إلى الجانب السفلي. 1.5 بوصة ارتفاع &times; 15.25 بوصة عرض &times; 12.5 بوصة عمق. المصدر: من منزل مستقل في الجانب الشرقي العلوي. الكلمات الرئيسية: فخار فني، مرسومة يدويًا، حديث منتصف القرن، MCM، Stippling، Blue، Faune، Fawn، Tray\r\nفنان أو صانع\r\nبابلو بيكاسو\r\nتقرير الحالة\r\nإشعار لمقدمي العروض: عدم وجود تقرير الحالة لا يعني أن الكمية في حالة ممتازة. تتوفر معلومات الحالة الكاملة عند الطلب، في موعد لا يتجاوز 24 ساعة قبل المزاد. يتم عرض جميع القطع وبيعها \"كما هي\"، ولن توفر المزادات في Showplace المبالغ المستردة بناءً على الحالة. لم يتم اختبار حركات الساعة والإضاءة والكهرباء، ولم يتم فحص الفن خارج الإطار ما لم يُنص على خلاف ذلك. المزادات في Showplace لا توفر أي خدمات شحن أو تعبئة. يسعدنا تقديم قائمة بالشاحنين الموصى بهم الذين يمكنهم تقديم عروض أسعار الشحن قبل </span></pre>', 1, 'new', '2024-05-03 05:14:57', '2024-05-03 05:14:57', NULL),
-(23, 'Lot-020', 'FRANKLIN PETERS ACOMA POLYCHROME WEDDING VASE', 'مزهرية زفاف من فرانكلين بيترز أكوما بولي كروم', 'franklin-peters-acoma-polychrome-wedding-vase', 2, 6, 500.00, '100', '1500', '1450', NULL, 0, '<p>Franklin Peters Acoma Polychrome Wedding Vase. Signed on bottom Franklin Peters / Huwaka / Acoma, NM. Franklin Peters was born into the Sky Clan on Acoma Pueblo. He learned the art of pottery making as he grew up surrounded by some of Acoma&rsquo;s most well known potters: Ella Peters (his mother), Florence Aragon, Rachel Aragon, Phyllis Juanico, Dorothy Torivio, Wilfred Garcia, Frederica Antonio, and Barbara and Joseph Cerno. In 2011 Franklin was honored with the 2011 Rollin and Mary Ella King Native Artist Fellowship at the School for Advanced Research in Santa Fe. Keywords: Native American, Indian; Ref: BD1700</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">مزهرية زفاف متعددة الألوان من فرانكلين بيترز أكوما. تم التوقيع في الأسفل فرانكلين بيترز / هواكا / أكوما، نيو مكسيكو. ولد فرانكلين بيترز في Sky Clan في Acoma Pueblo. لقد تعلم فن صناعة الفخار عندما نشأ محاطًا ببعض أشهر الخزافين في أكوما: إيلا بيترز (والدته)، فلورنس أراغون، راشيل أراغون، فيليس خوانيكو، دوروثي توريفيو، ويلفريد جارسيا، فريدريكا أنطونيو، وباربرا وجوزيف. سيرنو. في عام 2011، تم تكريم فرانكلين بمنحة رولين وماري إيلا كينغ للفنانين الأصليين لعام 2011 في مدرسة الأبحاث المتقدمة في سانتا في. الكلمات المفتاحية: أمريكي أصلي، هندي؛ المرجع: 1700 دينار بحريني</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 05:17:17', '2024-05-03 05:17:17', NULL),
-(24, 'Lot-021', 'Deckelvase', 'ديكلففاس', 'deckelvase', 2, 6, 400.00, '100', '1500', '1450', NULL, 0, '<h4>Description</h4>\r\n<div><strong>Deckelvase</strong>&nbsp;Rozenburg um 1900<br>Umlaufendes Dekor. Bodenmarke. H 53 cm.</div>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">\r\nديكلفاسي روزنبرج أم 1900\r\nديكورات أملاوفنديس. بودينماركي. ح 53 سم.</span></pre>\r\n</div>', 1, 'new', '2024-05-03 05:19:39', '2024-05-03 05:19:39', NULL),
-(25, 'Lot-022', 'Prince, Richard; Human Nature - Signed Screenprint 1/250.', 'الأمير ريتشارد. الطبيعة البشرية - بصمة موقعة 1/250.', 'prince-richard-human-nature-signed-screenprint-1250', 2, 6, 200.00, '100', '1200', '1150', NULL, 0, '<p>Greybull Press, 2001. Original screenprint by Richard Prince, signed in pencil on lower right recto. From an edition of 250; 9 3/8\" x 6 3/4\" (sheet). Framed 10.25 x 7.5 inche. Framed Screenprint only, book NOT included. CONDITION: Fine (with no visible defects). OTHER ARTISTS IN OUR AUCTION INCLUDE: Mr. Brainwash Penn, Irving Meyerowitz, Joel Warhol, Andy Crewdson, Gregory Prince, Richard Weiwei, Ai McShine, Kynaston; Serra, Richard Cartier-Bresson, Henri Hirst, Damien Gehry, Frank Ruscha, Ed; Ban, Shigeru; Hadid, Zaha; Warhol, Andy Riefenstahl, Leni Soth, Alec; Parr, Martin; Meiselas, Susan; Erwitt, Elliott; Kagan, Vladimir; Arbus, Diane Warhol, Andy Penn, Irving Calatrava, Santiago; McFly, Marly Weber, Bruce Evans, Walker Roberts, Mel Bohrod, Aaron (1907-1992) Apollonia Muller, Karen Arcara, Arianna; Santese, Luca Avedon, Richard Blenkinsop, Phil Botto, Andrea Brodie, Mike Broomberg, Adam &amp; Chanarin, Oliver Power, Mark Bueno, Karianne Castle, Alison Chardon, Laurent Clark, Larry Clement, Krass Cooke, Jim D\'Agata, Antoine Dallaporta, Raphael Davidson, Bruce Degiorgis, Nicolo Dimmock, Jessica Eggleston, William Eijkelboom, Hans Epstein, Mitch Eskildsen, Joachim; Rinne, Cia Ethridge, Roe Ford, Kyle Germaine, Julian Gill, Stephen Girard, Greg Girard, Sebastien Gossage, John Graham, Paul Heinecken, Robert Hetherington, Tim Hibi, Yuichi Hido, Todd Halil Hiller, Susan Izu, Kenro Kenna Michael Kitajima, Keizo Klein, William Korhonen, Nina Newton, Helmut Ractliffe, Jo Koudelka, Josef Kruithof, Anouk Ledare, Leigh Lee, Kay &amp; Marshall Lewitt, Sol Liao, Jeff Link, O Winston Luchford, Glenn Lyon, Danny Mandel, Mike Meindertsma, Christien Mellor, David Metinides, Enrique Misrach, Richard Morath, Inga; Aubier, Dominique Moriyama, Daido Onaka, Koji Ortiz, Gustavo Hernando Palla, Victor &amp; Martins, Costa Parr, Martin Avedon, Richard Shrigley, David Holmes, Joseph O. Sher, Lewis Joe (1922-2013) Pujade-Lauraine, Gregoire Richardson, Terry Rickard, Doug Rio Branco, Miguel Rogovin, Milton Salvans, Txema Salveson, Paul Samaras, Lucas Schutmaat, Bryan Schles, Ken Sewell, Andy Shore, Stephen Simon, Taryn Robertin,Sybill Smalley, Luke Soth, Alec Tillim, Guy Van Der Elsken, Ed Van Meene, Helen Van Roekel, Florian Viksraitis, Rimaldis Wassinklundgren Webb, Alex Winklemann, Andreas; Winklemann, Andres Marroquin Gibson, Ralph Wylie, Donovan Gill, Stephen Ledare, Leigh Webb, Alex Ronis, Willy Herzog, Fred Leutwyler, Henry Mark, Mary Ellen Hosoe, Eikoh; Eggleston, William Sternfeld, Joel Narahara, Ikko Boltanski, Christian Lyon, Danny Parke, Trent; Autio, Narelle Burtynsky, Edward Szabo, Joseph Cases, Ricardo \"Andersen, Morten Peters, Jurgen Fairey, Shepard Renaldi, Richard Goldblatt, David; Gordimer, Nadine Dorr, Nell Graham, Paul Patterson, Christian Brecht, Berthold Kawauchi, Rinko van Manen, Bertien Templeton, Ed Mikhael Subotzky and Patrick Waterhouse Milach, Ralph Shag Muybridge, Eadweard Mandel, Mike Uliano,Lucas Brandt, Nick Genthe, Arnold Glaser, Ernst; Weiskopf, F. G.; Kurella, Alfred; Rodchenko, Alexander Hoffmann, Heinrich (ed.) de Middel, Cristina Lartigue, Jacques Henri Keller, Dagmar No. 223 Lin Zhipeng Haan, Karl de Meiselas, Susan Hido, Todd Ethridge, Roe Cortes, Jose Pedro Gaumy, Jean Manos, Constantine Sarfati, Lise McCurry, Steve Frank, Robert Paine, Wingate Sugimoto, Hiroshi Hido, Todd Capa, Cornel; Heynowski,</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjo5K7f3vCFAxXTh68BHXiWBTgQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">Greybull Press، 2001. طبعة الشاشة الأصلية لريتشارد برينس، موقعة بالقلم الرصاص على الجانب الأيمن السفلي. من طبعة 250؛ 9 3/8 بوصة &times; 6 3/4 بوصة (ورقة). مؤطر 10.25 &times; 7.5 بوصة. طباعة شاشة مؤطرة فقط، الكتاب غير متضمن. الحالة: جيدة (بدون عيوب ظاهرة). يشمل الفنانون الآخرون في مزادنا: السيد برين واش بن، إيرفينغ ميرويتز، جويل وارهول، آندي كرودسون، جريجوري برينس، ريتشارد ويوي، آي ماكشين، كيناستون؛ سيرا، ريتشارد كارتييه بريسون، هنري هيرست، داميان جيري، فرانك روشا، إد؛ بان، شيجيرو؛ حديد، زها؛ وارهول، آندي ريفينستال، ليني سوث، أليك؛ بار، مارتن. ميسيلاس، سوزان؛ إرويت، إليوت. كاجان، فلاديمير؛ أربوس، ديان وارهول، آندي بن، إيرفينغ كالاترافا، سانتياغو؛ ماكفلاي، مارلي ويبر، بروس إيفانز، ووكر روبرتس، ميل بوهرود، آرون (1907-1992) أبولونيا مولر، كارين أركارا، أريانا؛ سانتيز، لوكا أفيدون، ريتشارد بلينكينسوب، فيل بوتو، أندريا برودي، مايك برومبيرج، آدم وشانارين، أوليفر باور، مارك بوينو، كاريان كاسل، أليسون شاردون، لوران كلارك، لاري كليمنت، كراس كوك، جيم داجاتا، أنطوان دالابورتا، رافائيل ديفيدسون، بروس ديجورجيس، نيكولو ديموك، جيسيكا إغليستون، ويليام إيكلبوم، هانز إبستين، ميتش إسكلدسن، يواكيم؛ رين، سيا إيثريدج، رو فورد، كايل جيرمين، جوليان جيل، ستيفن جيرارد، جريج جيرارد، سيباستيان جوسيج، جون جراهام، بول هاينكن، روبرت هيذرينجتون، تيم هيبي، يويتشي هيدو، تود هاليل هيلر، سوزان إيزو، كينرو كينا مايكل كيتاجيما، كيزو كلاين، ويليام كورهونن، نينا نيوتن، هيلموت راكتليف، جو كوديلكا، جوزيف كرويثوف، أنوك ليدير، لي لي، كاي ومارشال لويت، سول لياو، جيف لينك، وينستون لوتشفورد، جلين ليون، داني ماندل، مايك مينديرتسما، كريستيان ميلور , ديفيد ميتينيدس، إنريكي مسراخ، ريتشارد موراث، إنجا؛ أوبير، دومينيك مورياما، ديدو أوناكا، كوجي أورتيز، غوستافو هيرناندو بالا، فيكتور ومارتينز، كوستا بار، مارتن أفيدون، ريتشارد شريجلي، ديفيد هولمز، جوزيف أو. شير، لويس جو (1922-2013) بوجد لورين، جريجوار ريتشاردسون، تيري ريكارد، دوج ريو برانكو، ميغيل روجوفين، ميلتون سالفانز، تكسيما سالفيسون، بول ساماراس، لوكاس شوتمات، بريان شلس، كين سيويل، آندي شور، ستيفن سيمون، تارين روبرتن، سيبيل سمالي، لوك سوث، أليك تيليم، جاي فان دير إلسكين. ، إد فان مين، هيلين فان روكيل، فلوريان فيكسرايتيس، ريمالديس فاسينكلوندجرين ويب، أليكس وينكلمان، أندرياس؛</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', '2024-05-03 05:24:13', '2024-05-03 05:24:13', NULL),
-(27, 'Lot-023', 'test product zoom', 'اختبار تكبير المنتج', 'test-product-zoom', 2, 6, 100.00, '100', '500', '750', NULL, 0, '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32.</p>\r\n<p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjh39r80YCGAxXisVYBHdaMACAQ3ewLegQIBhAU\"><span class=\"Y2IQFc\" lang=\"ar\">خلافاً للاعتقاد الشائع، فإن لوريم إيبسوم ليس مجرد نص عشوائي. لها جذور في قطعة من الأدب اللاتيني الكلاسيكي من 45 قبل الميلاد، مما يجعلها أكثر من 2000 سنة. قام ريتشارد مكلينتوك، أستاذ اللغة اللاتينية في كلية هامبدن سيدني في فيرجينيا، بالبحث عن إحدى الكلمات اللاتينية الأكثر غموضًا، وهي consectetur، من مقطع لوريم إيبسوم، ومن خلال تصفح مراجع الكلمة في الأدب الكلاسيكي، اكتشف المصدر الذي لا شك فيه. يأتي نص لوريم إيبسوم من الأقسام 1.10.32 و1.10.33 من كتاب \"de Finibus Bonorum et Malorum\" (أقصى الخير والشر) لشيشرون، والذي كتبه عام 45 قبل الميلاد. هذا الكتاب عبارة عن أطروحة عن نظرية الأخلاق، والتي حظيت بشعبية كبيرة خلال عصر النهضة. السطر الأول من لوريم إيبسوم، \"Lorem ipsum dolor sit amet..\"، يأتي من سطر في القسم 1.10.32.\r\n</span></pre>', 1, 'new', '2024-05-09 13:12:10', '2024-05-09 13:12:10', NULL),
-(29, 'Lot-025', 'test product', 'منتج للتجربة', 'test-product', 2, 8, 500.00, '100', '1000', NULL, NULL, 0, '<p>this is product for test</p>', '<p>هذا المنتج للتجربة</p>', 1, 'new', '2024-09-21 14:05:24', '2024-09-21 14:11:13', NULL),
-(30, 'Lot-026', 'second product for test', 'مشروع ثاني للتجربة', 'second-product-for-test', 3, 9, 800.00, '1000', '2000', NULL, '2024-09-30 12:00:00', 0, '<p>description&nbsp; for test</p>', '<p>وصف للتجربة</p>', 1, 'new', '2024-09-23 11:57:22', '2024-10-18 18:26:52', '2024-10-18 18:26:52'),
-(31, 'Lot-027', 'last test', 'منتح نهائي للاختبار', 'last-test', 3, 9, 1000.00, '1000', '4000', NULL, '2024-09-29 12:00:00', 0, '<p>وصف نهائي</p>', '<p>final desc</p>', 1, 'new', '2024-09-26 11:15:01', '2024-10-18 18:26:53', '2024-10-18 18:26:53'),
-(32, 'Lot-028', 'my test product', 'مشروع اختبار', 'my-test-product', 3, 10, 100.00, '100', '500', NULL, '2024-10-26 12:00:00', 0, '<p>this is descreption</p>', '<p>وصف تجريبي</p>', 1, 'new', '2024-10-18 14:45:26', '2024-10-18 14:46:16', '2024-10-18 14:46:16'),
-(33, 'Lot-028', 'test product', 'مشروع اختبار', 'test-product-2', 3, 11, 1000.00, '700', '5000', NULL, '2024-10-26 12:00:00', 0, '<p>this is description</p>', '<p>وصف تجريبي</p>', 1, 'new', '2024-10-18 15:18:42', '2024-10-18 15:29:30', '2024-10-18 15:29:30'),
-(34, 'Lot-026', 'مشروع4', 'product4', 'mshroaa4', 3, 13, 100.00, '100', '200', NULL, '2024-10-25 12:00:00', 0, '<p>desc</p>', '<p>وصف</p>', 1, 'new', '2024-10-18 18:28:32', '2024-10-18 18:28:32', NULL);
-INSERT INTO `products` (`id`, `lot_no`, `title`, `title_ar`, `slug`, `auction_type_id`, `project_id`, `reserved_price`, `start_price`, `end_price`, `minsellingprice`, `auction_end_date`, `is_published`, `description`, `description_ar`, `is_popular`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(35, 'Lot-027', 'third product', 'مشروع ثالت', 'third-product', 3, 13, 100.00, '100', '400', NULL, '2024-10-20 12:00:00', 0, '<p>sssssssssssss</p>', '<p>سسسسسسسسسسس</p>', 0, 'new', '2024-10-19 13:08:23', '2024-10-19 13:08:23', NULL),
-(36, 'Lot-028', 'watch1', 'ساعة1', 'watch1', 3, 14, 100.00, '100', '200', NULL, '2024-10-31 12:00:00', 0, '<p>some product description</p>', '<p>بعض الوصف التجريبي</p>', 1, 'new', '2024-10-19 15:12:32', '2024-10-19 15:18:00', '2024-10-19 15:18:00'),
-(37, 'Lot-029', 'watch2', 'ساعة2', 'watch2', 3, 14, 200.00, '200', '300', NULL, '2024-10-31 12:00:00', 0, '<p>second test description</p>', '<p>ثاني وصف تجريبي</p>', 1, 'new', '2024-10-19 15:13:40', '2024-10-19 15:13:40', NULL),
-(38, 'Lot-030', 'watch1', 'ساعة1', 'watch1', 3, 14, 100.00, '200', '300', NULL, '2024-10-25 12:00:00', 0, '<p>some description</p>', '<p>بعض الوصف التجريبي</p>', 1, 'new', '2024-10-19 15:20:43', '2024-10-19 15:20:43', NULL),
-(39, 'Lot-031', 'product5', 'منتج 5', 'product5', 3, 16, 100.00, '200', '400', NULL, '2024-10-21 21:00:00', 0, '<p>desc5</p>', '<p>وصف 5</p>', 1, 'new', '2024-10-21 15:26:34', '2024-10-21 16:04:56', NULL),
-(40, 'Lot-032', 'product6', 'منتج6', 'product6', 3, 17, 100.00, '100', '200', NULL, '2024-10-23 21:00:00', 0, '<p>desc6</p>', '<p>وصف 6</p>', 1, 'new', '2024-10-21 15:36:54', '2024-10-21 16:05:17', NULL),
-(41, 'Lot-033', 'product7', 'منتج 7', 'product7', 3, 18, 100.00, '200', '400', NULL, '2024-10-25 12:00:00', 0, '<p>desc7</p>', '<p>وصف 7</p>', 0, 'new', '2024-10-21 15:38:03', '2024-10-21 16:05:33', NULL),
-(42, 'Lot-034', 'product8', 'منتج 8', 'product8', 3, 19, 100.00, '200', '400', NULL, '2024-10-25 12:00:00', 0, '<p>desc8</p>', '<p>وصف8</p>', 1, 'new', '2024-10-21 15:38:55', '2024-10-21 16:05:58', NULL),
-(43, 'Lot-035', 'product9', 'منتج9', 'product9', 3, 20, 100.00, '100', '200', NULL, '2024-10-25 12:00:00', 0, '<p>desc9</p>', '<p>وصف9</p>', 0, 'new', '2024-10-21 15:40:32', '2024-10-21 16:06:18', NULL),
-(44, 'Lot-036', 'product10', 'منتج10', 'product10', 3, 21, 100.00, '100', '200', NULL, '2024-11-25 12:00:00', 0, '<p>desc10</p>', '<p>وصف10</p>', 1, 'new', '2024-10-21 15:41:14', '2024-10-25 13:16:41', NULL),
-(45, 'Lot-037', 'any thing', 'أي شئ', 'any-thing', 3, 21, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 0, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'new', '2024-10-25 13:19:04', '2024-10-25 13:19:04', NULL),
-(46, 'Lot-038', 'my product', 'منتجي', 'my-product', 3, 21, 100.00, '200', '300', NULL, '2024-10-25 18:00:00', 0, '<p>some description</p>', '<p>بعض الوصف</p>', 0, 'new', '2024-10-25 13:22:32', '2024-10-25 13:22:32', NULL),
-(47, 'Lot-039', 'product11', 'منتج 11', 'product11', 3, 22, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 1, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'new', '2024-10-25 13:28:21', '2024-10-28 17:29:37', NULL);
+INSERT INTO `products` (`id`, `lot_no`, `user_id`, `title`, `title_ar`, `slug`, `auction_type_id`, `project_id`, `reserved_price`, `start_price`, `end_price`, `minsellingprice`, `auction_end_date`, `is_published`, `description`, `description_ar`, `is_popular`, `status`, `is_closed`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Lot-001', 0, 'GREG HANSELL, (1949 -), Vaucluse House, 1986, pastel, 79 x 99 cm. (31.1 x 38.9 in.), frame: 99 x 119 x 4 cm. (38.9 x 46.8 x 1.5 in.)', 'جريج هانسيل، (1949 -)، بيت فوكلوز، 1986، باستيل، 79 × 99 سم. (31.1 × 38.9 بوصة)، الإطار: 99 × 119 × 4 سم. (38.9 × 46.8 × 1.5 بوصة)', 'greg-hansell-1949-vaucluse-house-1986-pastel-79-x-99-cm-311-x-389-in-frame-99-x-119-x-4-cm-389-x-468-x-15-in', 1, 1, 100.00, '100', '500', NULL, '2024-05-06 12:00:00', 0, '<div>\r\n<h4>Description</h4>\r\n<div><strong>GREG HANSELL</strong> <br>(1949 - ) <br><strong>Vaucluse House, 1986</strong> <br>pastel <br>signed and dated lower right, titled verso</div>\r\n</div>\r\n<div>\r\n<h4>Dimensions</h4>\r\n<div>79 x 99 cm. (31.1 x 38.9 in.), frame: 99 x 119 x 4 cm. (38.9 x 46.8 x 1.5 in.)</div>\r\n</div>\r\n<div>\r\n<h4>Artist or Maker</h4>\r\n<div class=\"artist-info\"><a href=\"https://www.invaluable.com/artist/hansell-greg-fwao3atmdj\" target=\"_blank\" rel=\"noopener noreferrer\">\r\n<div>Greg Hansell</div>\r\n</a></div>\r\n</div>\r\n<div>\r\n<h4>Medium</h4>\r\n<div>pastel</div>\r\n</div>\r\n<div>\r\n<h4>Condition Report</h4>\r\n<div>Please note that whilst we endeavour to mention any imperfection, the absence of this information in the catalogue does not automatically imply that the lot is free from defect.</div>\r\n</div>', '<div id=\"KnM9nf\" class=\"PZPZlf\" data-attrid=\"tw-sourceArea\" data-entityname=\"Google Translate\">\r\n<div id=\"tw-source\">\r\n<div id=\"tw-source-text-container\" class=\"tw-ta-container F0azHf tw-nfl\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3OwLegQIBRAK\"><textarea id=\"tw-source-text-ta\" class=\"tw-ta tw-text-large q8U8x goog-textarea\" dir=\"ltr\" lang=\"en\" style=\"overflow: auto hidden; box-sizing: border-box; padding-top: 2px; height: 1048px;\" spellcheck=\"false\" rows=\"1\" placeholder=\"Enter text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQsaQCegQIBRAL\"></textarea></div>\r\n<div id=\"tw-source-rmn-container\" class=\"tw-ta-container F0azHf tw-nfl\">\r\n<pre id=\"tw-source-rmn\" class=\"tw-data-placeholder tw-text-small tw-ta\" dir=\"ltr\" style=\"text-align: left;\" data-placeholder=\"\"></pre>\r\n</div>\r\n</div>\r\n</div>\r\n<p><span id=\"tw-src-spkr-button\" class=\"tw-menu-btn za3ale\" tabindex=\"0\" role=\"button\" data-action-target=\"source\" data-sttse=\"true\" aria-label=\"Listen to source text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQv7cBegQIBRAR\"></span></p>\r\n<div id=\"tw-smenu\" class=\"tw-menu\"><span id=\"tw-src-spkr-button\" class=\"tw-menu-btn za3ale\" tabindex=\"0\" role=\"button\" data-action-target=\"source\" data-sttse=\"true\" aria-label=\"Listen to source text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQv7cBegQIBRAR\"></span></div>\r\n<p><span id=\"tw-cst\" class=\"tw-menu-btn KTDgic\" tabindex=\"0\" role=\"button\" aria-label=\"Clear source text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQxZgCegQIBRAS\"></span></p>\r\n<div class=\"QmZWSe\">\r\n<div class=\"DHcWmd\">&nbsp;</div>\r\n</div>\r\n<div class=\"oSioSc\">\r\n<div id=\"tw-target\">\r\n<div id=\"kAz1tf\" class=\"g9WsWb PZPZlf\" data-attrid=\"tw-targetArea\" data-entityname=\"Google Translate\">\r\n<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">وصف\r\nجريج هانسيل\r\n(1949 - )\r\nبيت فوكلوز، 1986\r\nباستيل\r\nموقعة ومؤرخة أسفل اليمين، بعنوان الظهر\r\nأبعاد\r\n79 &times; 99 سم. (31.1 &times; 38.9 بوصة)، الإطار: 99 &times; 119 &times; 4 سم. (38.9 &times; 46.8 &times; 1.5 بوصة)\r\nفنان أو صانع\r\nجريج هانسيل\r\nواسطة\r\nباستيل\r\nتقرير الحالة\r\nيرجى ملاحظة أنه بينما نسعى إلى ذكر أي عيوب، فإن غياب هذه المعلومات في الكتالوج لا يعني تلقائيًا أن الكمية خالية من العيوب.</span></pre>\r\n</div>\r\n</div>\r\n</div>\r\n</div>', 1, 'new', 1, '2024-04-24 08:56:44', '2024-11-20 08:03:35', NULL),
+(5, 'Lot-002', 0, 'MAYNARD DIXON \"NUDE STUDY\" GRAPHITE ON PAPER', 'ماينارد ديكسون \"دراسة عارية\" الجرافيت على الورق', 'maynard-dixon-nude-study-graphite-on-paper', 2, 3, 100.00, '100', '500', '850', NULL, 0, '<p>Maynard Dixon (1875 - 1946) \"Nude Study\" Graphite on Paper. Initialed and dated 1929 lower right. Born in Fresno, California in the San Joaquin Valley, Maynard Dixon, originally named Henry St. John Dixon, became a noted illustrator, landscape, and mural painter of the early 20th-century American West, especially the desert, Indians, early settlers, and cowboys. Maynard Dixon lived most of his life in the West, living at times in Mount Carmel, Utah; Tucson, Arizona; and the desert of California near Mecca and Indio. His close friends were artists Jimmy Swinnerton, John Hilton, and Clyde Forsythe. Dixon\'s works were known for a unique and universally known style with its strong, dramatic forms and clear, vivid colors. Artist: Maynard Dixon Title: \"Nude Study\" Medium: Graphite on Paper Circa/Year: 1929 Signature Type: Hand Signed Signature Location: Lower Right Site Measurement: 10.75\" x 13.75\" Image Keywords: Southwestern, Western Artwork, Art; Ref: BD1942</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">ماينارد ديكسون (1875 - 1946) \"دراسة عارية\" جرافيت على ورق. تم التوقيع عليه بالأحرف الأولى وتاريخه عام 1929 أسفل اليمين. ولد ماينارد ديكسون في فريسنو، كاليفورنيا في وادي سان جواكين، وأصبح رسامًا توضيحيًا ومناظر طبيعية ورسامًا جداريًا مشهورًا في الغرب الأمريكي في أوائل القرن العشرين، وخاصة الصحراء والهنود والمستوطنين الأوائل. ورعاة البقر. عاش ماينارد ديكسون معظم حياته في الغرب، حيث عاش أحيانًا في جبل الكرمل بولاية يوتا؛ توكسون، أريزونا؛ وصحراء كاليفورنيا بالقرب من مكة والهند. كان أصدقاؤه المقربون هم الفنانين جيمي سوينرتون وجون هيلتون وكلايد فورسيث. اشتهرت أعمال ديكسون بأسلوب فريد ومعروف عالميًا بأشكاله الدرامية القوية وألوانه الواضحة النابضة بالحياة. الفنان: ماينارد ديكسون العنوان: \"دراسة عارية\" الوسيط: جرافيت على ورق حوالي / السنة: 1929 نوع التوقيع: موقع التوقيع يدويًا موقع التوقيع: قياس الموقع الأيمن السفلي: 10.75 &times; 13.75 الكلمات الرئيسية للصورة: جنوب غربي، عمل فني غربي، فن؛ المرجع: 1942 دينار بحريني</span></pre>\r\n</div>', 1, 'new', 0, '2024-04-24 10:06:18', '2024-04-24 10:06:18', NULL),
+(6, 'Lot-003', 0, 'OLAF WIEGHORST HORSE PENCIL ON PAPER', 'قلم رصاص أولاف فيجورست هورس على الورق', 'olaf-wieghorst-horse-pencil-on-paper', 3, 5, 100.00, '100', '850', NULL, '2024-05-07 12:00:00', 0, '<p>Olaf Carl Wieghorst (1899 - 1988) Horse Pencil on Paper. Acclaimed by critics as the outstanding contemporary Western artist, Olaf Wieghorst earned these accolades during a lifetime of observing, handling and painting horses and the American West. He was a man deeply in love with the West, its people, and its way of life. Olaf\'s paintings are in the great private collections of Western art including those of Clint Murchison, Leonard Firestone, Barry Goldwater, Earl Adams, Sam Campbell, Jack Goodman, Read Mullan, C.R. Smith, Bruce Gelker, Fred Utter as well as The Eisenhower Library, Abilene, Kansas, and the Whitney Gallery, Cody, Wyoming. Artist: Olaf Wieghorst Title: Horse Medium: Pencil on Paper Signature Type: Hand Signed Signature Location: Lower Center Site Measurement: 3.5\" x 4\" Image Keywords: Southwestern, Western Artwork, Art; Ref: BD1667</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwil94ajvdqFAxXdSmwGHTpcCCEQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">أولاف كارل ويغورست (1899 - 1988) قلم رصاص على ورق. حاز أولاف ويغورست، الذي نال استحسان النقاد باعتباره الفنان الغربي المعاصر المتميز، على هذه الأوسمة خلال حياته التي قضاها في مراقبة الخيول والغرب الأمريكي والتعامل معها ورسمها. لقد كان رجلاً يحب الغرب بشدة وشعبه وأسلوب حياته. لوحات أولاف موجودة في المجموعات الخاصة العظيمة للفن الغربي بما في ذلك لوحات كلينت مورشيسون، وليونارد فايرستون، وباري جولد ووتر، وإيرل آدامز، وسام كامبل، وجاك جودمان، وريد مولان، وسي آر سميث، وبروس جيلكر، وفريد ​​أوتر، بالإضافة إلى مكتبة أيزنهاور. أبيلين، كانساس، ومعرض ويتني، كودي، وايومنغ. الفنان: Olaf Wieghorst العنوان: حصان متوسط: قلم رصاص على ورق نوع التوقيع: موقع التوقيع اليدوي الموقع: قياس الموقع المركزي السفلي: 3.5 &times; 4 كلمات الصورة الرئيسية: جنوب غربي، عمل فني غربي، فن؛ المرجع: BD1667</span></pre>\r\n</div>', 1, 'new', 1, '2024-04-24 10:15:00', '2024-11-20 08:03:35', NULL),
+(7, 'Lot-004', 0, 'Mies van der Rohe x Knoll \"Barcelona\" Daybed', 'سرير نهاري Mies van der Rohe x Knoll \"Barcelona\".', 'mies-van-der-rohe-x-knoll-barcelona-daybed', 2, 6, 500.00, '200', '1100', '900', NULL, 0, '<div>\r\n<div>Ludwig Mies van der Rohe (German/American, 1886-1969) for Knoll \"Barcelona\" Daybed, with black tufted leather cushion on wood and chrome base, printed \"Knoll\" to underside of cushion and marked \"Knoll Studio / Mies van der Rohe\" on proper front left leg. 25\" H x 78\" W x 38.5\" D; bed: 16\" H. Provenance: From an Upper East Side Collection. Keywords: Furniture, Seating, Mid-Century Modern design, MCM, Lounge, Upholstery, Designer, Chaise longue, Bench</div>\r\n</div>\r\n<div>\r\n<h4>Artist or Maker</h4>\r\n<div class=\"artist-info\"><a href=\"https://www.invaluable.com/artist/van-der-rohe-ludwig-mies-qh76fdyaug\" target=\"_blank\" rel=\"noopener noreferrer\">\r\n<div>Ludwig Mies van der Rohe</div>\r\n</a></div>\r\n</div>\r\n<div>\r\n<h4>Condition Report</h4>\r\n<div>Notice to bidders: The absence of a condition report does not imply that the lot is in perfect condition. Complete condition information is available by request, no later than 24 hours prior to the auction. All lots are offered and sold \"as is\", and Auctions at Showplace will not provide refunds based on condition. Timepiece movements, lighting and electrics have not been tested, and art has not been examined out of the frame unless otherwise stated. Auctions at Showplace does not provide any shipping or packing services. We happily provide a list of recommended shippers who can provide shipping quotes prior to bidding.</div>\r\n</div>', '<p>Ludwig Mies van der Rohe (ألماني/أمريكي، 1886-1969) لسرير Knoll \"Barcelona\" النهاري، مع وسادة جلدية سوداء معنقدة على قاعدة من الخشب والكروم، وطبعة \"Knoll\" على الجانب السفلي من الوسادة وعلامة \"Knoll Studio / Mies van der Rohe\" \"على الساق اليسرى الأمامية اليمنى. 25 بوصة ارتفاع &times; 78 بوصة عرض &times; 38.5 بوصة عمق؛ السرير: 16 بوصة ارتفاع. المصدر: من مجموعة الجهة الشرقية العليا. الكلمات الرئيسية: الأثاث، المقاعد، التصميم الحديث لمنتصف القرن، MCM، الصالة، المفروشات، المصمم، كرسي استرخاء، مقعد</p>\r\n<p><br>فنان أو صانع</p>\r\n<p>لودفيج ميس فان دير روه</p>\r\n<p>تقرير الحالة</p>\r\n<p>إشعار لمقدمي العروض: عدم وجود تقرير الحالة لا يعني أن الكمية في حالة ممتازة. تتوفر معلومات الحالة الكاملة عند الطلب، في موعد لا يتجاوز 24 ساعة قبل المزاد. يتم عرض جميع القطع وبيعها \"كما هي\"، ولن توفر المزادات في Showplace المبالغ المستردة بناءً على الحالة. لم يتم اختبار حركات الساعة والإضاءة والكهرباء، ولم يتم فحص الفن خارج الإطار ما لم يُنص على خلاف ذلك. المزادات في Showplace لا توفر أي خدمات شحن أو تعبئة. يسعدنا تقديم قائمة بالشاحنين الموصى بهم الذين يمكنهم تقديم عروض أسعار الشحن قبل تقديم العطاءات.</p>', 1, 'new', 0, '2024-04-30 10:44:01', '2024-04-30 10:44:01', NULL),
+(8, 'Lot-005', 0, 'Qing Dynasty Huanghua Pear Lifting Box', 'صندوق رفع الكمثرى Huanghua من أسرة تشينغ', 'qing-dynasty-huanghua-pear-lifting-box', 2, 6, 300.00, '300', '1100', '699', NULL, 0, '<p>Ancient art pieces from the 18th to 461th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن 461، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', 0, '2024-04-30 11:22:36', '2024-04-30 11:22:36', NULL),
+(9, 'Lot-006', 0, 'Qing Dynasty Shoushan Tian Huangshi Animal Flower Pattern Shanzi', 'سلالة تشينغ شوشان تيان هوانغشي نمط زهرة الحيوان شانزي', 'qing-dynasty-shoushan-tian-huangshi-animal-flower-pattern-shanzi', 2, 6, 100.00, '300', '1500', '750', NULL, 0, '<p>Ancient art pieces from the 18th to 465th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن 465، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', 0, '2024-04-30 11:24:34', '2024-04-30 11:24:34', NULL),
+(10, 'Lot-007', 0, 'Hotan Jade Lid Box in Qing Dynasty', 'صندوق غطاء اليشم Hotan في عهد أسرة تشينغ', 'hotan-jade-lid-box-in-qing-dynasty', 3, 5, 100.00, '100', '1000', NULL, '2024-05-07 12:00:00', 0, '<p>Ancient art pieces from the 18th to 464th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن الرابع والستين، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', 1, '2024-04-30 11:27:01', '2024-11-20 08:03:35', NULL),
+(11, 'Lot-008', 0, 'Hotan Jade in the Qing Dynasty was a group of jade wearers with luck changing', 'كان Hotan Jade في عهد أسرة تشينغ عبارة عن مجموعة من مرتدي اليشم ذوي الحظ المتغير', 'hotan-jade-in-the-qing-dynasty-was-a-group-of-jade-wearers-with-luck-changing', 3, 5, 200.00, '100', '500', NULL, '2024-05-07 12:00:00', 0, '<p>Ancient art pieces from the 18th to 463th centuries, collectibles, exquisitely crafted, perfectly preserved to this day, able to better showcase previous cultural and artistic works</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" style=\"text-align: right;\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjE-NOF6emFAxXiZ_UHHX8BCnMQ3ewLegQIBRAT\"><span class=\"Y2IQFc\" lang=\"ar\">قطع فنية قديمة من القرن الثامن عشر إلى القرن 463، مقتنيات، مصنوعة بشكل رائع، محفوظة بشكل مثالي حتى يومنا هذا، قادرة على عرض الأعمال الثقافية والفنية السابقة بشكل أفضل</span></pre>\r\n</div>', 1, 'new', 1, '2024-04-30 11:29:01', '2024-11-20 08:03:35', NULL),
+(12, 'Lot-009', 0, 'ANDIRAN, FRÉDÉRIC-FRANÇOIS D\': \"Jardin du Luxembourg', 'أنديران، فريدريك فرانسوا د: \"حديقة لوكسمبورغ', 'andiran-frederic-francois-d-jardin-du-luxembourg', 2, 6, 100.00, '100', '800', '750', NULL, 0, '<p>ANDIRAN, FR&Eacute;D&Eacute;RIC-FRAN&Ccedil;OIS D\' (Bordeaux 1802 - 1876 Lausanne) : \"Jardin du Luxembourg\"; Feder in Braun und Aquarell; 20x27 cm (LM), gerahmt; sig. \"Fr. d\'Andiran\" u. betitelt u.l.</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiki4qXgu-FAxVSbvUHHTbLDekQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">أنديران، فريدريك فرانسوا د\' (بوردو 1802 - 1876 لوزان) : \"حديقة لوكسمبورغ\"؛ فيدر في براون وأكواريل؛ 20x27 سم (LM)، جيراهمت؛ سيج. \"الأب دانديران\" ش. بيتيتيلت ش.</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-02 12:58:13', '2024-05-02 12:58:13', NULL),
+(13, 'Lot-010', 0, 'WELCOME TO THE AUCTION', 'مرحبا بكم في المزاد', 'welcome-to-the-auction', 2, 6, 100.00, '100', '900', '850', NULL, 0, '<p>DESCRIPTION: Original drawing in pen on a single graph-paper sheet with perforated edges measuring 11 5/8 x 8 1/4 inches ( 29.5 x 21cm). SIGNED and INSCRIBED with title and date to Frank Dunphy (1937-2020; the Irish-born business brain behind Hirst\'s multimillion-pound career who also represented Tracey Emin, Jake and Dinos Chapman and Ray Winstone); housed in its original frame with Sotheby\'s inventory, collocation and lot stickers attached to the frame recto. In this original, hand-drawn design by Damien Hirst, the artist revisits his Catholic upbringing by re-imagining his earlier work, The Evangelists, that debuted only a few months earlier in 2003. In that work, Hirst combined his previous interests in the collection, composition and organization of elaborate medical curio cabinets with his groundbreaking presentations of animals locked in formaldehyde aquariums, yet did so in a manner that places both of those conceptual themes within a specifically religious set of perameters. Here then, by revisiting The Evangelists once more within this original drawing (2004), Hirst offers another insightful, original work of art that is intricately woven by and into some of the larger, seminal aspets of his early thought and artistic production; and one that likewise finds him combining his constant and continued fascination with the psychology of life and death (as represented through the lenses of medicine, zoology and taxidermy) with a specifically religious set of colorings to create an open and vibrant dialogue with his own Catholic upbringing (and by extension similar Christian influences experienced by others around the globe). The Evangelists (as drawing, 2004), therefore presents us with an energetic, vibrant and vivid artistic gesture, a provocative window through which we can readily observe and discuss the groundbreaking artistic output Hirst produced up until the moment in which he penned this fascinating work of art. CONDITION: Fine; clean and bright with mere hints of wear when observed upon extremely close and careful inspection. The sheet is hinged verso to the backing board and the simple white frame is in excellent condition. Overall, The Evangelists (2004) is a vibrant, edgy and provocative artwork, a great conversation piece perfect for any Damien Hirst enthusiast or collector. OTHER ARTISTS IN OUR AUCTION INCLUDE: Mr. Brainwash Penn, Irving Meyerowitz, Joel Warhol, Andy Crewdson, Gregory Prince, Richard Weiwei, Ai McShine, Kynaston; Serra, Richard Cartier-Bresson, Henri Hirst, Damien Gehry, Frank Ruscha, Ed; Ban, Shigeru;</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">الوصف: رسم أصلي بالقلم على ورقة رسم بياني واحدة ذات حواف مثقوبة بقياس 11 5/8 &times; 8 1/4 بوصة (29.5 &times; 21 سم). تم التوقيع والمدونة بعنوان وتاريخ لفرانك دنفي (1937-2020؛ العقل التجاري الأيرلندي المولد وراء مسيرة هيرست المهنية التي تقدر بملايين الجنيهات الاسترلينية والذي مثل أيضًا تريسي إيمين وجيك ودينوس تشابمان وراي وينستون)؛ موجودة في إطارها الأصلي مع مخزون Sotheby\'s وملصقات المجموعة المرفقة بالصفحة اليمنى للإطار. في هذا التصميم الأصلي المرسوم يدويًا لداميان هيرست، يعيد الفنان النظر في نشأته الكاثوليكية من خلال إعادة تصور عمله السابق، الإنجيليون، الذي ظهر لأول مرة قبل بضعة أشهر فقط في عام 2003. في هذا العمل، جمع هيرست اهتماماته السابقة في جمع وتكوين وتنظيم خزائن التحف الطبية المتقنة مع عروضه الرائدة للحيوانات المحبوسة في أحواض السمك الفورمالديهايد، ومع ذلك فعل ذلك بطريقة تضع كلا هذين الموضوعين المفاهيميين ضمن مجموعة دينية محددة من المحيطات. هنا إذن، من خلال إعادة النظر في الإنجيليين مرة أخرى ضمن هذا الرسم الأصلي (2004)، يقدم هيرست عملاً فنيًا أصليًا آخر ثاقبًا تم نسجه بشكل معقد من خلال بعض الجوانب الأكبر والأكثر أهمية في فكره المبكر وإنتاجه الفني؛ وهو أيضًا يجده يجمع بين افتتانه المستمر والمستمر بعلم نفس الحياة والموت (كما هو ممثل من خلال عدسات الطب وعلم الحيوان والتحنيط) مع مجموعة دينية محددة من الألوان لخلق حوار مفتوح وحيوي مع كاثوليكي خاص به. التنشئة (وبالتالي التأثيرات المسيحية المماثلة التي يعاني منها الآخرون في جميع أنحاء العالم). يقدم لنا الإنجيليون (كرسم، 2004)، لفتة فنية مفعمة بالحيوية والحيوية، ونافذة استفزازية يمكننا من خلالها مراقبة ومناقشة الإنتاج الفني الرائد الذي أنتجه هيرست حتى اللحظة التي كتب فيها هذا العمل الرائع. من الفن. الحالة: جيدة؛ نظيفة ومشرقة مع مجرد تلميحات من التآكل عند ملاحظتها عند الفحص الدقيق والدقيق للغاية. يتم تعليق الورقة على الجانب الخلفي من اللوحة الخلفية والإطار الأبيض البسيط في حالة ممتازة. بشكل عام، يعد The Evangelists (2004) عملًا فنيًا نابضًا بالحياة ومثيرًا واستفزازيًا، وهو قطعة محادثة رائعة مثالية لأي متحمس أو جامع داميان هيرست. يشمل الفنانون الآخرون في مزادنا: السيد برين واش بن، إيرفينغ ميرويتز، جويل وارهول، آندي كرودسون، جريجوري برينس، ريتشارد ويوي، آي ماكشين، كيناستون؛ سيرا، ريتشارد كارتييه بريسون، هنري هيرست، داميان جيري، فرانك روشا، إد؛ بان، شيجيرو؛</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 04:43:28', '2024-05-03 04:43:28', NULL),
+(14, 'Lot-011', 0, 'Hilda Rix Nicholas, forest scene, pastel on paper, 29cm x 43cm frame 41.5cm x 57cm, some foxing', 'هيلدا ريكس نيكولاس، مشهد غابة، باستيل على ورق، إطار 29 سم × 43 سم، 41.5 سم × 57 سم، بعض الثعالب', 'hilda-rix-nicholas-forest-scene-pastel-on-paper-29cm-x-43cm-frame-415cm-x-57cm-some-foxing', 2, 6, 100.00, '100', '700', '650', NULL, 0, '<p>Eric Michaels (Born 1949) \"Morning In The Village\" Pastel on Paper. Eric Michaels is a plein-air landscape painter of Southwestern and European subjects using watercolors, pastels and primarily oils. Perhaps the most distinctive feature of Eric Michaels\' work is its international flavor. The subject matter spans four continents and both hemispheres. Painting in these various locations enables him to achieve an understanding of local light conditions and to participate in the native experience. Michaels has exhibited at the Royal Watercolour Society in London, nine years in the Artists of America Show in Denver, and is a regular exhibitor in the Great American Artists Exhibition in Cincinnati. His paintings hang in private, corporate, museum and state collections; including the Albuquerque Museum of Fine Art, the Americana Museum, the Institute of American Indian Arts, Phillips Petroleum, IBM, Honeywell-Sperry Inc., and the State Collection of the Governor\'s Gallery, Santa Fe, NM. Artist: Eric Michaels Title: \"Morning In The Village\" Medium: Pastel on Paper Signature Type: Hand Signed Signature Location: Lower Left Site Measurement: 17.5\" x 23.5\" Image Keywords: Southwestern, Western Artwork, Art; Ref: BD1942</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">إريك مايكلز (مواليد 1949) \"صباح في القرية\" باستيل على ورق. إريك مايكلز هو رسام للمناظر الطبيعية في الهواء الطلق للمواضيع الجنوبية الغربية والأوروبية باستخدام الألوان المائية والباستيل والزيوت في المقام الأول. ربما تكون السمة الأكثر تميزًا في عمل إريك مايكلز هي نكهته العالمية. يمتد الموضوع إلى أربع قارات ونصفي الكرة الأرضية. يمكّنه الرسم في هذه المواقع المختلفة من تحقيق فهم لظروف الإضاءة المحلية والمشاركة في التجربة المحلية. عرض مايكلز أعماله في الجمعية الملكية للألوان المائية في لندن، وشارك لمدة تسع سنوات في معرض فناني أمريكا في دنفر، وهو عارض منتظم في معرض الفنانين الأمريكيين العظماء في سينسيناتي. لوحاته معلقة في المجموعات الخاصة والشركات والمتاحف والدولة. بما في ذلك متحف البوكيرك للفنون الجميلة، ومتحف أمريكانا، ومعهد الفنون الهندية الأمريكية، وفيليبس بتروليوم، وآي بي إم، وشركة هانيويل سبيري، ومجموعة الدولة لمعرض الحاكم، سانتا في، نيو مكسيكو. الفنان: إريك مايكلز العنوان: \"Morning In The Village\" الوسيط: باستيل على ورق نوع التوقيع: موقع التوقيع اليدوي: قياس الموقع السفلي الأيسر: 17.5 &times; 23.5 الكلمات الرئيسية للصورة: جنوب غربي، عمل فني غربي، فن؛ المرجع: 1942 دينار بحريني</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 04:47:43', '2024-05-03 04:47:43', NULL),
+(15, 'Lot-012', 0, 'Giuseppe Armani La Pieta Figurine', 'تمثال جوزيبي أرماني لا بيتا', 'giuseppe-armani-la-pieta-figurine', 2, 6, 100.00, '100', '800', '750', NULL, 0, '<p>Giuseppe Armani La Pieta Figurine. Art 802-C - 1993 - Limited Edition #1164/5000. Made in Italy. Measures 19.75\" tall. Comes with original box and COA. All invoices must be paid within 24 hours of the sale. We offer multiple shipping options, We also offer Pick-Ups Thursday, Friday, Saturday, and Monday immediately following the sale. BY APPOINTMENT ONLY.</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">تمثال جوزيبي أرماني لا بيتا. المادة 802-C - 1993 - إصدار محدود رقم 1164/5000. صنع في ايطاليا. يبلغ طوله 19.75 بوصة. ويأتي مع الصندوق الأصلي وشهادة توثيق البرامج. يجب دفع جميع الفواتير خلال 24 ساعة من البيع. نحن نقدم خيارات شحن متعددة، كما نقدم خدمة الاستلام يوم الخميس والجمعة والسبت والاثنين مباشرة بعد البيع. موعد فقط.</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 04:50:43', '2024-05-03 04:50:43', NULL),
+(16, 'Lot-013', 0, 'A Norman Rockwell \"The Weigh In\" Figural Group', 'مجموعة مجسمة لنورمان روكويل \"The Weigh In\".', 'a-norman-rockwell-the-weigh-in-figural-group', 2, 6, 100.00, '100', '5100', '5000', NULL, 0, '<div>\r\n<div><strong>A Norman Rockwell \"The Weigh In\" Figural Group</strong></div>\r\n</div>\r\n<div>\r\n<h4>Dimensions</h4>\r\n<div>h. 17 cms</div>\r\n</div>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">مجموعة مجسمة لنورمان روكويل \"The Weigh In\".\r\nأبعاد\r\n</span><span class=\"Y2IQFc\" lang=\"ar\">ح. 17 سم</span></pre>', 1, 'new', 0, '2024-05-03 04:54:27', '2024-05-03 04:54:27', NULL),
+(17, 'Lot-014', 0, 'R. Diane Martinez Signed Black On Black Ceramic Bear Figurine', 'ر. ديان مارتينيز موقعة باللون الأسود على تمثال دب من السيراميك الأسود', 'r-diane-martinez-signed-black-on-black-ceramic-bear-figurine', 2, 6, 500.00, '100', '900', '850', NULL, 0, '<p>R. Diane Martinez innovated her award-winning style of pottery 34 years ago. As a member of the Tarahumara Indian Tribe, her one-of-a-kind pieces are all hand-made and free-hand painted inside and out.</p>\r\n<p>Pickup on Monday, May 6, 2024 from 2:00 pm to 6:00 pm</p>\r\n<p>All items are sold as-is.&nbsp;<em>The absence of a condition report does not imply that the lot is in perfect condition or completely free of defects, imperfections, or wear and tear.</em></p>\r\n<p>The pickup address will be released on your invoice. Invoices are sent after the entire auction has ended.&nbsp;<em>Be sure to bring boxes and packing material to pickup. If you purchase a large item, be sure to bring moving help.</em></p>\r\n<p>Large items cannot be shipped.<strong>&nbsp;Items not picked up by the pickup deadline, NOT requiring shipping will be forfeited and you will still be charged.</strong> Items cannot be held after the pickup date. Items not paid for will be automatically charged to the card on file.</p>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">R. Diane Martinez أسلوبها الفخاري الحائز على جوائز منذ 34 عامًا. باعتبارها عضوًا في قبيلة تاراهومارا الهندية، فإن جميع قطعها الفريدة من نوعها مصنوعة يدويًا ومرسومة يدويًا من الداخل والخارج.\r\nالاستلام يوم الاثنين 6 مايو 2024 من الساعة 2:00 ظهرًا حتى 6:00 مساءً\r\n\r\nوتباع جميع البنود كما هو. لا يعني عدم وجود تقرير الحالة أن الكمية في حالة ممتازة أو خالية تمامًا من العيوب أو العيوب أو البلى.\r\n\r\nسيتم نشر عنوان الالتقاط في فاتورتك. يتم إرسال الفواتير بعد انتهاء المزاد بأكمله. تأكد من إحضار الصناديق ومواد التعبئة والتغليف لالتقاطها. إذا قمت بشراء عنصر كبير، تأكد من إحضار المساعدة المتحركة.\r\n\r\nلا يمكن شحن العناصر الكبيرة. سيتم مصادرة العناصر التي لم يتم استلامها بحلول الموعد النهائي للاستلام، والتي لا تتطلب الشحن، وسيتم فرض رسوم عليك. لا يمكن الاحتفاظ بالعناصر بعد تاريخ الاستلام. سيتم خصم العناصر التي لم يتم دفع ثمنها تلقائيًا من البطاقة الموجودة في الملف.</span></pre>', 1, 'new', 0, '2024-05-03 04:59:57', '2024-05-03 04:59:57', NULL),
+(18, 'Lot-015', 0, 'Giuseppe Armani Lady with Peacock Figurine', 'سيدة جوزيبي أرماني مع تمثال الطاووس', 'giuseppe-armani-lady-with-peacock-figurine', 2, 6, 800.00, '100', '1500', '1200', NULL, 0, '<p>Giuseppe Armani Lady with Peacock Figurine. Art 385-C - 1987 - Limited Edition #2957/5000. Hand Signed by Armani. Made in Italy. Measures 19.5\" tall. Comes with original box and COA. All invoices must be paid within 24 hours of the sale. We offer multiple shipping options, We also offer Pick-Ups Thursday, Friday, Saturday, and Monday immediately following the sale. BY APPOINTMENT ONLY.</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">سيدة جوزيبي أرماني مع تمثال الطاووس. المادة 385-C - 1987 - إصدار محدود رقم 2957/5000. توقيع أرماني. صنع في ايطاليا. يبلغ طوله 19.5 بوصة. ويأتي مع الصندوق الأصلي وشهادة توثيق البرامج. يجب دفع جميع الفواتير خلال 24 ساعة من البيع. نحن نقدم خيارات شحن متعددة، كما نقدم خدمة الاستلام يوم الخميس والجمعة والسبت والاثنين مباشرة بعد البيع. موعد فقط.</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 05:03:00', '2024-05-03 05:03:00', NULL),
+(19, 'Lot-016', 0, 'Lustiger Marsch (Lena Amstel)', 'لوستيجر مارش (لينا أمستل)', 'lustiger-marsch-lena-amstel', 2, 6, 550.00, '100', '900', '800', NULL, 0, '<p><strong>Lustiger Marsch (Lena Amstel)</strong>&nbsp;Rosenthal 1919<br>Nach einem Entwurf von Constantin Holzer-Defanti. Manufakturmarke. Modellnr. K 551. H 36 cm.</p>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">لوستيجر مارش (لينا أمستل) روزنتال 1919\r\nناتش إينم إنتورف فون كونستانتين هولزر ديفانتي. تصنيع. موديللنر. ك 551. </span></pre>', 1, 'new', 0, '2024-05-03 05:05:13', '2024-05-03 05:05:13', NULL),
+(20, 'Lot-017', 0, '(83pc) Villeroy & Boch New Wave Porcelain China', '(83 قطعة) بورسلين الموجة الجديدة من فيليروي آند بوش الصين', '83pc-villeroy-boch-new-wave-porcelain-china', 2, 6, 550.00, '100', '1000', '950', NULL, 0, '<div class=\"collapse show\">\r\n<div class=\"card\">\r\n<div class=\"card-body\">\r\n<div>\r\n<div>3 Boxes In This Lot, Including Plates, Bowls, Mugs, Teacups, Espresso Cups &amp; Saucers, In Used Condition, Marked On Bottoms. Nr30219 Js</div>\r\n</div>\r\n<button class=\"btn btn-link\" type=\"button\">Request more information</button></div>\r\n</div>\r\n</div>\r\n<div id=\"paymentNShipmentToggler\" class=\"accordion-heading\" tabindex=\"0\" role=\"button\"></div>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">3 صناديق في هذه المجموعة، بما في ذلك الأطباق والأوعية والأكواب وأكواب الشاي وأكواب الإسبريسو والصحون، في حالة مستعملة، ومُحددة على الجزء السفلي. رقم 30219 شبيبة</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 05:08:48', '2024-05-03 05:08:48', NULL),
+(22, 'Lot-019', 0, 'Pablo Picasso \"Visage Noir Putoise\" Platter', 'طبق بابلو بيكاسو \"فيساج نوير بوتواز\".', 'pablo-picasso-visage-noir-putoise-platter', 2, 6, 100.00, '100', '1200', '1150', NULL, 0, '<div>\r\n<div>Pablo Picasso (Spanish, 1881-1973), \"Visage Noir Putoise\", 1948, Glazed White Earthenware Ceramic Platter, stamped \"Madoura / Plein / Feu / Edition / Picasso\", marked \"I 105\" and numbered \"77/200\" to underside. 1.5\" H x 15.25\" W x 12.5\" D. Provenance: From an Upper East Side townhouse. Keywords: Art pottery, Hand-painted, Mid-Century Modern, MCM, Stippling, Blue, Faune, Fawn, Tray</div>\r\n</div>\r\n<div>\r\n<h4>Artist or Maker</h4>\r\n<div class=\"artist-info\"><a href=\"https://www.invaluable.com/artist/picasso-pablo-nvddduiinb\" target=\"_blank\" rel=\"noopener noreferrer\">\r\n<div>Pablo Picasso</div>\r\n</a></div>\r\n</div>\r\n<div>\r\n<h4>Condition Report</h4>\r\n<div>Notice to bidders: The absence of a condition report does not imply that the lot is in perfect condition. Complete condition information is available by request, no later than 24 hours prior to the auction. All lots are offered and sold \"as is\", and Auctions at Showplace will not provide refunds based on condition. Timepiece movements, lighting and electrics have not been tested, and art has not been examined out of the frame unless otherwise stated. Auctions at Showplace does not provide any shipping or packing services. We happily provide a list of recommended shippers who can provide shipping quotes prior to bidding.</div>\r\n</div>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">بابلو بيكاسو (إسباني، 1881-1973)، \"Visage Noir Putoise\"، 1948، طبق خزفي خزفي أبيض مزجج، مختوم \"Madoura / Plein / Feu / Edition / Picasso\"، مع علامة \"I 105\" ومرقمة \"77/200\" إلى الجانب السفلي. 1.5 بوصة ارتفاع &times; 15.25 بوصة عرض &times; 12.5 بوصة عمق. المصدر: من منزل مستقل في الجانب الشرقي العلوي. الكلمات الرئيسية: فخار فني، مرسومة يدويًا، حديث منتصف القرن، MCM، Stippling، Blue، Faune، Fawn، Tray\r\nفنان أو صانع\r\nبابلو بيكاسو\r\nتقرير الحالة\r\nإشعار لمقدمي العروض: عدم وجود تقرير الحالة لا يعني أن الكمية في حالة ممتازة. تتوفر معلومات الحالة الكاملة عند الطلب، في موعد لا يتجاوز 24 ساعة قبل المزاد. يتم عرض جميع القطع وبيعها \"كما هي\"، ولن توفر المزادات في Showplace المبالغ المستردة بناءً على الحالة. لم يتم اختبار حركات الساعة والإضاءة والكهرباء، ولم يتم فحص الفن خارج الإطار ما لم يُنص على خلاف ذلك. المزادات في Showplace لا توفر أي خدمات شحن أو تعبئة. يسعدنا تقديم قائمة بالشاحنين الموصى بهم الذين يمكنهم تقديم عروض أسعار الشحن قبل </span></pre>', 1, 'new', 0, '2024-05-03 05:14:57', '2024-05-03 05:14:57', NULL),
+(23, 'Lot-020', 0, 'FRANKLIN PETERS ACOMA POLYCHROME WEDDING VASE', 'مزهرية زفاف من فرانكلين بيترز أكوما بولي كروم', 'franklin-peters-acoma-polychrome-wedding-vase', 2, 6, 500.00, '100', '1500', '1450', NULL, 0, '<p>Franklin Peters Acoma Polychrome Wedding Vase. Signed on bottom Franklin Peters / Huwaka / Acoma, NM. Franklin Peters was born into the Sky Clan on Acoma Pueblo. He learned the art of pottery making as he grew up surrounded by some of Acoma&rsquo;s most well known potters: Ella Peters (his mother), Florence Aragon, Rachel Aragon, Phyllis Juanico, Dorothy Torivio, Wilfred Garcia, Frederica Antonio, and Barbara and Joseph Cerno. In 2011 Franklin was honored with the 2011 Rollin and Mary Ella King Native Artist Fellowship at the School for Advanced Research in Santa Fe. Keywords: Native American, Indian; Ref: BD1700</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">مزهرية زفاف متعددة الألوان من فرانكلين بيترز أكوما. تم التوقيع في الأسفل فرانكلين بيترز / هواكا / أكوما، نيو مكسيكو. ولد فرانكلين بيترز في Sky Clan في Acoma Pueblo. لقد تعلم فن صناعة الفخار عندما نشأ محاطًا ببعض أشهر الخزافين في أكوما: إيلا بيترز (والدته)، فلورنس أراغون، راشيل أراغون، فيليس خوانيكو، دوروثي توريفيو، ويلفريد جارسيا، فريدريكا أنطونيو، وباربرا وجوزيف. سيرنو. في عام 2011، تم تكريم فرانكلين بمنحة رولين وماري إيلا كينغ للفنانين الأصليين لعام 2011 في مدرسة الأبحاث المتقدمة في سانتا في. الكلمات المفتاحية: أمريكي أصلي، هندي؛ المرجع: 1700 دينار بحريني</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 05:17:17', '2024-05-03 05:17:17', NULL),
+(24, 'Lot-021', 0, 'Deckelvase', 'ديكلففاس', 'deckelvase', 2, 6, 400.00, '100', '1500', '1450', NULL, 0, '<h4>Description</h4>\r\n<div><strong>Deckelvase</strong>&nbsp;Rozenburg um 1900<br>Umlaufendes Dekor. Bodenmarke. H 53 cm.</div>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwiX5Pri1PCFAxX3ZvUHHRyIDLYQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">\r\nديكلفاسي روزنبرج أم 1900\r\nديكورات أملاوفنديس. بودينماركي. ح 53 سم.</span></pre>\r\n</div>', 1, 'new', 0, '2024-05-03 05:19:39', '2024-05-03 05:19:39', NULL),
+(25, 'Lot-022', 0, 'Prince, Richard; Human Nature - Signed Screenprint 1/250.', 'الأمير ريتشارد. الطبيعة البشرية - بصمة موقعة 1/250.', 'prince-richard-human-nature-signed-screenprint-1250', 2, 6, 200.00, '100', '1200', '1150', NULL, 0, '<p>Greybull Press, 2001. Original screenprint by Richard Prince, signed in pencil on lower right recto. From an edition of 250; 9 3/8\" x 6 3/4\" (sheet). Framed 10.25 x 7.5 inche. Framed Screenprint only, book NOT included. CONDITION: Fine (with no visible defects). OTHER ARTISTS IN OUR AUCTION INCLUDE: Mr. Brainwash Penn, Irving Meyerowitz, Joel Warhol, Andy Crewdson, Gregory Prince, Richard Weiwei, Ai McShine, Kynaston; Serra, Richard Cartier-Bresson, Henri Hirst, Damien Gehry, Frank Ruscha, Ed; Ban, Shigeru; Hadid, Zaha; Warhol, Andy Riefenstahl, Leni Soth, Alec; Parr, Martin; Meiselas, Susan; Erwitt, Elliott; Kagan, Vladimir; Arbus, Diane Warhol, Andy Penn, Irving Calatrava, Santiago; McFly, Marly Weber, Bruce Evans, Walker Roberts, Mel Bohrod, Aaron (1907-1992) Apollonia Muller, Karen Arcara, Arianna; Santese, Luca Avedon, Richard Blenkinsop, Phil Botto, Andrea Brodie, Mike Broomberg, Adam &amp; Chanarin, Oliver Power, Mark Bueno, Karianne Castle, Alison Chardon, Laurent Clark, Larry Clement, Krass Cooke, Jim D\'Agata, Antoine Dallaporta, Raphael Davidson, Bruce Degiorgis, Nicolo Dimmock, Jessica Eggleston, William Eijkelboom, Hans Epstein, Mitch Eskildsen, Joachim; Rinne, Cia Ethridge, Roe Ford, Kyle Germaine, Julian Gill, Stephen Girard, Greg Girard, Sebastien Gossage, John Graham, Paul Heinecken, Robert Hetherington, Tim Hibi, Yuichi Hido, Todd Halil Hiller, Susan Izu, Kenro Kenna Michael Kitajima, Keizo Klein, William Korhonen, Nina Newton, Helmut Ractliffe, Jo Koudelka, Josef Kruithof, Anouk Ledare, Leigh Lee, Kay &amp; Marshall Lewitt, Sol Liao, Jeff Link, O Winston Luchford, Glenn Lyon, Danny Mandel, Mike Meindertsma, Christien Mellor, David Metinides, Enrique Misrach, Richard Morath, Inga; Aubier, Dominique Moriyama, Daido Onaka, Koji Ortiz, Gustavo Hernando Palla, Victor &amp; Martins, Costa Parr, Martin Avedon, Richard Shrigley, David Holmes, Joseph O. Sher, Lewis Joe (1922-2013) Pujade-Lauraine, Gregoire Richardson, Terry Rickard, Doug Rio Branco, Miguel Rogovin, Milton Salvans, Txema Salveson, Paul Samaras, Lucas Schutmaat, Bryan Schles, Ken Sewell, Andy Shore, Stephen Simon, Taryn Robertin,Sybill Smalley, Luke Soth, Alec Tillim, Guy Van Der Elsken, Ed Van Meene, Helen Van Roekel, Florian Viksraitis, Rimaldis Wassinklundgren Webb, Alex Winklemann, Andreas; Winklemann, Andres Marroquin Gibson, Ralph Wylie, Donovan Gill, Stephen Ledare, Leigh Webb, Alex Ronis, Willy Herzog, Fred Leutwyler, Henry Mark, Mary Ellen Hosoe, Eikoh; Eggleston, William Sternfeld, Joel Narahara, Ikko Boltanski, Christian Lyon, Danny Parke, Trent; Autio, Narelle Burtynsky, Edward Szabo, Joseph Cases, Ricardo \"Andersen, Morten Peters, Jurgen Fairey, Shepard Renaldi, Richard Goldblatt, David; Gordimer, Nadine Dorr, Nell Graham, Paul Patterson, Christian Brecht, Berthold Kawauchi, Rinko van Manen, Bertien Templeton, Ed Mikhael Subotzky and Patrick Waterhouse Milach, Ralph Shag Muybridge, Eadweard Mandel, Mike Uliano,Lucas Brandt, Nick Genthe, Arnold Glaser, Ernst; Weiskopf, F. G.; Kurella, Alfred; Rodchenko, Alexander Hoffmann, Heinrich (ed.) de Middel, Cristina Lartigue, Jacques Henri Keller, Dagmar No. 223 Lin Zhipeng Haan, Karl de Meiselas, Susan Hido, Todd Ethridge, Roe Cortes, Jose Pedro Gaumy, Jean Manos, Constantine Sarfati, Lise McCurry, Steve Frank, Robert Paine, Wingate Sugimoto, Hiroshi Hido, Todd Capa, Cornel; Heynowski,</p>', '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjo5K7f3vCFAxXTh68BHXiWBTgQ3ewLegQIBRAU\"><span class=\"Y2IQFc\" lang=\"ar\">Greybull Press، 2001. طبعة الشاشة الأصلية لريتشارد برينس، موقعة بالقلم الرصاص على الجانب الأيمن السفلي. من طبعة 250؛ 9 3/8 بوصة &times; 6 3/4 بوصة (ورقة). مؤطر 10.25 &times; 7.5 بوصة. طباعة شاشة مؤطرة فقط، الكتاب غير متضمن. الحالة: جيدة (بدون عيوب ظاهرة). يشمل الفنانون الآخرون في مزادنا: السيد برين واش بن، إيرفينغ ميرويتز، جويل وارهول، آندي كرودسون، جريجوري برينس، ريتشارد ويوي، آي ماكشين، كيناستون؛ سيرا، ريتشارد كارتييه بريسون، هنري هيرست، داميان جيري، فرانك روشا، إد؛ بان، شيجيرو؛ حديد، زها؛ وارهول، آندي ريفينستال، ليني سوث، أليك؛ بار، مارتن. ميسيلاس، سوزان؛ إرويت، إليوت. كاجان، فلاديمير؛ أربوس، ديان وارهول، آندي بن، إيرفينغ كالاترافا، سانتياغو؛ ماكفلاي، مارلي ويبر، بروس إيفانز، ووكر روبرتس، ميل بوهرود، آرون (1907-1992) أبولونيا مولر، كارين أركارا، أريانا؛ سانتيز، لوكا أفيدون، ريتشارد بلينكينسوب، فيل بوتو، أندريا برودي، مايك برومبيرج، آدم وشانارين، أوليفر باور، مارك بوينو، كاريان كاسل، أليسون شاردون، لوران كلارك، لاري كليمنت، كراس كوك، جيم داجاتا، أنطوان دالابورتا، رافائيل ديفيدسون، بروس ديجورجيس، نيكولو ديموك، جيسيكا إغليستون، ويليام إيكلبوم، هانز إبستين، ميتش إسكلدسن، يواكيم؛ رين، سيا إيثريدج، رو فورد، كايل جيرمين، جوليان جيل، ستيفن جيرارد، جريج جيرارد، سيباستيان جوسيج، جون جراهام، بول هاينكن، روبرت هيذرينجتون، تيم هيبي، يويتشي هيدو، تود هاليل هيلر، سوزان إيزو، كينرو كينا مايكل كيتاجيما، كيزو كلاين، ويليام كورهونن، نينا نيوتن، هيلموت راكتليف، جو كوديلكا، جوزيف كرويثوف، أنوك ليدير، لي لي، كاي ومارشال لويت، سول لياو، جيف لينك، وينستون لوتشفورد، جلين ليون، داني ماندل، مايك مينديرتسما، كريستيان ميلور , ديفيد ميتينيدس، إنريكي مسراخ، ريتشارد موراث، إنجا؛ أوبير، دومينيك مورياما، ديدو أوناكا، كوجي أورتيز، غوستافو هيرناندو بالا، فيكتور ومارتينز، كوستا بار، مارتن أفيدون، ريتشارد شريجلي، ديفيد هولمز، جوزيف أو. شير، لويس جو (1922-2013) بوجد لورين، جريجوار ريتشاردسون، تيري ريكارد، دوج ريو برانكو، ميغيل روجوفين، ميلتون سالفانز، تكسيما سالفيسون، بول ساماراس، لوكاس شوتمات، بريان شلس، كين سيويل، آندي شور، ستيفن سيمون، تارين روبرتن، سيبيل سمالي، لوك سوث، أليك تيليم، جاي فان دير إلسكين. ، إد فان مين، هيلين فان روكيل، فلوريان فيكسرايتيس، ريمالديس فاسينكلوندجرين ويب، أليكس وينكلمان، أندرياس؛</span></pre>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', 1, 'new', 0, '2024-05-03 05:24:13', '2024-05-03 05:24:13', NULL),
+(27, 'Lot-023', 0, 'test product zoom', 'اختبار تكبير المنتج', 'test-product-zoom', 2, 6, 100.00, '100', '500', '750', NULL, 0, '<div id=\"tw-target-text-container\" class=\"tw-ta-container F0azHf tw-lfl\" tabindex=\"0\">\r\n<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32.</p>\r\n<p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</p>\r\n</div>\r\n<div id=\"tw-target-rmn-container\" class=\"tw-target-rmn tw-ta-container F0azHf tw-nfl\"></div>', '<pre id=\"tw-target-text\" class=\"tw-data-text tw-text-large tw-ta\" dir=\"rtl\" data-placeholder=\"Translation\" aria-label=\"Translated text\" data-ved=\"2ahUKEwjh39r80YCGAxXisVYBHdaMACAQ3ewLegQIBhAU\"><span class=\"Y2IQFc\" lang=\"ar\">خلافاً للاعتقاد الشائع، فإن لوريم إيبسوم ليس مجرد نص عشوائي. لها جذور في قطعة من الأدب اللاتيني الكلاسيكي من 45 قبل الميلاد، مما يجعلها أكثر من 2000 سنة. قام ريتشارد مكلينتوك، أستاذ اللغة اللاتينية في كلية هامبدن سيدني في فيرجينيا، بالبحث عن إحدى الكلمات اللاتينية الأكثر غموضًا، وهي consectetur، من مقطع لوريم إيبسوم، ومن خلال تصفح مراجع الكلمة في الأدب الكلاسيكي، اكتشف المصدر الذي لا شك فيه. يأتي نص لوريم إيبسوم من الأقسام 1.10.32 و1.10.33 من كتاب \"de Finibus Bonorum et Malorum\" (أقصى الخير والشر) لشيشرون، والذي كتبه عام 45 قبل الميلاد. هذا الكتاب عبارة عن أطروحة عن نظرية الأخلاق، والتي حظيت بشعبية كبيرة خلال عصر النهضة. السطر الأول من لوريم إيبسوم، \"Lorem ipsum dolor sit amet..\"، يأتي من سطر في القسم 1.10.32.\r\n</span></pre>', 1, 'new', 0, '2024-05-09 13:12:10', '2024-05-09 13:12:10', NULL),
+(29, 'Lot-025', 0, 'test product', 'منتج للتجربة', 'test-product', 2, 8, 500.00, '100', '1000', NULL, NULL, 0, '<p>this is product for test</p>', '<p>هذا المنتج للتجربة</p>', 1, 'new', 0, '2024-09-21 14:05:24', '2024-09-21 14:11:13', NULL),
+(30, 'Lot-026', 0, 'second product for test', 'مشروع ثاني للتجربة', 'second-product-for-test', 3, 9, 800.00, '1000', '2000', NULL, '2024-09-30 12:00:00', 0, '<p>description&nbsp; for test</p>', '<p>وصف للتجربة</p>', 1, 'new', 0, '2024-09-23 11:57:22', '2024-10-18 18:26:52', '2024-10-18 18:26:52'),
+(31, 'Lot-027', 0, 'last test', 'منتح نهائي للاختبار', 'last-test', 3, 9, 1000.00, '1000', '4000', NULL, '2024-09-29 12:00:00', 0, '<p>وصف نهائي</p>', '<p>final desc</p>', 1, 'new', 0, '2024-09-26 11:15:01', '2024-10-18 18:26:53', '2024-10-18 18:26:53'),
+(32, 'Lot-028', 0, 'my test product', 'مشروع اختبار', 'my-test-product', 3, 10, 100.00, '100', '500', NULL, '2024-10-26 12:00:00', 0, '<p>this is descreption</p>', '<p>وصف تجريبي</p>', 1, 'new', 0, '2024-10-18 14:45:26', '2024-10-18 14:46:16', '2024-10-18 14:46:16'),
+(33, 'Lot-028', 0, 'test product', 'مشروع اختبار', 'test-product-2', 3, 11, 1000.00, '700', '5000', NULL, '2024-10-26 12:00:00', 0, '<p>this is description</p>', '<p>وصف تجريبي</p>', 1, 'new', 0, '2024-10-18 15:18:42', '2024-10-18 15:29:30', '2024-10-18 15:29:30');
+INSERT INTO `products` (`id`, `lot_no`, `user_id`, `title`, `title_ar`, `slug`, `auction_type_id`, `project_id`, `reserved_price`, `start_price`, `end_price`, `minsellingprice`, `auction_end_date`, `is_published`, `description`, `description_ar`, `is_popular`, `status`, `is_closed`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(34, 'Lot-026', 0, 'مشروع4', 'product4', 'mshroaa4', 3, 13, 100.00, '100', '200', NULL, '2024-10-25 12:00:00', 0, '<p>desc</p>', '<p>وصف</p>', 1, 'new', 1, '2024-10-18 18:28:32', '2024-11-20 08:03:35', NULL),
+(35, 'Lot-027', 0, 'third product', 'مشروع ثالت', 'third-product', 3, 13, 100.00, '100', '400', NULL, '2024-10-20 12:00:00', 0, '<p>sssssssssssss</p>', '<p>سسسسسسسسسسس</p>', 0, 'new', 0, '2024-10-19 13:08:23', '2024-10-19 13:08:23', NULL),
+(36, 'Lot-028', 0, 'watch1', 'ساعة1', 'watch1', 3, 14, 100.00, '100', '200', NULL, '2024-10-31 12:00:00', 0, '<p>some product description</p>', '<p>بعض الوصف التجريبي</p>', 1, 'new', 0, '2024-10-19 15:12:32', '2024-10-19 15:18:00', '2024-10-19 15:18:00'),
+(37, 'Lot-029', 0, 'watch2', 'ساعة2', 'watch2', 3, 14, 200.00, '200', '300', NULL, '2024-10-31 12:00:00', 0, '<p>second test description</p>', '<p>ثاني وصف تجريبي</p>', 1, 'new', 0, '2024-10-19 15:13:40', '2024-10-19 15:13:40', NULL),
+(38, 'Lot-030', 0, 'watch1', 'ساعة1', 'watch1', 3, 14, 100.00, '200', '300', NULL, '2024-10-25 12:00:00', 0, '<p>some description</p>', '<p>بعض الوصف التجريبي</p>', 1, 'new', 0, '2024-10-19 15:20:43', '2024-10-19 15:20:43', NULL),
+(39, 'Lot-031', 0, 'product5', 'منتج 5', 'product5', 3, 16, 100.00, '200', '400', NULL, '2024-10-21 21:00:00', 0, '<p>desc5</p>', '<p>وصف 5</p>', 1, 'new', 0, '2024-10-21 15:26:34', '2024-10-21 16:04:56', NULL),
+(40, 'Lot-032', 0, 'product6', 'منتج6', 'product6', 3, 17, 100.00, '100', '200', NULL, '2024-10-23 21:00:00', 0, '<p>desc6</p>', '<p>وصف 6</p>', 1, 'new', 0, '2024-10-21 15:36:54', '2024-10-21 16:05:17', NULL),
+(41, 'Lot-033', 0, 'product7', 'منتج 7', 'product7', 3, 18, 100.00, '200', '400', NULL, '2024-10-25 12:00:00', 0, '<p>desc7</p>', '<p>وصف 7</p>', 0, 'new', 0, '2024-10-21 15:38:03', '2024-10-21 16:05:33', NULL),
+(42, 'Lot-034', 0, 'product8', 'منتج 8', 'product8', 3, 19, 100.00, '200', '400', NULL, '2024-10-25 12:00:00', 0, '<p>desc8</p>', '<p>وصف8</p>', 1, 'new', 0, '2024-10-21 15:38:55', '2024-10-21 16:05:58', NULL),
+(43, 'Lot-035', 0, 'product9', 'منتج9', 'product9', 3, 20, 100.00, '100', '200', NULL, '2024-10-25 12:00:00', 0, '<p>desc9</p>', '<p>وصف9</p>', 0, 'new', 0, '2024-10-21 15:40:32', '2024-10-21 16:06:18', NULL),
+(44, 'Lot-036', 0, 'product10', 'منتج10', 'product10', 3, 21, 100.00, '100', '200', NULL, '2024-11-25 12:00:00', 0, '<p>desc10</p>', '<p>وصف10</p>', 1, 'new', 0, '2024-10-21 15:41:14', '2024-10-25 13:16:41', NULL),
+(45, 'Lot-037', 0, 'any thing', 'أي شئ', 'any-thing', 3, 21, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 0, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'new', 0, '2024-10-25 13:19:04', '2024-10-25 13:19:04', NULL),
+(46, 'Lot-038', 0, 'my product', 'منتجي', 'my-product', 3, 21, 100.00, '200', '300', NULL, '2024-10-25 18:00:00', 0, '<p>some description</p>', '<p>بعض الوصف</p>', 0, 'new', 0, '2024-10-25 13:22:32', '2024-10-25 13:22:32', NULL),
+(47, 'Lot-039', 0, 'product11', 'منتج 11', 'product11', 3, 22, 100.00, '200', '400', NULL, '2024-11-25 12:00:00', 1, '<p>some description</p>', '<p>بعض الوصف</p>', 1, 'open', 0, '2024-10-25 13:28:21', '2024-11-17 09:40:27', NULL),
+(54, 'Lot-040', 51, 'test', 'تجربة', 'product12', 3, 22, 1000.00, '1000', '99997', NULL, '2024-11-18 12:00:00', 0, '<p>d test</p>', '<p>d تجربة</p>', 1, 'open', 0, '2024-11-17 04:36:14', '2024-11-17 05:36:12', NULL),
+(55, 'Lot-041', 51, 'asdasd', 'asdasd', NULL, 3, 22, 150.00, '1500', '1500', NULL, '2024-11-17 12:00:00', 0, '<p>adasd</p>', '<p>asdasd</p>', 1, 'open', 0, '2024-11-17 06:07:59', '2024-11-17 06:22:13', NULL),
+(56, 'Lot-042', 51, 'test', 'تجربة', NULL, NULL, NULL, 1500.00, NULL, NULL, NULL, NULL, 0, 'test test', 'تجربة تجربة', 0, 'new', 0, '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(57, 'Lot-043', NULL, 'test', 'تتتتتت', 'test', 3, 22, 1498.00, '1500', '1996', NULL, '2024-11-25 12:00:00', 1, '<p>فففف</p>', '<p>سسسسسس</p>', 1, 'new', 0, '2024-11-17 09:38:55', '2024-11-17 11:57:33', NULL),
+(58, 'Lot-044', NULL, 'tttt', 'tttt', 'tttt', 3, 22, 12.00, '1212', '12121212', NULL, '2024-11-25 12:00:00', 0, '<p>sadd</p>', '<p>asd</p>', 1, 'suspended', 0, '2024-11-17 12:35:08', '2024-11-20 08:26:09', NULL),
+(59, 'Lot-045', NULL, 'tttt', 'tttt', 'tttt-2', 3, 22, 12.00, '1212', '121212', NULL, '2024-11-23 12:00:00', 1, '<p>asdasd</p>', '<p>asdasdasd</p>', 1, 'suspended', 0, '2024-11-17 12:41:36', '2024-11-20 08:26:30', NULL),
+(60, 'Lot-046', NULL, 'محمد', 'محمد', 'mhmd', 3, 22, 147.00, '1515', '1515145', NULL, '2024-11-25 12:00:00', 0, '<p>شسي</p>', '<p>شيس</p>', 1, 'new', 0, '2024-11-17 12:45:55', '2024-11-17 12:45:55', NULL),
+(61, 'Lot-047', NULL, 'fsddf', 'sdfsdf', 'fsddf', 3, 22, 555.00, '5555', '555555', NULL, '2024-11-24 12:00:00', 1, '<p>sdf</p>', '<p>sdf</p>', 1, 'new', 0, '2024-11-17 12:58:24', '2024-11-17 12:58:24', NULL),
+(62, 'Lot-048', NULL, 'xcv', 'xcv', 'xcv', 3, 22, 234.00, '234234', '234234234', NULL, '2024-11-24 12:00:00', 1, '<p>sdf</p>', '<p>sdfsdf</p>', 1, 'open', 0, '2024-11-17 13:00:40', '2024-11-19 05:10:42', '2024-11-19 05:10:42'),
+(63, 'Lot-048', NULL, '55555555', '555555555', '55555555', 3, 22, 11111.00, '11111111', '111111111108', NULL, '2024-11-22 12:00:00', 1, '<p>5555555555</p>', '<p>5555555555555</p>', 1, 'open', 0, '2024-11-19 05:41:45', '2024-11-19 05:41:45', NULL),
+(64, 'Lot-049', NULL, 'bidsherif', 'مزاد شريف', 'bidsherif', 2, 24, 1000.00, '1000', '1500', NULL, '2024-11-25 12:00:00', 1, '<p>وصف المزاد انجليزي</p>', '<p>وصف المزاد عربي</p>', 1, 'open', 0, '2024-11-19 09:34:06', '2024-11-20 09:05:33', NULL),
+(65, NULL, NULL, 'test', 'test', 'test-2', 3, 22, 500.00, '500', '1000', NULL, '2024-11-23 12:00:00', 1, '<p>sdf</p>', '<p>sdf</p>', 1, 'open', 0, '2024-11-20 09:08:10', '2024-11-20 09:08:10', NULL),
+(66, NULL, NULL, 'sherif1', 'sherif2', 'sherif1', 3, 22, 1000.00, '1000', '1997', NULL, '2024-11-25 12:00:00', 1, '<p>sdf</p>', '<p>ertr</p>', 1, 'open', 0, '2024-11-21 06:03:40', '2024-11-21 06:03:40', NULL),
+(67, NULL, NULL, 'sherif1', 'sherif2', 'sherif1-2', 3, 22, 1000.00, '1000', '1997', NULL, '2024-11-25 12:00:00', 1, '<p>sdf</p>', '<p>ertr</p>', 1, 'open', 0, '2024-11-21 06:11:31', '2024-11-21 06:11:31', NULL),
+(68, NULL, NULL, 'sherif1', 'sherif2', 'sherif1-2', 3, 22, 1000.00, '1000', '1997', NULL, '2024-11-25 12:00:00', 1, '<p>sdf</p>', '<p>ertr</p>', 1, 'open', 0, '2024-11-21 06:12:14', '2024-11-21 06:12:14', NULL),
+(69, NULL, NULL, 'sherif1', 'sherif2', 'sherif1-2', 3, 22, 1000.00, '1000', '1997', NULL, '2024-11-25 12:00:00', 1, '<p>sdf</p>', '<p>ertr</p>', 1, 'open', 0, '2024-11-21 06:13:34', '2024-11-21 06:13:34', NULL),
+(70, NULL, NULL, 'sherif1', 'sherif2', 'sherif1-2', 3, 22, 1000.00, '1000', '1997', NULL, '2024-11-25 12:00:00', 1, '<p>sdf</p>', '<p>ertr</p>', 1, 'open', 0, '2024-11-21 06:14:20', '2024-11-21 06:14:20', NULL),
+(71, NULL, NULL, 'tstss', 'sssss', 'tstss', 3, 22, 200.00, '200', '297', NULL, '2024-11-25 12:00:00', 1, '<p>asd</p>', '<p>asd</p>', 1, 'open', 0, '2024-11-21 06:17:45', '2024-11-21 06:17:45', NULL),
+(72, NULL, NULL, 'zx', 'zx', 'zx', 3, 22, 100.00, '100', '198', NULL, '2024-11-25 12:00:00', 1, '<p>ad</p>', '<p>asd</p>', 1, 'open', 0, '2024-11-21 06:19:05', '2024-11-21 06:19:05', NULL),
+(73, NULL, NULL, 'zx', 'zx', 'zx-2', 3, 22, 100.00, '100', '198', NULL, '2024-11-25 12:00:00', 1, '<p>ad</p>', '<p>asd</p>', 1, 'open', 0, '2024-11-21 06:20:25', '2024-11-21 06:20:25', NULL),
+(74, NULL, NULL, 'zx', 'zx', 'zx-2', 3, 22, 100.00, '100', '198', NULL, '2024-11-25 12:00:00', 1, '<p>ad</p>', '<p>asd</p>', 1, 'open', 0, '2024-11-21 06:20:57', '2024-11-21 06:20:57', NULL),
+(75, NULL, NULL, 'zx', 'zx', 'zx-2', 3, 22, 100.00, '100', '198', NULL, '2024-11-25 12:00:00', 1, '<p>ad</p>', '<p>asd</p>', 1, 'open', 0, '2024-11-21 06:24:19', '2024-11-21 06:24:19', NULL),
+(76, NULL, NULL, 'sdf', 'sdf', 'sdf', 3, 22, 555.00, '555', '666', NULL, '2024-11-25 12:00:00', 1, '<p>er</p>', '<p>er</p>', 1, 'new', 0, '2024-11-21 06:28:05', '2024-11-21 06:28:05', NULL),
+(78, NULL, NULL, 'trr', 'trrr', 'trr', 3, 22, 11.00, '11', '22', NULL, '2024-11-25 12:00:00', 1, '<p>eee</p>', '<p>ee</p>', 1, 'open', 0, '2024-11-21 06:34:43', '2024-11-21 06:34:43', NULL),
+(79, NULL, NULL, 'ff', 'ff', 'ff', 3, 22, 55.00, '55', '555', NULL, '2024-11-25 12:00:00', 1, '<p>tr</p>', '<p>rt</p>', 1, 'open', 0, '2024-11-21 06:39:32', '2024-11-21 06:39:32', NULL),
+(80, 'Lot-001', NULL, 'ff', 'ff', 'ff-2', 3, 22, 55.00, '55', '555', NULL, '2024-11-25 12:00:00', 1, '<p>tr</p>', '<p>rt</p>', 1, 'open', 0, '2024-11-21 06:41:12', '2024-11-21 06:41:12', NULL),
+(81, 'Lot-002', 1, 'sherif', 'aaaaaaa', 'sherif', 3, 22, 66.00, '66', '75', NULL, '2024-11-25 12:00:00', 1, '<p>dd</p>', '<p>ddd</p>', 1, 'open', 0, '2024-11-21 06:48:58', '2024-11-21 06:48:58', NULL),
+(82, 'Lot-003', 1, 'ttes', 'werwer', 'ttes', 3, 22, 150.00, '150', '500', NULL, '2024-11-25 12:00:00', 1, '<p>gdfg</p>', '<p>dfg</p>', 1, 'open', 0, '2024-11-21 07:12:33', '2024-11-21 07:12:33', NULL);
 
 -- --------------------------------------------------------
 
@@ -53338,14 +53382,14 @@ INSERT INTO `products` (`id`, `lot_no`, `title`, `title_ar`, `slug`, `auction_ty
 --
 
 CREATE TABLE `product_galleries` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `lot_no` varchar(255) NOT NULL,
-  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint UNSIGNED NOT NULL,
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `product_galleries`
@@ -53464,9 +53508,44 @@ INSERT INTO `product_galleries` (`id`, `lot_no`, `product_id`, `image_path`, `cr
 (120, 'Lot-037', 45, 'http://127.0.0.1:8000/product/gallery/202410251619-671bc4f911fe8.png', '2024-10-25 13:19:05', '2024-10-25 13:19:05', NULL),
 (121, 'Lot-038', 46, 'http://127.0.0.1:8000/product/gallery/202410251622-671bc5c860f90.png', '2024-10-25 13:22:32', '2024-10-25 13:22:32', NULL),
 (122, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410251628-671bc725b3616.png', '2024-10-25 13:28:21', '2024-10-25 15:43:40', '2024-10-25 15:43:40'),
-(123, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410251843-671be6ef97377.png', '2024-10-25 15:43:59', '2024-10-25 15:43:59', NULL),
-(124, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410282028-671ff40af0282.png', '2024-10-28 17:28:59', '2024-10-28 17:28:59', NULL),
-(125, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410282029-671ff43206cb2.png', '2024-10-28 17:29:38', '2024-10-28 17:29:38', NULL);
+(123, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410251843-671be6ef97377.png', '2024-10-25 15:43:59', '2024-11-10 06:36:03', '2024-11-10 06:36:03'),
+(124, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410282028-671ff40af0282.png', '2024-10-28 17:28:59', '2024-11-10 06:36:04', '2024-11-10 06:36:04'),
+(125, 'Lot-039', 47, 'http://127.0.0.1:8000/product/gallery/202410282029-671ff43206cb2.png', '2024-10-28 17:29:38', '2024-11-10 06:36:05', '2024-11-10 06:36:05'),
+(126, 'Lot-039', 47, 'http://localhost/bidsa/public/product/gallery/202411100836-67307084e8ae1.png', '2024-11-10 06:36:20', '2024-11-10 06:36:20', NULL),
+(127, 'Lot-039', 47, 'http://localhost/bidsa/public/product/gallery/202411100836-67307084f126d.png', '2024-11-10 06:36:20', '2024-11-10 06:36:20', NULL),
+(130, 'Lot-040', 54, 'http://localhost/bidsa/public/product/gallery/202411170636-67398ede66816.png', '2024-11-17 04:36:14', '2024-11-17 04:36:14', NULL),
+(131, 'Lot-040', 54, 'http://localhost/bidsa/public/product/gallery/202411170636-67398ede69098.png', '2024-11-17 04:36:14', '2024-11-17 04:36:14', NULL),
+(132, 'Lot-040', 54, 'http://localhost/bidsa/public/product/gallery/202411170636-67398ede6ab27.jpg', '2024-11-17 04:36:14', '2024-11-17 04:36:14', NULL),
+(133, 'Lot-040', 54, 'http://localhost/bidsa/public/product/gallery/202411170636-67398ede6c6e2.png', '2024-11-17 04:36:14', '2024-11-17 04:36:14', NULL),
+(134, 'Lot-041', 55, 'http://localhost/bidsa/public/product/gallery/202411170807-6739a45fd482e.png', '2024-11-17 06:07:59', '2024-11-17 06:07:59', NULL),
+(135, 'Lot-041', 55, 'http://localhost/bidsa/public/product/gallery/202411170807-6739a45fd9447.jpg', '2024-11-17 06:07:59', '2024-11-17 06:07:59', NULL),
+(136, 'Lot-041', 55, 'http://localhost/bidsa/public/product/gallery/202411170807-6739a45fdb40e.png', '2024-11-17 06:07:59', '2024-11-17 06:07:59', NULL),
+(137, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710a4613.png', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(138, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710aac90.png', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(139, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710acc70.jpg', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(140, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710b05c9.png', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(141, 'Lot-042', 56, 'http://localhost/bidsa/public/product/gallery/202411170819-6739a710b9504.jpg', '2024-11-17 06:19:28', '2024-11-17 06:19:28', NULL),
+(142, 'Lot-043', 57, 'http://localhost/bidsa/public/product/gallery/202411171138-6739d5cf8519f.jpg', '2024-11-17 09:38:55', '2024-11-17 09:38:55', NULL),
+(143, 'Lot-043', 57, 'http://localhost/bidsa/public/product/gallery/202411171138-6739d5cf90332.jpg', '2024-11-17 09:38:55', '2024-11-17 09:38:55', NULL),
+(144, 'Lot-043', 57, 'http://localhost/bidsa/public/product/gallery/202411171138-6739d5cf9468f.jpg', '2024-11-17 09:38:55', '2024-11-17 09:38:55', NULL),
+(145, 'Lot-044', 58, 'http://localhost/bidsa/public/product/gallery/202411171435-6739ff1ced465.jpg', '2024-11-17 12:35:08', '2024-11-17 12:35:08', NULL),
+(146, 'Lot-044', 58, 'http://localhost/bidsa/public/product/gallery/202411171435-6739ff1cf179a.jpg', '2024-11-17 12:35:08', '2024-11-17 12:35:08', NULL),
+(147, 'Lot-044', 58, 'http://localhost/bidsa/public/product/gallery/202411171435-6739ff1d01c2c.png', '2024-11-17 12:35:09', '2024-11-17 12:35:09', NULL),
+(148, 'Lot-045', 59, 'http://localhost/bidsa/public/product/gallery/202411171441-673a00a024042.jpg', '2024-11-17 12:41:36', '2024-11-17 12:41:36', NULL),
+(149, 'Lot-045', 59, 'http://localhost/bidsa/public/product/gallery/202411171441-673a00a02b473.jpg', '2024-11-17 12:41:36', '2024-11-17 12:41:36', NULL),
+(150, 'Lot-045', 59, 'http://localhost/bidsa/public/product/gallery/202411171441-673a00a02e642.jpg', '2024-11-17 12:41:36', '2024-11-17 12:41:36', NULL),
+(151, 'Lot-046', 60, 'http://localhost/bidsa/public/product/gallery/202411171445-673a01a33fb70.jpg', '2024-11-17 12:45:55', '2024-11-17 12:45:55', NULL),
+(152, 'Lot-046', 60, 'http://localhost/bidsa/public/product/gallery/202411171445-673a01a344a25.png', '2024-11-17 12:45:55', '2024-11-17 12:45:55', NULL),
+(153, 'Lot-047', 61, 'http://localhost/bidsa/public/product/gallery/202411171458-673a0490bcbea.jpg', '2024-11-17 12:58:24', '2024-11-17 12:58:24', NULL),
+(154, 'Lot-047', 61, 'http://localhost/bidsa/public/product/gallery/202411171458-673a0490c9e41.jpg', '2024-11-17 12:58:24', '2024-11-17 12:58:24', NULL),
+(155, 'Lot-048', 62, 'http://localhost/bidsa/public/product/gallery/202411171500-673a05187d274.jpg', '2024-11-17 13:00:40', '2024-11-17 13:00:40', NULL),
+(156, 'Lot-048', 63, 'http://127.0.0.1:8000/product/gallery/202411190741-673c4139dfb34.png', '2024-11-19 05:41:45', '2024-11-19 05:41:45', NULL),
+(157, 'Lot-048', 63, 'http://127.0.0.1:8000/product/gallery/202411190741-673c4139f2695.png', '2024-11-19 05:41:46', '2024-11-19 05:41:46', NULL),
+(158, 'Lot-049', 64, 'http://localhost/bidsa/public/product/gallery/202411191134-673c77aee9e41.png', '2024-11-19 09:34:06', '2024-11-19 09:34:06', NULL),
+(159, 'Lot-049', 64, 'http://localhost/bidsa/public/product/gallery/202411191134-673c77aeee95a.png', '2024-11-19 09:34:06', '2024-11-19 09:34:06', NULL),
+(160, 'Lot-001', 80, 'http://localhost/bidsa/public/product/gallery/202411210841-673ef22842dc8.png', '2024-11-21 06:41:12', '2024-11-21 06:41:12', NULL),
+(161, 'Lot-002', 81, 'http://localhost/bidsa/public/product/gallery/202411210848-673ef3fa545af.png', '2024-11-21 06:48:58', '2024-11-21 06:48:58', NULL),
+(162, 'Lot-003', 82, 'http://localhost/bidsa/public/product/gallery/202411210912-673ef981696e3.png', '2024-11-21 07:12:33', '2024-11-21 07:12:33', NULL);
 
 -- --------------------------------------------------------
 
@@ -53475,13 +53554,13 @@ INSERT INTO `product_galleries` (`id`, `lot_no`, `product_id`, `image_path`, `cr
 --
 
 CREATE TABLE `product_specifications` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `product_id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -53490,7 +53569,7 @@ CREATE TABLE `product_specifications` (
 --
 
 CREATE TABLE `projects` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `name_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -53498,18 +53577,18 @@ CREATE TABLE `projects` (
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_date_time` datetime NOT NULL,
   `end_date_time` datetime DEFAULT NULL,
-  `auction_type_id` int(11) NOT NULL,
+  `auction_type_id` int NOT NULL,
   `category_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `deposit_amount` int(11) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Description Status: true (active) or false (inactive)',
-  `is_trending` tinyint(1) NOT NULL DEFAULT 0,
+  `description` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `description_ar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `deposit_amount` int DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Description Status: true (active) or false (inactive)',
+  `is_trending` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `buyers_premium` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `projects`
@@ -53536,7 +53615,8 @@ INSERT INTO `projects` (`id`, `type`, `name`, `name_ar`, `slug`, `image_path`, `
 (20, 'P-0009', 'project9', 'مشروع4', 'project4', '1729537757image_path.png', '2024-10-18 12:00:00', '2024-10-25 12:00:00', 3, '1', NULL, NULL, NULL, 1, 1, '2024-10-20 15:34:01', '2024-10-21 16:09:17', NULL, 100.00),
 (21, 'P-0009', 'project10', 'مشروع4', 'project4', '1729872960image_path.png', '2024-10-18 12:00:00', '2024-11-25 12:00:00', 3, '1', NULL, NULL, NULL, 1, 1, '2024-10-20 15:34:18', '2024-10-25 13:16:00', NULL, 100.00),
 (22, 'P-0010', 'project11', 'مشروع11', 'project11', '1729873580image_path.png', '2024-10-25 19:27:00', '2024-11-25 12:00:00', 3, '2', NULL, NULL, NULL, 1, 1, '2024-10-25 13:26:20', '2024-10-25 13:26:20', NULL, 100.00),
-(23, 'P-0011', 'pr', 'مش', 'pr', '1730453929image_path.png', '2024-11-01 10:00:00', '2024-12-01 12:00:00', 3, '1', NULL, NULL, NULL, 1, 1, '2024-11-01 06:38:49', '2024-11-01 06:38:49', NULL, 100.00);
+(23, 'P-0011', 'pr', 'مش', 'pr', '1730453929image_path.png', '2024-11-01 10:00:00', '2024-12-01 12:00:00', 3, '1', NULL, NULL, NULL, 1, 1, '2024-11-01 06:38:49', '2024-11-01 06:38:49', NULL, 100.00),
+(24, 'P-0012', 'testsherif', 'testsherif', 'testsherif', '1732015956image_path.png', '2024-11-19 12:00:00', '2024-11-30 12:00:00', 2, '1', NULL, NULL, 1500, 1, 1, '2024-11-19 09:32:36', '2024-11-19 09:32:36', NULL, 10.00);
 
 -- --------------------------------------------------------
 
@@ -53545,7 +53625,7 @@ INSERT INTO `projects` (`id`, `type`, `name`, `name_ar`, `slug`, `image_path`, `
 --
 
 CREATE TABLE `settings` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `slug` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -53553,11 +53633,11 @@ CREATE TABLE `settings` (
   `value_ar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image_ar` varchar(255) DEFAULT NULL,
-  `is_static` tinyint(1) DEFAULT 0,
+  `is_static` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `settings`
@@ -53577,12 +53657,12 @@ INSERT INTO `settings` (`id`, `title`, `title_ar`, `slug`, `value`, `value_ar`, 
 --
 
 CREATE TABLE `start_bid` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `project_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `status` tinyint NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -53599,13 +53679,13 @@ INSERT INTO `start_bid` (`id`, `project_id`, `product_id`, `status`, `created_at
 --
 
 CREATE TABLE `states` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `name` varchar(30) NOT NULL,
-  `country_id` int(11) NOT NULL DEFAULT 1,
+  `country_id` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `states`
@@ -57714,15 +57794,15 @@ INSERT INTO `states` (`id`, `name`, `country_id`, `created_at`, `updated_at`, `d
 --
 
 CREATE TABLE `subcategories` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Category Status: true (active) or false (inactive)',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `category_id` bigint UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Category Status: true (active) or false (inactive)',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -57731,9 +57811,9 @@ CREATE TABLE `subcategories` (
 --
 
 CREATE TABLE `temp_address` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `bid_placed_id` varchar(255) NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `apartment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -57744,7 +57824,7 @@ CREATE TABLE `temp_address` (
   `phone` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `temp_address`
@@ -57812,7 +57892,11 @@ INSERT INTO `temp_address` (`id`, `bid_placed_id`, `user_id`, `first_name`, `las
 (59, '75', 37, 'pankaj', 'pk', NULL, '302', '101', '3', '302033', '9876543210', '2024-09-26 07:56:20', '2024-09-26 07:57:21'),
 (60, '81', 37, 'pankaj', 'pk', NULL, '706', '101', '10', '302033', '9876543210', '2024-09-26 12:01:40', '2024-09-26 12:01:40'),
 (61, '93', 33, 'ebrahim', 'Hosny', NULL, '37444', '191', '3163', '888', '0542327025', '2024-09-26 12:41:03', '2024-09-26 12:41:03'),
-(62, '94', 33, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, '2024-09-26 12:45:39', '2024-09-26 12:45:39');
+(62, '94', 33, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, '2024-09-26 12:45:39', '2024-09-26 12:45:39'),
+(63, '108', 1, 'sherif', 'hassan', NULL, NULL, '64', NULL, '12222', '01000224341', '2024-11-17 09:43:42', '2024-11-17 09:43:42'),
+(64, '109', 51, 'sherif', 'hassan', NULL, NULL, '64', '1048', '12222', '01000224341', '2024-11-19 09:36:55', '2024-11-19 09:36:55'),
+(65, '110', 52, 'sherif', 'hassan', NULL, '15400', '64', '1044', '12222', '01000224341', '2024-11-19 09:39:14', '2024-11-19 09:39:14'),
+(66, '111', 51, 'sherif', 'hassan', NULL, NULL, '64', '1054', '12222', '01000224341', '2024-11-20 06:39:54', '2024-11-20 06:39:54');
 
 -- --------------------------------------------------------
 
@@ -57821,21 +57905,21 @@ INSERT INTO `temp_address` (`id`, `bid_placed_id`, `user_id`, `first_name`, `las
 --
 
 CREATE TABLE `temp_users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` int(11) DEFAULT 2 COMMENT '1=admin, 2=user',
+  `role` int DEFAULT '2' COMMENT '1=admin, 2=user',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `country_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `profile_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'User Status: true (active) or false (inactive)',
-  `otp` int(10) UNSIGNED DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'User Status: true (active) or false (inactive)',
+  `otp` int UNSIGNED DEFAULT NULL,
   `device_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lang_id` varchar(255) NOT NULL DEFAULT 'en',
   `currency_code` varchar(255) NOT NULL DEFAULT 'SAR',
-  `is_term` tinyint(1) NOT NULL DEFAULT 0,
-  `is_otp_verify` tinyint(1) NOT NULL DEFAULT 0,
+  `is_term` tinyint(1) NOT NULL DEFAULT '0',
+  `is_otp_verify` tinyint(1) NOT NULL DEFAULT '0',
   `refer_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -57843,8 +57927,8 @@ CREATE TABLE `temp_users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `notify_on` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `notify_on` tinyint NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `temp_users`
@@ -58901,7 +58985,9 @@ INSERT INTO `temp_users` (`id`, `first_name`, `last_name`, `role`, `email`, `cou
 (1043, 'lama taha', NULL, 2, 'lama22@lama.com', NULL, '0435363733', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$x4nBXANT8ct5Iv7G826mQOBr0.Au5oo1i.oQIGijOtsSxjXcQN.SO', NULL, '2024-11-02 04:34:06', '2024-11-02 04:34:06', NULL, 0),
 (1044, 'lama taha', NULL, 2, 'lama221@lama.com', NULL, '0435363733', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$qKE0fEYLWo4NzVx/5HN9E.v3PusXDJDLo.YBMt0Vh/tOL1yr3nv5m', NULL, '2024-11-02 04:35:15', '2024-11-02 04:35:15', NULL, 0),
 (1045, 'lama taha', NULL, 2, 'lama2212@lama.com', NULL, '0435363733', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$9mSENG8eXw95Hg27lXN44eIvst7XUwwtcqteHz5Es2wYztj5l6g7K', NULL, '2024-11-02 04:36:37', '2024-11-02 04:36:37', NULL, 0),
-(1046, 'karma', NULL, 2, 'karma@karma.com', NULL, '0546327373', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$BKm4fnllOh1pDwM4efrRH.BcBqDLB44p9B8QmfhGGl2abTShqwTOu', NULL, '2024-11-02 04:37:32', '2024-11-02 04:37:32', NULL, 0);
+(1046, 'karma', NULL, 2, 'karma@karma.com', NULL, '0546327373', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$BKm4fnllOh1pDwM4efrRH.BcBqDLB44p9B8QmfhGGl2abTShqwTOu', NULL, '2024-11-02 04:37:32', '2024-11-02 04:37:32', NULL, 0),
+(1047, 'sherif hassan', NULL, 2, 'user@gmail.com', NULL, '1234567890', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$9WWmaY5un80zhnNdEqQoQec/Wz0nShYGao5sne5C.kAphA.Dl1GgW', NULL, '2024-11-12 12:23:09', '2024-11-12 12:23:09', NULL, 0),
+(1048, 'sherif hassan', NULL, 2, 'user2@gmail.com', NULL, '1234567999', NULL, 0, NULL, NULL, 'en', 'SAR', 1, 0, NULL, NULL, '$2y$10$XokYSCHX/Ge6JzvAx9qDl.PKVQ4TAIzmYm.l6ScBIV/BaWO7yCanW', NULL, '2024-11-19 09:38:33', '2024-11-19 09:38:33', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -58910,8 +58996,8 @@ INSERT INTO `temp_users` (`id`, `first_name`, `last_name`, `role`, `email`, `cou
 --
 
 CREATE TABLE `useraddresses` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `apartment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -58919,12 +59005,12 @@ CREATE TABLE `useraddresses` (
   `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `state` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `zipcode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_primary` tinyint(4) NOT NULL DEFAULT 0,
+  `is_primary` tinyint NOT NULL DEFAULT '0',
   `is_save` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `address_type` int(10) UNSIGNED NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `address_type` int UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `useraddresses`
@@ -58940,21 +59026,21 @@ INSERT INTO `useraddresses` (`id`, `user_id`, `first_name`, `last_name`, `apartm
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` int(11) DEFAULT 2 COMMENT '1=admin, 2=user',
+  `role` int DEFAULT '2' COMMENT '1=admin, 2=user',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `country_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `profile_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'User Status: true (active) or false (inactive)',
-  `otp` int(10) UNSIGNED DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'User Status: true (active) or false (inactive)',
+  `otp` int UNSIGNED DEFAULT NULL,
   `device_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lang_id` varchar(255) NOT NULL DEFAULT 'en',
   `currency_code` varchar(255) NOT NULL DEFAULT 'SAR',
-  `is_term` tinyint(1) NOT NULL DEFAULT 0,
-  `is_otp_verify` tinyint(1) NOT NULL DEFAULT 0,
+  `is_term` tinyint(1) NOT NULL DEFAULT '0',
+  `is_otp_verify` tinyint(1) NOT NULL DEFAULT '0',
   `refer_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -58962,15 +59048,15 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `notify_on` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+  `notify_on` tinyint NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `role`, `email`, `country_code`, `phone`, `profile_image`, `status`, `otp`, `device_token`, `lang_id`, `currency_code`, `is_term`, `is_otp_verify`, `refer_code`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `notify_on`) VALUES
-(1, 'Admin', 'Boss', 1, 'admin@admin.com', NULL, '+1-442-877-9035', NULL, 1, NULL, NULL, 'en', 'SAR', 0, 0, NULL, '2023-09-24 17:49:51', '$2y$10$yiAt.RT8Rbt278AFOEdSB.qC5OdkyOOIN3aJ3CfyDiygyMugRbWnq', 'Xlefwi6M33MQ697QteZpbcLHV6lxiQGZgjpcg2a9Tn3vv1kBBsnRHcw6KFng', '2023-09-24 17:49:51', NULL, NULL, 1),
+(1, 'Admin', 'Boss', 1, 'admin@admin.com', NULL, '+1-442-877-9035', NULL, 1, NULL, NULL, 'en', 'SAR', 0, 0, NULL, '2023-09-24 17:49:51', '$2y$10$yiAt.RT8Rbt278AFOEdSB.qC5OdkyOOIN3aJ3CfyDiygyMugRbWnq', 'XKfles0YXxwzlK2sF9bThTYo4XKyjz5f5yxkorkDCr76hKWAKm8Lq3t3QFD6', '2023-09-24 17:49:51', NULL, NULL, 1),
 (3, 'Prabhash', 'jha', 2, 'pre@mailinator.com', '+91', '9875213030', 'https://bid.sa/img/users/1712842591profile_image.png', 1, NULL, '', 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$s7hzvijyLBW52.eSDe1JDuVbNA86UdmROyPpfeGcZYO3uEkv764xC', NULL, '2024-04-10 10:54:52', '2024-04-23 06:02:52', NULL, 0),
 (19, 'Prabhash', 'jha', 2, 'jploft@mailinator.com', '+91', '9875213030', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$9o/XLbume7p7JwQKtNdpzOnTdRog8lXtpK1PrEU7T0UOXlw4ht.e6', NULL, '2024-04-11 04:36:34', '2024-04-11 04:36:34', NULL, 0),
 (20, 'sid', 'test', 2, 'sid@mailinator.com', '+91', '9852368952', NULL, 1, 2256, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$.2VML5.9tqlyWgTqPuKsxOEJsgRYeN9kUn4FXKskBEIuqOQYHcKIS', NULL, '2024-04-12 09:56:00', '2024-04-12 10:22:23', NULL, 0),
@@ -58999,7 +59085,9 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `role`, `email`, `country_
 (47, 'hima hosny', NULL, 2, 'hima4@hima.com', NULL, '0543435267', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$uDWnpJ2af1Z.VT9m9kX1x.M1OZ.9RLmPwFebwZ.SjgBY0vklTxwMq', NULL, '2024-10-25 12:22:33', '2024-10-25 12:22:33', NULL, 0),
 (48, 'hima hosny', NULL, 2, 'hima5@hima.com', NULL, '0543435343', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$7yavI5hDznGLHQuKi6CxYuZoSGP4ZtOiLYysDGXENBgNEG7q0Sx4W', NULL, '2024-10-25 12:38:44', '2024-10-25 12:38:44', NULL, 0),
 (49, 'hima ali', NULL, 2, 'hima6@hima.com', NULL, '0543435353', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$wSmk0ybG7HhRhax2kH8RF.2yPB8iS6i0O5x4IKY3uWYPdm34HNMiW', NULL, '2024-10-25 12:48:19', '2024-10-25 12:48:19', NULL, 0),
-(50, 'karma', NULL, 2, 'karma@karma.com', NULL, '0546327373', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$BKm4fnllOh1pDwM4efrRH.BcBqDLB44p9B8QmfhGGl2abTShqwTOu', NULL, '2024-11-02 04:37:42', '2024-11-02 04:37:42', NULL, 0);
+(50, 'karma', NULL, 2, 'karma@karma.com', NULL, '0546327373', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$BKm4fnllOh1pDwM4efrRH.BcBqDLB44p9B8QmfhGGl2abTShqwTOu', NULL, '2024-11-02 04:37:42', '2024-11-02 04:37:42', NULL, 0),
+(51, 'sherif hassan', NULL, 2, 'user@gmail.com', NULL, '1234567890', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$9WWmaY5un80zhnNdEqQoQec/Wz0nShYGao5sne5C.kAphA.Dl1GgW', NULL, '2024-11-12 12:23:16', '2024-11-12 12:23:16', NULL, 0),
+(52, 'sherif hassan', NULL, 2, 'user2@gmail.com', NULL, '1234567999', NULL, 1, NULL, NULL, 'en', 'SAR', 1, 1, NULL, NULL, '$2y$10$XokYSCHX/Ge6JzvAx9qDl.PKVQ4TAIzmYm.l6ScBIV/BaWO7yCanW', NULL, '2024-11-19 09:38:39', '2024-11-19 09:38:39', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -59008,12 +59096,12 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `role`, `email`, `country_
 --
 
 CREATE TABLE `wishlists` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
+  `product_id` bigint UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `wishlists`
@@ -59259,211 +59347,211 @@ ALTER TABLE `wishlists`
 -- AUTO_INCREMENT for table `app_notification`
 --
 ALTER TABLE `app_notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `auction_types`
 --
 ALTER TABLE `auction_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `banners`
 --
 ALTER TABLE `banners`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `bid_placed`
 --
 ALTER TABLE `bid_placed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `bid_requests`
 --
 ALTER TABLE `bid_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `bid_values`
 --
 ALTER TABLE `bid_values`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `blogs`
 --
 ALTER TABLE `blogs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48357;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48357;
 
 --
 -- AUTO_INCREMENT for table `contact_us`
 --
 ALTER TABLE `contact_us`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4049;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4049;
 
 --
 -- AUTO_INCREMENT for table `contact_us_subjects`
 --
 ALTER TABLE `contact_us_subjects`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `countries`
 --
 ALTER TABLE `countries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
 
 --
 -- AUTO_INCREMENT for table `currencies`
 --
 ALTER TABLE `currencies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `help_support`
 --
 ALTER TABLE `help_support`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `languages`
 --
 ALTER TABLE `languages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `newslatters`
 --
 ALTER TABLE `newslatters`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
 
 --
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `product_galleries`
 --
 ALTER TABLE `product_galleries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
 
 --
 -- AUTO_INCREMENT for table `product_specifications`
 --
 ALTER TABLE `product_specifications`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `start_bid`
 --
 ALTER TABLE `start_bid`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `states`
 --
 ALTER TABLE `states`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4122;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4122;
 
 --
 -- AUTO_INCREMENT for table `subcategories`
 --
 ALTER TABLE `subcategories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `temp_address`
 --
 ALTER TABLE `temp_address`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `temp_users`
 --
 ALTER TABLE `temp_users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1047;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1049;
 
 --
 -- AUTO_INCREMENT for table `useraddresses`
 --
 ALTER TABLE `useraddresses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `wishlists`
 --
 ALTER TABLE `wishlists`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables

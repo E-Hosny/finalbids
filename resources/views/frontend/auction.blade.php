@@ -133,7 +133,7 @@ td {
 }
 .btn.btn-secondary.testp {
     border-radius: 10px;
-    background: linear-gradient(90deg, #3E0269 0%, #7F12DD 100%);
+    background: linear-gradient(90deg, #0d3858 0%, #0d3858 100%);
     padding: 7px 27px;
     color: #fff !important;
     font-size: 11px;
@@ -143,7 +143,7 @@ td {
 }
 .btn.btn-secondary {
     border-radius: 10px;
-    background: linear-gradient(90deg, #3E0269 0%, #7F12DD 100%);
+    background: linear-gradient(90deg, #0d3858 0%, #0d3858 100%);
     padding: 7px 5px;
     color: #fff !important;
     font-size: 13px;

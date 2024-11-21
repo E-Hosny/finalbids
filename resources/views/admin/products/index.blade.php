@@ -56,5 +56,34 @@
     });
 });
 </script>
+
+
+<script>
+   $(document).on('click', '.close-auction', function () {
+    if (confirm('Are you sure you want to close this auction?')) {
+        let productId = $(this).data('id');
+        $.ajax({
+            url: "{{ route('admin.products.close-auction') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                product_id: productId
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    $('#product-table').DataTable().ajax.reload();
+                } else {
+                    alert('Failed to close auction!');
+                }
+            },
+            error: function () {
+                alert('Error occurred!');
+            }
+        });
+    }
+});
+
+</script>
 @endpush
 </x-admin-layout>

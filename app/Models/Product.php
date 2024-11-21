@@ -11,25 +11,33 @@ class Product extends Model
     use HasFactory,SoftDeletes;
     protected $table ='products';
 
+    // protected $fillable = [
+    //     'title',
+    //     'slug',
+    //     'auction_type_id',
+    //     'auction_end_date',
+    //     'project_id',
+    //     'reserved_price',
+    //     'description',
+    //     'is_popular', 
+    //     'slug', 
+    //     'lot_no',
+    //     'start_price',
+    //     'end_price',
+    //     'lang_id',
+    //     'minsellingprice',
+    //     'title_ar',
+    //     'description_ar',
+    //     'user_id',
+    //     'status',
+    //     'is_published',
+    // ];
     protected $fillable = [
-        'title',
-        'slug',
-        'auction_type_id',
-        'auction_end_date',
-        'project_id',
-        'reserved_price',
-        'description',
-        'is_popular', 
-        'slug', 
-        'lot_no',
-        'start_price',
-        'end_price',
-        'lang_id',
-        'minsellingprice',
-        'title_ar',
-        'description_ar',
+        'title', 'title_ar', 'slug', 'auction_type_id', 'project_id',
+        'reserved_price', 'start_price', 'end_price', 'minsellingprice',
+        'auction_end_date', 'is_published', 'description', 'description_ar',
+        'is_popular','lot_no','user_id', 'status', 'is_closed'
     ];
-
    
     public function setPriceAttribute($value)
     {
@@ -83,6 +91,19 @@ class Product extends Model
     {
         return $this->hasMany(BidPlaced::class, 'product_id');
     }
+
+    public function images()
+    {
+        return $this->hasMany(Gallery::class, 'product_id');
+    }
     
+    public function bids()
+    {
+        return $this->hasMany(BidPlaced::class, 'product_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }
