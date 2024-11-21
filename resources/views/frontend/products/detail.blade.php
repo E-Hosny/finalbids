@@ -248,7 +248,18 @@
                         {{ session('locale') === 'en' ? 'STARTING BID' : 'بداية المزاد' }} <span class="bid-amount">${{ $product->start_price }}</span>
                     </div>
                     {{-- <a href="{{ route('login') }}" class="btn-bid">LOGIN TO BID</a> --}}
-                    <a class="btn-bid" data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'LOGIN TO BID' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
+                    
+                    {{-- <a class="btn-bid" data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'LOGIN TO BID' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a> --}}
+
+                    @if(Auth::check())
+                    <button  class="btn-bid" type="button" id="placeBidButton" data-bs-toggle="modal" data-bs-target="#myModal">
+                        {{ session('locale') === 'en' ? 'Place Bid' : (session('locale') === 'ar' ? 'وضع مزايدة' : 'Place Bid') }}
+                    </button>
+                    @else
+                    <a class="btn-bid" data-bs-toggle="modal" data-bs-target="#LoginModal">
+                        {{ session('locale') === 'en' ? 'LOGIN TO BID' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}
+                    </a>
+                    @endif
 
                 </div>
 
