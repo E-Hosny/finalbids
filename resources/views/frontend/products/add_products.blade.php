@@ -81,7 +81,7 @@
                             </div>
 
                             <!-- السعر المحجوز -->
-                            <div class="form-group mb-4">
+                            {{-- <div class="form-group mb-4">
                                 <label for="reserved_price" class="form-label">
                                     {{ session('locale') === 'ar' ? 'السعر المحجوز' : 'Reserved Price' }}
                                 </label>
@@ -89,7 +89,7 @@
                                     <span class="input-group-text">$</span>
                                     <input type="number" name="reserved_price" id="reserved_price" class="form-control" required>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- قسم الوصف -->
                             <div class="row mb-4">

@@ -27,7 +27,7 @@ public function store(Request $request)
     $data = $request->validate([
         'title' => 'required|string|max:255',
         'title_ar' => 'required|string|max:255',
-        'reserved_price' => 'required|numeric',
+        'reserved_price' => 'nullable|numeric',
         'description' => 'required|string',
         'description_ar' => 'required|string',
         'image_path.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -43,7 +43,8 @@ public function store(Request $request)
     $product = Product::create([
         'title' => $data['title'],
         'title_ar' => $data['title_ar'],
-        'reserved_price' => $data['reserved_price'],
+        // 'reserved_price' => $data['reserved_price'],
+        'reserved_price' => '0',
         'description' => $data['description'],
         'description_ar' => $data['description_ar'],
         'lot_no' => $lotNo,
