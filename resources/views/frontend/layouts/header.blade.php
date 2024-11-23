@@ -117,7 +117,7 @@ if (Auth::check()) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="{{asset('frontend/images/logo.svg')}}">
-    <title>Bid</title>
+    <title>Muzayadah</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css">
@@ -196,10 +196,10 @@ if (Auth::check()) {
 
           <div id="mainListDiv" class="main_list  w-100 d-flex px-4  ">
               <ul class="navlinks  px-2">
-              <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Home' : (session('locale') === 'ar' ? 'الرئيسية' : 'Home') }}</a></li>
+              <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Auctions' : (session('locale') === 'ar' ? 'الرئيسية' : 'Auctions') }}</a></li>
 
               <li class="category-menu">
-              <a href="/categories/index">{{ session('locale') === 'en' ? 'Category' : (session('locale') === 'ar' ? 'الصنف' : 'Category') }}</a>
+              <a href="/categories/index">{{ session('locale') === 'en' ? 'Departments' : (session('locale') === 'ar' ? 'الصنف' : 'Departments') }}</a>
                     <div class="category-list">
                         <ul>
                         @foreach($categories as $category)
@@ -248,7 +248,7 @@ if (Auth::check()) {
                         <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="group-hidden">
-                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Create Account' : (session('locale') === 'ar' ? 'تسجيل حساب جديد' : 'Create Account') }}</a>
                     </li>
                  @endguest
 
@@ -313,7 +313,7 @@ if (Auth::check()) {
                         <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
                     <li class="d-flex align-items-center">
-                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
+                        <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Create Account' : (session('locale') === 'ar' ? 'تسجيل حساب جديد' : 'Create Account') }}</a>
                     </li>
 
                     <li>
@@ -435,7 +435,7 @@ if (Auth::check()) {
 
     .nav a{
         font-size: 20px !important;
-        margin: 0px 7px;
+        /* margin: 0px 7px; */
     }
     .nav select{
         font-size: 20px !important;

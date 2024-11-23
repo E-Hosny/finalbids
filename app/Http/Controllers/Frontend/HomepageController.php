@@ -561,7 +561,7 @@ class HomepageController extends Controller
                 ], 422);
             }
 
-            // $otp = rand(1000, 9999);
+            $otp = rand(1000, 9999);
 
             DB::beginTransaction();
 
@@ -575,11 +575,13 @@ class HomepageController extends Controller
 //                'notify_on' => $request->input('cancel_receive', 0),
                 // 'is_otp_verify' => 0,
                 'status' => 0,
-                // 'otp' => $otp,
+                'otp' => $otp,
             ]);
             $user->save();
 
             DB::commit();
+            $this->sendOtpViaTaqnyat($user->phone, $otp);
+
 
 
             // Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
@@ -602,6 +604,37 @@ class HomepageController extends Controller
             ], 500);
         }
     }
+
+    private function sendOtpViaTaqnyat($phone, $otp)
+{
+    // $url = env('TAQNYAT_API_URL');
+    // $token = env('TAQNYAT_BEARER_TOKEN');
+    // $sender = env('TAQNYAT_SENDER');
+
+    if(session('locale')=='ar'){
+        $body="رمز التحقق: $otp لدخول منصة bid.sa";
+    }else{
+        $body = "Your verification code: $otp For login bid.sa portal";
+
+    }
+
+
+
+    $client = new \GuzzleHttp\Client();
+    $response = $client->post('https://api.taqnyat.sa/v1/messages', [
+        'headers' => [
+            'Authorization' => 'Bearer ' . 'c933affa6c2314484d105c45a0e1adc7',
+            'Content-Type' => 'application/json',
+        ],
+        'json' => [
+            'recipients' => '966' . ltrim($phone, '0'),
+            'body' => $body,
+            'sender' => "MazadBid",
+        ],
+    ]);
+
+    Log::info("OTP sent to $phone: $otp");
+}
 
 
     public function register(Request $request)
