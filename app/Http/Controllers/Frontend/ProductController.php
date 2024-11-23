@@ -38,6 +38,7 @@ public function store(Request $request)
     $lastLotNumber = $lastProduct ? intval(substr($lastProduct->lot_no, 4)) : 0;
     $newLotNumber = $lastLotNumber + 1;
     $lotNo = 'Lot-' . sprintf('%03d', $newLotNumber);
+    $slug = $this->getUniqueSlug($data['title']);
 
     // إنشاء المنتج
     $product = Product::create([
@@ -48,10 +49,12 @@ public function store(Request $request)
         'description' => $data['description'],
         'description_ar' => $data['description_ar'],
         'lot_no' => $lotNo,
+        'slug' => $slug,
         'user_id' => auth()->id(), // تعيين المستخدم الحالي
         'status' => 'new', // حالة المنتج في انتظار التفعيل
     ]);
     $data['slug'] = Str::slug($data['title'], '-'); // تحديث الـ slug
+    
 
 
     // رفع الصور إذا وُجدت
@@ -79,13 +82,20 @@ public function store(Request $request)
 
 
     // توليد slug فريد للعنوان
-    protected function getUniqueSlug($title)
-    {
-        $slug = Str::slug($title);
-        $count = Product::where('slug', $slug)->count();
+    // protected function getUniqueSlug($title)
+    // {
+    //     $slug = Str::slug($title);
+    //     $count = Product::where('slug', $slug)->count();
 
-        return $count > 0 ? $slug . '-' . ($count + 1) : $slug;
-    }
+    //     return $count > 0 ? $slug . '-' . ($count + 1) : $slug;
+    // }
+    protected function getUniqueSlug($title)
+{
+    $slug = Str::slug($title); // تحويل العنوان إلى slug
+    $count = Product::where('slug', 'LIKE', "{$slug}%")->count(); // البحث عن slugs مشابهة
+
+    return $count > 0 ? $slug . '-' . ($count + 1) : $slug; // إضافة رقم إذا وُجد slug مشابه
+}
 
 
     public function userProducts()
