@@ -42,7 +42,7 @@ a {
 }
 
 a:hover{
-    color: #3E0269;
+    color: #0d3858;
     cursor: pointer;
 }
 a,
@@ -72,7 +72,7 @@ input::-webkit-inner-spin-button {
 }
 .btn.btn-secondary {
     border-radius: 10px;
-    background: linear-gradient(90deg, #3E0269 0%, #7F12DD 100%);
+    background: linear-gradient(90deg, #0d3858 0%, #0d3858 100%);
     padding: 13px 30px;
     color: #fff !important;
     font-size: 16px;
@@ -89,9 +89,9 @@ input::-webkit-inner-spin-button {
     border-radius: 10px;
     background: transparent;
     padding: 12px 30px;
-    color: #3E0269 !important;
+    color: #0d3858 !important;
     font-size: 16px;
-    border: 1px solid #3E0269;
+    border: 1px solid #0d3858;
     text-transform: uppercase;
 }
 
@@ -1615,7 +1615,7 @@ select {
     font-weight: 600;
 }
 .edit-number{
-    color: #3E0269;
+    color: #0d3858;
 }
 .modal-content {
     border-radius: 20px;

@@ -30,7 +30,7 @@ use App\Http\Controllers\Frontend\ProductWishController;
 use App\Http\Controllers\Frontend\LangController;
 use App\Http\Controllers\Frontend\BiddingController;
 use App\Http\Controllers\Frontend\UserCategoryController;
-
+use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 
 
 
@@ -194,6 +194,23 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::resource('helpsupport', HelpsupportController::class);
 
 
+
+});
+
+
+// Route::get('/add-product', function () {
+//     if (!auth()->check()) {
+//         return redirect()->route('login');
+//     }
+//     return view('frontend.products.add_products');  // يمكنك تغيير هذا لعرض الصفحة التي تريدها
+//     // return "test";  // يمكنك تغيير هذا لعرض الصفحة التي تريدها
+// });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/add-product', [FrontendProductController::class, 'create'])->name('frontend.product.create');
+    Route::post('/add-product', [FrontendProductController::class, 'store'])->name('frontend.product.store');
+    Route::get('/user/products', [FrontendProductController::class, 'userProducts'])->name('user.products');
+    Route::get('/user/products/{id}/details', [FrontendProductController::class, 'productDetails'])->name('user.products.details');
 
 });
 

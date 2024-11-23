@@ -128,41 +128,7 @@ if (Auth::check()) {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<!-- Add this CSS to your existing style section -->
-<style>
-    .sell-link {
-        display: flex !important;
-        align-items: center;
-        background-color: #0D3858;
-        color: white !important;
-        padding: 8px 20px !important;
-        border-radius: 25px;
-        transition: all 0.3s ease;
-    }
-    
-    .sell-link:hover {
-        background-color: #0D3858;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .sell-link i {
-        margin-right: 5px;
-        font-size: 18px;
-    }
-    
-    /* RTL Support */
-    .rtl .sell-link i {
-        margin-right: 0;
-        margin-left: 5px;
-    }
-    
-    @media only screen and (max-width: 1000px) {
-        .sell-link {
-            margin: 10px 0;
-        }
-    }
-    </style>
+
   </head>
 
   <body @if(session()->get('locale') == 'ar') class="rtl" @endif>
@@ -260,23 +226,6 @@ if (Auth::check()) {
 
                         </select>
                     </li>
-                             {{-- sell --}}
-                          {{-- أولاً: زر البيع في القائمة --}}
-                            <li>
-                                @auth
-                                    <a href="{{ url('/add-product') }}" class="sell-link">
-                                        <i class="fa fa-plus-circle me-1"></i>
-                                        {{ session('locale') === 'en' ? 'Sell' : (session('locale') === 'ar' ? 'بيع' : 'Sell') }}
-                                    </a>
-                                @else
-                                    <a href="javascript:void(0)" class="sell-link" data-bs-toggle="modal" data-bs-target="#LoginModal">
-                                        <i class="fa fa-plus-circle me-1"></i>
-                                        {{ session('locale') === 'en' ? 'Sell' : (session('locale') === 'ar' ? 'بيع' : 'Sell') }}
-                                    </a>
-                                @endauth
-                            </li>
-                         {{-- sell --}}
-
 
                     @auth
                        <div class="me-auto">
@@ -335,9 +284,6 @@ if (Auth::check()) {
 
                         </select>
                     </li>
-
-
-    
 
                 </ul>
                 <div class="search-box">
@@ -640,20 +586,3 @@ $(document).ready(function() {
     }
 });
 </script>
-
-
-
-
-{{-- ثانياً: السكريبت الخاص بالتحقق --}}
-<script>
-    $(document).ready(function() {
-        $('.sell-link').click(function(e) {
-            @auth
-                window.location.href = "{{ url('/add-product') }}";
-            @else
-                e.preventDefault();
-                $('#LoginModal').modal('show');
-            @endauth
-        });
-    });
-    </script>
