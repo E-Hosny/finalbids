@@ -145,7 +145,7 @@
 <section class="trending-auction-section mb-5">
     <div class="container  ">
         <div class="section-heading px-4">
-            <h2>{{ session('locale') === 'en' ? 'Recommended Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Recommended Auctions') }}</h2>
+            <h2>{{ session('locale') === 'en' ? 'Upcoming Auctions' : (session('locale') === 'ar' ? 'المزادات الموصى بها' : 'Upcoming Auctions') }}</h2>
         </div>
         @foreach($auctionTypesWithProject as $at)
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 trending-auction-section-items">

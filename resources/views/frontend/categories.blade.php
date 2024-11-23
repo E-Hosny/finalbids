@@ -5,7 +5,7 @@
 
 <section class="categories py-5">
     <div class="container mx-auto">
-        <h1 class="fw-bold">{{ session('locale')=='en' ? 'Categories' : 'الفئات' }}</h1>
+        <h1 class="fw-bold">{{ session('locale')=='en' ? 'Departments' : 'الفئات' }}</h1>
         <div class="row py-4 gy-3">
             @foreach ($categories as $category )
 
