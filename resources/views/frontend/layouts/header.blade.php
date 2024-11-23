@@ -139,24 +139,24 @@ if (Auth::check()) {
         border-radius: 25px;
         transition: all 0.3s ease;
     }
-    
+
     .sell-link:hover {
         background-color: #0D3858;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    
+
     .sell-link i {
         margin-right: 5px;
         font-size: 18px;
     }
-    
+
     /* RTL Support */
     .rtl .sell-link i {
         margin-right: 0;
         margin-left: 5px;
     }
-    
+
     @media only screen and (max-width: 1000px) {
         .sell-link {
             margin: 10px 0;
@@ -337,12 +337,12 @@ if (Auth::check()) {
                     </li>
 
 
-    
+
 
                 </ul>
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder={{ session('locale') === 'en' ? 'Search...' : (session('locale') === 'ar' ? 'ابحث...' : 'Search...') }}>
-                    <button class="search-btn">
+                    <button class="search-btn  me-3">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
