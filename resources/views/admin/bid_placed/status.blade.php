@@ -3,8 +3,7 @@
         <button class="btn btn-sm btn-success" disabled>
             Approved
         </button>
-   
-        @else
+    @else
         <button class="btn btn-sm btn-success change-status" data-id="{{ $id }}" data-status="1">
             Approve
         </button>

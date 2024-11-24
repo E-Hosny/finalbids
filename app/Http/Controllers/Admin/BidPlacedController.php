@@ -35,6 +35,25 @@ class BidPlacedController extends Controller
     //     return response()->json(['message' => 'Status updated successfully']);
     // }
 
+    // public function updateStatus(Request $request)
+    // {
+    //     $bidPlacedId = $request->input('bid_request_id');
+    //     $status = $request->input('status');
+    
+    //     $bidPlaced = BidPlaced::find($bidPlacedId);
+    
+    //     if (!$bidPlaced) {
+    //         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
+    //     }
+    
+    //     $bidPlaced->status = $status;
+    //     $bidPlaced->save();
+    
+    //     $message = $status == 1 ? 'Bid request approved successfully.' : 'Bid request declined successfully.';
+    
+    //     return response()->json(['success' => true, 'message' => $message]);
+    // }
+    
     public function updateStatus(Request $request)
     {
         $bidPlacedId = $request->input('bid_request_id');
@@ -54,6 +73,7 @@ class BidPlacedController extends Controller
         return response()->json(['success' => true, 'message' => $message]);
     }
     
+
 
 }
 
