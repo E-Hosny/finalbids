@@ -35,25 +35,76 @@ class BidPlacedController extends Controller
     //     return response()->json(['message' => 'Status updated successfully']);
     // }
 
+    // public function updateStatus(Request $request)
+    // {
+    //     $bidPlacedId = $request->input('bid_request_id');
+    //     $status = $request->input('status');
+    
+    //     $bidPlaced = BidPlaced::find($bidPlacedId);
+    
+    //     if (!$bidPlaced) {
+    //         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
+    //     }
+    
+    //     $bidPlaced->status = $status;
+    //     $bidPlaced->save();
+    
+    //     $message = $status == 1 ? 'Bid request approved successfully.' : 'Bid request declined successfully.';
+    
+    //     return response()->json(['success' => true, 'message' => $message]);
+    // }
+    
+    // public function updateStatus(Request $request)
+    // {
+    //     $bidPlacedId = $request->input('bid_request_id');
+    //     $status = $request->input('status');
+    
+    //     $bidPlaced = BidPlaced::find($bidPlacedId);
+    
+    //     if (!$bidPlaced) {
+    //         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
+    //     }
+    
+    //     $bidPlaced->status = $status;
+    //     $bidPlaced->save();
+    
+    //     $message = $status == 1 ? 'Bid request approved successfully.' : 'Bid request Reject successfully.';
+    
+    //     return response()->json(['success' => true, 'message' => $message]);
+    // }
+    
     public function updateStatus(Request $request)
-    {
-        $bidPlacedId = $request->input('bid_request_id');
-        $status = $request->input('status');
-    
-        $bidPlaced = BidPlaced::find($bidPlacedId);
-    
-        if (!$bidPlaced) {
-            return response()->json(['success' => false, 'message' => 'Bid request not found.']);
-        }
-    
-        $bidPlaced->status = $status;
-        $bidPlaced->save();
-    
-        $message = $status == 1 ? 'Bid request approved successfully.' : 'Bid request declined successfully.';
-    
-        return response()->json(['success' => true, 'message' => $message]);
+{
+    $bidPlacedId = $request->input('bid_request_id');
+    $status = $request->input('status');
+
+    $bidPlaced = BidPlaced::find($bidPlacedId);
+
+    if (!$bidPlaced) {
+        return response()->json(['success' => false, 'message' => 'Bid request not found.']);
     }
-    
+
+    // التحقق من صحة قيمة الحالة
+    if (!in_array($status, [0, 1, 2])) {
+        return response()->json(['success' => false, 'message' => 'Invalid status value.']);
+    }
+
+    $bidPlaced->status = $status;
+    $bidPlaced->save();
+
+    // تعيين الرسالة بناءً على الحالة
+    if ($status == 1) {
+        $message = 'Bid request approved successfully.';
+    } elseif ($status == 2) {
+        $message = 'Bid request rejected successfully.';
+    } else {
+        $message = 'Bid request set to pending.';
+    }
+
+    return response()->json(['success' => true, 'message' => $message]);
+}
+
+
 
 }
 
