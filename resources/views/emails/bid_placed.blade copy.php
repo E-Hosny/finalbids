@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Bid Notification | Bidsa</title>
+    <title>تم وضع مزايدتك بنجاح | Bidsa</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+        /* استخدام الخط السعودي */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
         
         body {
-            font-family: 'Poppins', Arial, sans-serif;
+            font-family: 'Tajawal', Arial, sans-serif;
             line-height: 1.6;
             color: #333333;
             max-width: 600px;
@@ -76,11 +77,6 @@
             border-radius: 4px;
             margin: 20px 0;
             font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background-color: #2471a3;
         }
 
         .footer {
@@ -89,16 +85,6 @@
             padding-top: 20px;
             border-top: 1px solid #eee;
             color: #666;
-        }
-
-        .social-links a {
-            color: #2980b9;
-            text-decoration: none;
-            margin: 0 5px;
-        }
-
-        .social-links a:hover {
-            text-decoration: underline;
         }
 
         @media only screen and (max-width: 480px) {
@@ -116,38 +102,38 @@
     <div class="email-container">
         <div class="header">
             <img src="https://www.bid.sa/logo.png" alt="Bidsa Logo" class="logo">
-            <h1>Hello Auction Admin!</h1>
+            <h1>مرحباً ادارة مزادات!</h1>
         </div>
 
         <div class="main-content">
             <p>
-                A new bid has been placed on your website
+                تم تقديم سعر  جديد في موقعكم
             </p>
             
             <div class="bid-details">
-                <p><strong>Customer Name:</strong> {{ $first_name }}</p>
-                <p><strong>Product Name:</strong> {{ $product_name }}</p>
-                <p><strong>Bid Amount:</strong> <span class="bid-amount">SAR {{ $bid_amount }}</span></p>
-                <p><strong>Auction End Time:</strong> {{ $auction_end_time }}</p>
+                <p><strong>اسم العميل:</strong> {{ $first_name }}</p>
+                <p><strong>اسم المنتج:</strong> {{ $product_name }}</p>
+                <p><strong>قيمة المزايدة:</strong> <span class="bid-amount">{{ $bid_amount }} ريال سعودي</span></p>
+                <p><strong>تاريخ انتهاء المزاد:</strong> {{ $auction_end_time }}</p>
             </div>
 
-            <img src="{{ $product_image }}" alt="Product Image" class="product-image">
+            <img src="{{ $product_image }}" alt="صورة المنتج" class="product-image">
             
-            <p>To manage and monitor auction status, please visit the admin panel:</p>
+            <p>لإدارة مزايداتك ومتابعة حالة المزاد، يمكنك زيارة لوحة التحكم:</p>
             
-            <a href="https://www.bid.sa/admin/login" class="cta-button" target="_blank">
-                Access Admin Panel
+            <a href="https://www.bid.sa/admin/bid-placed" class="cta-button" target="_blank">
+                إدارة المزايدات
             </a>
 
-            <p>You will be notified of any updates regarding this bid.</p>
+            <p>سنقوم بإعلامك فور وجود أي تحديثات على مزايدتك.</p>
         </div>
 
         <div class="footer">
-            <p>Best Regards,<br>Team Bidsa</p>
-            <p>For Support: info@bid.sa</p>
-            <p class="social-links">Follow us on: 
-                <a href="https://twitter.com/bidsa" target="_blank">Twitter</a> | 
-                <a href="https://instagram.com/bidsa" target="_blank">Instagram</a>
+            <p>مع أطيب التحيات،<br>فريق Bidsa</p>
+            <p>للمساعدة والدعم: info@bid.sa</p>
+            <p>تابعنا على: 
+                <a href="https://twitter.com/bidsa" target="_blank">تويتر</a> | 
+                <a href="https://instagram.com/bidsa" target="_blank">انستغرام</a>
             </p>
         </div>
     </div>
