@@ -31,6 +31,11 @@ use App\Http\Controllers\Frontend\LangController;
 use App\Http\Controllers\Frontend\BiddingController;
 use App\Http\Controllers\Frontend\UserCategoryController;
 use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\BidPlacedMail;
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -227,5 +232,101 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/products/{id}/details', [FrontendProductController::class, 'productDetails'])->name('user.products.details');
 
 });
+
+
+// Route::get('/test-email', function () {
+//     Mail::raw('This is a test email sent using Mailtrap!', function ($message) {
+//         $message->to('elkhouly@gmail.com') // ضع هنا عنوان البريد الذي تريد اختبار الإرسال إليه
+//                 ->subject('Test Email');
+//     });
+
+//     return 'Test email has been sent!';
+// });
+
+// Route::get('/test-email', function () {
+//     $userEmail = 'testuser@example.com';
+//     $testDetails = [
+//         'first_name' => 'Test User',
+//         'product_name' => 'Test Product',
+//         'product_image' => 'https://via.placeholder.com/150',
+//         'bid_amount' => '1000',
+//         'auction_end_time' => now()->addDays(2)->toDateTimeString(),
+//     ];
+
+//     Mail::to($userEmail)->send(new \App\Mail\BidPlacedMail(
+//         $testDetails['first_name'],
+//         $testDetails['product_name'],
+//         $testDetails['product_image'],
+//         $testDetails['bid_amount'],
+//         $testDetails['auction_end_time']
+//     ));
+
+//     return 'Test email sent!';
+// });
+
+// Route::get('/test-email', function () {
+//     $userEmail = 'your_email@example.com';
+//     $adminEmail = 'elkhouly@gmail.com';
+
+//     try {
+//         // إرسال الإيميل إلى المسؤول
+//         Mail::to($adminEmail)->send(new \App\Mail\BidPlacedMail(
+//             'Admin User', // اسم المسؤول
+//             'Admin Product', // اسم المنتج
+//             'https://via.placeholder.com/150', // صورة المنتج
+//             '5000', // المبلغ
+//             now()->addDays(2)->toDateTimeString() // تاريخ انتهاء المزاد
+//         ));
+//         Log::info('Admin email sent successfully.');
+
+//         // إرسال الإيميل إلى المستخدم
+//         Mail::to($userEmail)->send(new \App\Mail\BidPlacedMail(
+//             'Test User', // اسم المستخدم
+//             'Test Product', // اسم المنتج
+//             'https://via.placeholder.com/150', // صورة المنتج
+//             '1000', // المبلغ
+//             now()->addDays(2)->toDateTimeString() // تاريخ انتهاء المزاد
+//         ));
+//         Log::info('User email sent successfully.');
+//     } catch (\Exception $e) {
+//         Log::error('Email sending failed: ' . $e->getMessage());
+//     }
+
+//     return 'Test email sent!';
+// });
+
+// Route::get('/test-email', function () {
+//     try {
+//         // بيانات وهمية للاختبار
+//         $firstName = 'Test User';
+//         $productName = 'Test Product';
+//         $productImage = 'https://via.placeholder.com/150'; // صورة افتراضية
+//         $bidAmount = '1000';
+//         $auctionEndTime = now()->addDays(2)->toDateTimeString();
+
+//         // بريد المستلم
+//         $userEmail = 'elkhouly@gmail.com'; // استبدل هذا ببريدك الإلكتروني
+
+//         // إرسال البريد
+//         Mail::to($userEmail)->send(new BidPlacedMail(
+//             $firstName,
+//             $productName,
+//             $productImage,
+//             $bidAmount,
+//             $auctionEndTime
+//         ));
+
+//         // تسجيل رسالة النجاح
+//         Log::info('Test email sent successfully to: ' . $userEmail);
+
+//         return 'Test email has been sent!';
+//     } catch (\Exception $e) {
+//         // تسجيل رسالة الخطأ
+//         Log::error('Failed to send test email: ' . $e->getMessage());
+//         return 'Failed to send test email. Check the logs for more details.';
+//     }
+// });
+
+
 
 require __DIR__.'/auth.php';

@@ -469,7 +469,7 @@ class BiddingController extends Controller
     
             TempAddress::updateOrCreate(['bid_placed_id' => $bidPlacedId], $addressData);
     
-            $adminEmail = 'ebrahimhosny511@gmail.com';
+            $adminEmail = 'elkhouly@gmail.com';
             $product = Product::find($validatedData['product_id']);
             $project = Project::find($validatedData['project_id']);
     
@@ -488,14 +488,14 @@ class BiddingController extends Controller
                 $project->end_date_time
             ));
     
-            // // إرسال البريد للمستخدم
-            // Mail::to($user->email)->send(new BidPlacedMail(
-            //     $user->first_name,
-            //     $product->title,
-            //     $productImage ?? 'No Image',
-            //     $bidPlaced->bid_amount,
-            //     $project->end_date_time
-            // ));
+            // إرسال البريد للمستخدم
+            Mail::to($user->email)->send(new BidPlacedMail(
+                $user->first_name,
+                $product->title,
+                $productImage ?? 'No Image',
+                $bidPlaced->bid_amount,
+                $project->end_date_time
+            ));
     
             Log::info('Emails sent successfully', [
                 'Admin Email' => $adminEmail,

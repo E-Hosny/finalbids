@@ -9,6 +9,12 @@ class BidPlaced extends Model
 {
     use HasFactory;
 
+    // تعريف الثابت للحالة Pending
+    const STATUS_PENDING = 0;
+    const STATUS_APPROVED = 1;
+    const STATUS_REJECTED = 2;
+
+
     protected $table = 'bid_placed'; // اسم الجدول في قاعدة البيانات
     // protected $fillable = [
     //     'user_id',
