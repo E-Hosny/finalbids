@@ -234,14 +234,19 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Route::get('/test-email', function () {
-//     Mail::raw('This is a test email sent using Mailtrap!', function ($message) {
-//         $message->to('elkhouly@gmail.com') // ضع هنا عنوان البريد الذي تريد اختبار الإرسال إليه
-//                 ->subject('Test Email');
-//     });
+Route::get('/test-email', function () {
+    try {
+        Mail::raw('This is a test email sent to Gmail!', function ($message) {
+            $message->to('almurbacom@gmail.com') // ضع بريد المستقبل هنا
+                    ->subject('Test Email to Gmail');
+        });
 
-//     return 'Test email has been sent!';
-// });
+        return 'Test email sent to Gmail!';
+    } catch (\Exception $e) {
+        Log::error('Failed to send email: ' . $e->getMessage());
+        return response('Failed to send email.', 500);
+    }
+});
 
 // Route::get('/test-email', function () {
 //     $userEmail = 'testuser@example.com';
