@@ -87,6 +87,7 @@ Route::get('/category/{categories_slug}', [HomepageController::class,'projectByC
 
 Route::get('/categories/index', [UserCategoryController::class,'index'])->name('categories.index');
 
+Route::get('/live-search', [HomepageController::class, 'liveSearch'])->name('live.search');
 
 
 Route::get('/productsdetail/{slug}', [HomepageController::class,'productsdetail'])->name('productsdetail');
@@ -234,19 +235,19 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/test-email', function () {
-    try {
-        Mail::raw('This is a test email sent to Gmail!', function ($message) {
-            $message->to('almurbacom@gmail.com') // ضع بريد المستقبل هنا
-                    ->subject('Test Email to Gmail');
-        });
+// Route::get('/test-email', function () {
+//     try {
+//         Mail::raw('This is a test email sent to Gmail!', function ($message) {
+//             $message->to('almurbacom@gmail.com') // ضع بريد المستقبل هنا
+//                     ->subject('Test Email to Gmail');
+//         });
 
-        return 'Test email sent to Gmail!';
-    } catch (\Exception $e) {
-        Log::error('Failed to send email: ' . $e->getMessage());
-        return response('Failed to send email.', 500);
-    }
-});
+//         return 'Test email sent to Gmail!';
+//     } catch (\Exception $e) {
+//         Log::error('Failed to send email: ' . $e->getMessage());
+//         return response('Failed to send email.', 500);
+//     }
+// });
 
 // Route::get('/test-email', function () {
 //     $userEmail = 'testuser@example.com';

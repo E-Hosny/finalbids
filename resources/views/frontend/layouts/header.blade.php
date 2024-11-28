@@ -340,12 +340,217 @@ if (Auth::check()) {
     
 
                 </ul>
-                <div class="search-box">
+                {{-- <div class="search-box">
                     <input type="text" class="search-input" placeholder={{ session('locale') === 'en' ? 'Search...' : (session('locale') === 'ar' ? 'ابحث...' : 'Search...') }}>
                     <button class="search-btn">
                         <i class="fa fa-search"></i>
                     </button>
+                </div> --}}
+
+                <div class="search-box position-relative">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="searchInput"
+                        placeholder="{{ session('locale') === 'ar' ? 'ابحث عن المنتجات...' : 'Search products...' }}"
+                        autocomplete="off"
+                    >
+                    <button class="search-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    
+                    <!-- قائمة نتائج البحث -->
+                    <div id="searchResults" class="search-results-dropdown" style="display: none;">
+                        <div class="search-loading" style="display: none;">
+                            {{ session('locale') === 'ar' ? 'جاري البحث...' : 'Searching...' }}
+                        </div>
+                        <div class="search-results-content"></div>
+                    </div>
                 </div>
+                
+                <style>
+                    .search-box {
+                        position: relative;
+                        width: 100%;
+                        max-width: 500px;
+                    }
+                    
+                    .search-input {
+                        width: 100%;
+                        padding: 10px 40px 10px 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 5px;
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .search-input:focus {
+                        border-color: #0D3858;
+                        box-shadow: 0 0 0 2px rgba(13, 56, 88, 0.1);
+                        outline: none;
+                    }
+                    
+                    .search-btn {
+                        position: absolute;
+                        right: 10px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: none;
+                        border: none;
+                        color: #666;
+                        cursor: pointer;
+                    }
+                    
+                    .rtl .search-btn {
+                        right: auto;
+                        left: 10px;
+                    }
+                    
+                    .search-results-dropdown {
+                        position: absolute;
+                        top: calc(100% + 5px);
+                        left: 0;
+                        right: 0;
+                        background: white;
+                        border: 1px solid #ddd;
+                        border-radius: 5px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        z-index: 1000;
+                        max-height: 400px;
+                        overflow-y: auto;
+                    }
+                    
+                    .search-result-item {
+                        padding: 12px 15px;
+                        border-bottom: 1px solid #eee;
+                        transition: all 0.2s ease;
+                    }
+                    
+                    .search-result-item:hover {
+                        background: #f8f9fa;
+                    }
+                    
+                    .search-result-item:last-child {
+                        border-bottom: none;
+                    }
+                    
+                    .search-result-title {
+                        font-weight: 500;
+                        color: #333;
+                        margin-bottom: 4px;
+                    }
+                    
+                    .search-result-project {
+                        font-size: 13px;
+                        color: #666;
+                    }
+                    
+                    .search-result-price {
+                        color: #0D3858;
+                        font-weight: 500;
+                        margin-top: 4px;
+                    }
+                    
+                    .search-loading {
+                        padding: 15px;
+                        text-align: center;
+                        color: #666;
+                    }
+                    
+                    .no-results {
+                        padding: 20px;
+                        text-align: center;
+                        color: #666;
+                    }
+                    </style>
+                
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const searchInput = document.getElementById('searchInput');
+                    const searchResults = document.getElementById('searchResults');
+                    const searchLoading = document.querySelector('.search-loading');
+                    const searchContent = document.querySelector('.search-results-content');
+                    let searchTimeout;
+                    const isRTL = document.dir === 'rtl';
+                    const currency = "{{ session()->get('currency', 'SAR') }}";
+                
+                    function formatPrice(price) {
+                        return new Intl.NumberFormat('{{ session()->get('locale', 'en') }}', {
+                            style: 'currency',
+                            currency: currency
+                        }).format(price);
+                    }
+                
+                    searchInput.addEventListener('input', function() {
+                        const query = this.value.trim();
+                        
+                        if (query.length < 2) {
+                            searchResults.style.display = 'none';
+                            return;
+                        }
+                
+                        searchResults.style.display = 'block';
+                        searchLoading.style.display = 'block';
+                        searchContent.innerHTML = '';
+                
+                        clearTimeout(searchTimeout);
+                        searchTimeout = setTimeout(() => {
+                            fetch(`/live-search?query=${encodeURIComponent(query)}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    searchLoading.style.display = 'none';
+                                    
+                                    if (data.results && data.results.length) {
+                                        const resultsHtml = data.results.map(product => `
+                                            <a href="${product.url}" class="search-result-item d-block text-decoration-none">
+                                                <div class="search-result-title">${product.title}</div>
+                                                <div class="search-result-project">
+                                                    ${isRTL ? 'المشروع:' : 'Project:'} ${product.project_name}
+                                                </div>
+                                                <div class="search-result-price">
+                                                    ${formatPrice(product.reserved_price)}
+                                                </div>
+                                            </a>
+                                        `).join('');
+                                        
+                                        searchContent.innerHTML = resultsHtml;
+                                    } else {
+                                        searchContent.innerHTML = `
+                                            <div class="no-results">
+                                                ${isRTL ? 'لا توجد نتائج' : 'No results found'}
+                                            </div>
+                                        `;
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Search error:', error);
+                                    searchLoading.style.display = 'none';
+                                    searchContent.innerHTML = `
+                                        <div class="no-results text-danger">
+                                            ${isRTL ? 'حدث خطأ في البحث' : 'Search error occurred'}
+                                        </div>
+                                    `;
+                                });
+                        }, 300);
+                    });
+                
+                    // إغلاق نتائج البحث عند النقر خارجها
+                    document.addEventListener('click', function(event) {
+                        if (!searchResults.contains(event.target) && event.target !== searchInput) {
+                            searchResults.style.display = 'none';
+                        }
+                    });
+                
+                    // حدث الضغط على Enter
+                    searchInput.addEventListener('keypress', function(event) {
+                        if (event.key === 'Enter') {
+                            const firstResult = searchResults.querySelector('.search-result-item');
+                            if (firstResult) {
+                                window.location.href = firstResult.href;
+                            }
+                        }
+                    });
+                });
+                </script>
 
 
 

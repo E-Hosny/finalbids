@@ -73,7 +73,9 @@
         <div class="modal-content">
 
             <div class="modal-body">
-                <input type="hidden" id="otp-email" name="otp-email">
+                {{-- <input type="hidden" id="otp-email" name="otp-email"> --}}
+                <!-- إضافة حقل البريد الإلكتروني المخفي -->
+                <input type="hidden" id="otp-email" name="email">
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="login-mdl text-center">
@@ -317,7 +319,7 @@
 
 
 </script>
-
+{{-- 
 <script>
     $(document).ready(function() {
         $('#resend-code').click(function(event) {
@@ -350,51 +352,140 @@
             });
         }
     });
-</script>
+</script> --}}
+{{-- <script>
+   $(document).ready(function() {
+    $('#resend-code').click(function(event) {
+        event.preventDefault();
+        resendCode();
+    });
+
+    function resendCode() {
+        let phone = $('#phone').val(); // تأكد أن الحقل يحتوي على رقم الهاتف
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('resend_otp') }}",
+            data: { phone: phone },
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert("Verification code has been resent successfully via SMS.");
+                } else {
+                    alert(response.message || "Failed to resend verification code.");
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = xhr.responseJSON?.message || "An error occurred while resending OTP.";
+                alert(errorMessage);
+            }
+        });
+    }
+});
+</script> --}}
 <script>
+    $(document).ready(function() {
+    $('#resend-code').click(function(event) {
+        event.preventDefault();
+        resendCode();
+    });
+
+    function resendCode() {
+        let phone = $('#phone').val(); // الحصول على رقم الهاتف من النموذج
+        
+        // التحقق من وجود رقم الهاتف
+        if (!phone) {
+            alert("Phone number is required");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('resend_otp') }}",
+            data: { 
+                phone: phone,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert(response.message || "Verification code has been resent successfully.");
+                } else {
+                    alert(response.message || "Failed to resend verification code.");
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = xhr.responseJSON?.message || "An error occurred while resending OTP.";
+                alert(errorMessage);
+            }
+        });
+    }
+});
+</script>
+{{-- <script>
     $(document).ready(function() {
         $('body').on('click','.btn-verify-otp', function(){
             verifyOTP();
         });
 
         function verifyOTP() {
-            const otpValue = $('#first').val() + $('#second').val() + $('#third').val() + $('#fourth').val();
+    // تجميع قيم OTP من الحقول الأربعة
+    const otpValue = (
+        $('#first').val() +
+        $('#second').val() +
+        $('#third').val() +
+        $('#fourth').val()
+    ).trim();
+    
+    const email = $('#otp-email').val().trim();
 
-            let email = $('#otp-email').val();
-            console.log(email);
-            $.ajax({
-                type: "POST",
-                url: "{{ route('verify-otp') }}",
-                data: { otpValue: otpValue, email: email },
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    if (response.status === 'error') {
-                        alert("Invalid OTP. Please try again.");
-                    } else if (response.status === 'success') {
+    // التحقق من اكتمال OTP
+    if (otpValue.length !== 4) {
+        alert("Please enter complete 4-digit OTP");
+        return;
+    }
 
+    console.log('Sending verification request:', {
+        otpValue: otpValue,
+        email: email
+    });
 
-                        setTimeout(function() {
-                            Swal.fire({
-                                title: "{{__('Congratulations!')}}",
-                                text: "{{__('User Created Successfully.')}}",
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(function() {
-                                window.location.href = "{{ route('homepage') }}";
-                            });
-                        }, 500);
-
-                        // $("#otpModalToggle").modal("hide");
-
-                    }
-                },
-                error: function() {
-                    alert("An error occurred while verifying OTP.");
-                }
+    $.ajax({
+        type: "POST",
+        url: "{{ route('verify-otp') }}",
+        data: { 
+            otpValue: otpValue, 
+            email: email,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(response) {
+            console.log('Server response:', response);
+            
+            if (response.status === 'success') {
+                Swal.fire({
+                    title: "{{__('Congratulations!')}}",
+                    text: "{{__('User Created Successfully.')}}",
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(function() {
+                    window.location.href = "{{ route('homepage') }}";
+                });
+            } else {
+                console.error('Verification failed:', response);
+                alert(response.message || "Invalid OTP. Please try again.");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Ajax error:', {
+                status: status,
+                error: error,
+                response: xhr.responseText
             });
+            alert("An error occurred while verifying OTP.");
         }
+    });
+
     });
 
     function moveToNextInput(currentInput, nextInputId) {
@@ -430,4 +521,132 @@
     $('.otpValue').on('keydown', function(event) {
         moveToPreviousInput(this, $(this).data('prev'));
     });
-</script>
+</script> --}}
+
+
+<script>
+    $(document).ready(function() {
+        let isVerifying = false;
+    
+        $('body').on('click', '.btn-verify-otp', function(e) {
+            e.preventDefault();
+            if (!isVerifying) {
+                verifyOTP();
+            }
+        });
+    
+        function verifyOTP() {
+            // تجميع قيم OTP
+            const otpValue = (
+                $('#first').val() +
+                $('#second').val() +
+                $('#third').val() +
+                $('#fourth').val()
+            ).trim();
+            
+            // التأكد من وجود القيمة في حقل البريد الإلكتروني
+            const email = $('#otp-email').val();
+            
+            console.log('Email value:', email); // للتحقق من قيمة البريد الإلكتروني
+    
+            // التحقق من صحة البريد الإلكتروني
+            if (!email || email === 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Email address is missing or invalid'
+                });
+                return;
+            }
+    
+            // التحقق من OTP
+            if (otpValue.length !== 4) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please enter a complete 4-digit OTP'
+                });
+                return;
+            }
+    
+            // طباعة البيانات للتحقق
+            console.log('Sending verification data:', {
+                email: email,
+                otpValue: otpValue
+            });
+    
+            isVerifying = true;
+    
+            // إرسال طلب التحقق
+            $.ajax({
+                type: "POST",
+                url: "{{ route('verify-otp') }}",
+                data: {
+                    email: email,
+                    otpValue: otpValue,
+                    _token: "{{ csrf_token() }}"
+                },
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Verifying...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
+                success: function(response) {
+                    isVerifying = false;
+                    Swal.close();
+    
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            title: "{{__('Congratulations!')}}",
+                            text: "{{__('User Created Successfully.')}}",
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "{{ route('homepage') }}";
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Verification Failed',
+                            text: response.message || 'Invalid OTP'
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    isVerifying = false;
+                    Swal.close();
+                    console.error('Verification error:', xhr);
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: xhr.responseJSON?.message || 'An error occurred during verification'
+                    });
+                }
+            });
+        }
+    
+        // تحديث قيمة البريد الإلكتروني عند فتح النافذة
+        $('#otpModalToggle').on('show.bs.modal', function(e) {
+            const email = sessionStorage.getItem('userEmail');
+            if (email) {
+                $('#otp-email').val(email);
+            }
+        });
+    
+        // حفظ البريد الإلكتروني في sessionStorage عند التسجيل
+        $('form.cmn-frm').on('submit', function() {
+            const email = $(this).find('input[name="email"]').val();
+            if (email) {
+                sessionStorage.setItem('userEmail', email);
+            }
+        });
+    });
+    </script>

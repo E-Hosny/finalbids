@@ -44,61 +44,6 @@ class HomepageController extends Controller
 {
 
 
-    public function liveSearch(Request $request)
-    {
-        try {
-            $query = $request->get('query');
-            \Log::info('Search query:', ['query' => $query]);
-            
-            $results = [];
-            
-            if ($query && strlen($query) >= 2) {
-                // البحث في المنتجات
-                $products = Product::where(function($q) use ($query) {
-                    $q->where('title', 'like', "%{$query}%")
-                      ->orWhere('title_ar', 'like', "%{$query}%");
-                })
-                ->where('is_published', 1)
-                ->with('project')
-                ->take(10)
-                ->get();
-    
-                foreach ($products as $product) {
-                    if ($product->project) {
-                        $results[] = [
-                            'id' => $product->id,
-                            'title' => session('locale') === 'ar' ? 
-                                ($product->title_ar ?: $product->title) : 
-                                ($product->title ?: $product->title_ar),
-                            // تغيير المسار ليتطابق مع دالة عرض تفاصيل المنتج
-                            'url' => url('productsdetail/'.$product->slug),
-                            'price' => $product->reserved_price,
-                            'project_name' => session('locale') === 'ar' ? 
-                                $product->project->name_ar : 
-                                $product->project->name
-                        ];
-                    }
-                }
-            }
-            
-            return response()->json([
-                'status' => 'success',
-                'results' => $results
-            ]);
-            
-        } catch (\Exception $e) {
-            \Log::error('Search error:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while searching'
-            ], 500);
-        }
-    }
-
     public function markAsRead($notificationId)
     {
         $notification = Appnotification::find($notificationId);
@@ -130,10 +75,113 @@ class HomepageController extends Controller
             // Request from web
             return redirect()->route('auction')->with('success', 'Payment Successfully Initiated.');
         }
-   
+    //   echo('payment Successfully');
+    //    return redirect()->route('auction')->with('success', 'Payment Successfully Initiated.');
+
 
     }
+    // public function homepage(Request $request)
+    // {
 
+    //     $langId = session('locale');
+    //     if (!$langId) {
+    //         $langId = 'en';
+    //         $request->session()->put('locale', $langId);
+    //     }
+    //     $currency = session()->get('currency');
+    //     $currentDateTime = now();
+    //     // echo $currentDateTime;
+    //     $auctionTypesWithProject = AuctionType::where('status', 1)
+    //                 ->whereHas('projects', function ($query) use ($langId, $currentDateTime) {
+    //                     $query->where('status', 1)
+    //                         ->where('is_trending', 1)
+    //                         ->whereHas('products')
+    //                         ->orderBy('start_date_time', 'ASC')
+    //                         ->where('end_date_time', '>=', $currentDateTime);
+    //                 })
+    //                 ->with([
+    //                     'projects' => function ($query) use ($langId, $currentDateTime) {
+    //                         $query->where('status', 1)
+    //                             ->where('is_trending', 1)
+    //                             ->has('products')
+    //                             ->orderBy('start_date_time', 'ASC')
+    //                             ->where('end_date_time', '>=', $currentDateTime);
+    //                     }
+    //                 ])
+    //                 ->has('projects')
+    //                 ->get();
+
+    //             // $auctionTypesWithProject->transform(function ($auctionType)  {
+    //             //     $auctionType->projects = $auctionType->projects->filter(function ($project) {
+    //             //         return $project->products->isNotEmpty();
+    //             //     })->take(4);
+    //             $auctionTypesWithProject->transform(function ($auctionType)  {
+    //                 $auctionType->projects = $auctionType->projects->filter(function ($project) {
+    //                     return $project->products->isNotEmpty();
+    //                 });
+
+    //                 return $auctionType;
+    //             });
+
+    //     // p($auctionTypesWithProject);
+
+    //     $banners = Banner::where('status', 1)->take(4)->get();
+    //     // $productauction = AuctionType::with(['products' => function ($query) use ($langId) {
+    //     //                 $query->where('status', 1)
+    //     //                     ->where('is_popular', 1);
+    //     //                 }])->where('status', 1)->get();
+    //     $productauction = AuctionType::with(['products' => function ($query) use ($currentDateTime, $langId) {
+    //                                     $query->where('status', 1)
+    //                                         ->where('is_popular', 1)
+    //                                         ->whereHas('project', function ($subquery) use ($currentDateTime) {
+    //                                             $subquery->where('end_date_time', '>=', $currentDateTime);
+    //                                         });
+    //                                 }])->where('status', 1)->get();
+
+    //     $mostRecentBids = BidPlaced::select('product_id', DB::raw('MAX(bid_amount) as max_bid_amount'), DB::raw('COUNT(DISTINCT user_id) as bid_count'))
+    //                                 ->where('sold', 1)
+    //                                 ->where('status', '!=', 0)
+    //                                 ->groupBy('product_id')
+    //                                 ->orderBy('max_bid_amount', 'desc')
+    //                                 ->with('product', 'auctionType')
+    //                                 ->get();
+
+    //     $homeProducts=Product::where('is_published','1')->get();
+
+
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+
+    //     return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'productauction', 'wishlist','mostRecentBids','currency','homeProducts'));
+    // }
+    // public function homepage(Request $request)
+    // {
+    //     $currentDateTime = now();
+    //     $currency = session()->get('currency', 'USD'); // استرجاع العملة من الجلسة أو تعيين قيمة افتراضية
+    
+    //     $auctionTypesWithProject = AuctionType::where('status', 1)
+    //         ->whereHas('projects', function ($query) use ($currentDateTime) {
+    //             $query->where('status', 1)
+    //                 ->where('end_date_time', '>=', $currentDateTime);
+    //         })
+    //         ->with([
+    //             'projects' => function ($query) use ($currentDateTime) {
+    //                 $query->where('status', 1)
+    //                     ->where('end_date_time', '>=', $currentDateTime);
+    //             }
+    //         ])
+    //         ->get();
+    
+    //     $banners = Banner::where('status', 1)->take(4)->get();
+    //     $homeProducts = Product::where('is_published', 1)
+    //         ->whereIn('status', ['open', 'closed'])
+    //         ->get();
+    
+    //     return view('frontend.homepage', compact('auctionTypesWithProject', 'banners', 'homeProducts', 'currency'));
+    // }
     
     public function homepage(Request $request)
     {
@@ -244,7 +292,22 @@ class HomepageController extends Controller
         return view('frontend.projects.index', ['projects' => $projects],['currency'=>$currency]);
     }
 
+    // public function pastauction(Request $request){
+    //     $langId = session('locale');
+    //     if (!$langId) {
+    //         $langId = 'en';
+    //         $request->session()->put('locale', $langId);
+    //     }
+    //     $currency = session()->get('currency');
+    //     $currentDateTime = now();
+    //     $projects = Project::where('end_date_time', '<=', $currentDateTime)
+    //                     ->orderBy('start_date_time', 'ASC')
+    //                     ->with('products') // Eager load products relationship
+    //                     ->get();
 
+
+    //             return view('frontend.pastauctionlist',compact('projects','currency'));
+    //         }
     public function pastauction(Request $request) {
         $langId = session('locale');
         if (!$langId) {
@@ -271,6 +334,94 @@ class HomepageController extends Controller
         return view('frontend.pastauctionlist', compact('projects', 'currency'));
     }
 
+    // public function productsByProject($slug, Request $request)
+    // {
+    //     $langId = session('locale');
+    //     $currency = session()->get('currency');
+    //     $projects = Project::where('slug', $slug)->first();
+    //     $productsQuery = Product::where('project_id', $projects->id);
+    //     // p($mostRecentBids);
+    //     if ($request->has('search') && !empty($request->search)) {
+    //         $searchTerm = $request->search;
+    //         $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+    //     }
+
+    //     if ($request->has('sort')) {
+    //         $sortOrder = $request->sort;
+
+    //         if ($sortOrder === 'price_high_low') {
+    //             $productsQuery->orderBy('reserved_price', 'desc');
+    //         } elseif ($sortOrder === 'price_low_high') {
+    //             $productsQuery->orderBy('reserved_price', 'asc');
+    //         }
+    //     } else {
+
+    //         $productsQuery->orderBy('reserved_price', 'asc');
+    //     }
+
+    //     $products = $productsQuery->paginate(10);
+
+    //     $totalItems = $products->total();
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+    //     $userBidRequests = [];
+    //     if (Auth::check()) {
+    //         $userBidRequests = BidRequest::where('user_id', Auth::id())
+    //             ->pluck('status', 'project_id')
+    //             ->toArray();
+    //     }
+
+    //     return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
+    // }
+//
+// public function productsByProject($slug, Request $request)
+// {
+//     $langId = session('locale');
+//     $currency = session()->get('currency');
+
+//     $projects = Project::where('slug', $slug)->first();
+
+//     $productsQuery = Product::where('project_id', $projects->id)
+//                             ->whereIn('status', ['open', 'closed']); // تصفية المنتجات
+
+//     if ($request->has('search') && !empty($request->search)) {
+//         $searchTerm = $request->search;
+//         $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+//     }
+
+//     if ($request->has('sort')) {
+//         $sortOrder = $request->sort;
+//         if ($sortOrder === 'price_high_low') {
+//             $productsQuery->orderBy('reserved_price', 'desc');
+//         } elseif ($sortOrder === 'price_low_high') {
+//             $productsQuery->orderBy('reserved_price', 'asc');
+//         }
+//     } else {
+//         $productsQuery->orderBy('reserved_price', 'asc');
+//     }
+
+//     $products = $productsQuery->paginate(10);
+
+//     $wishlist = [];
+//     if (Auth::check()) {
+//         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+//     }
+
+//     return view('frontend.products.index', [
+//         'products' => $products,
+//         'projects' => $projects,
+//         'wishlist' => $wishlist,
+//         'currency' => $currency,
+//     ]);
+// }
 public function productsByProject($slug, Request $request)
 {
     $langId = session('locale');
@@ -322,6 +473,14 @@ public function productsByProject($slug, Request $request)
         $bidRequest = BidRequest::where('project_id', $product->project_id)
                     ->where('status', 1)
                     ->first();
+        // $bidValues = Bidvalue::where('status', 1)
+        //             ->where('cal_amount', '>', $product->reserved_price)
+        //             ->orderBy('cal_amount')
+        //             ->get();
+
+        // $closestBid = $bidValues->sortBy(function ($bid) use ($product) {
+        //     return abs($bid->cal_amount <= $product->reserved_price);
+        //   })->first();
 
         $bidValues = Bidvalue::where('status', 1)
                 ->where('cal_amount', '>', $product->reserved_price)
@@ -333,6 +492,7 @@ public function productsByProject($slug, Request $request)
                 ->first();
 
             $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
+            // return  $lastBid->bid_amount ;
 
             $filteredBidValues = $bidValues->filter(function ($bid) use ($lastBidAmount) {
                 return $bid->cal_amount > $lastBidAmount;
@@ -401,7 +561,20 @@ public function productsByProject($slug, Request $request)
 
     public function projectByCategory($slug)
     {
+    // p($slug);
+    //     $projects = Project::with('products')
+    //         ->where('auction_type_id', $auctionType->id)
+    //         ->where('lang_id', $langId);
 
+    //     if ($request->has('search') && !empty($request->search)) {
+    //         $searchTerm = $request->search;
+    //         $projects->where(function ($query) use ($searchTerm) {
+    //             $query->where('name', 'like', '%' . $searchTerm . '%');
+    //         });
+    //     }
+
+    // $projects->whereHas('products', function ($query) {
+    // });
         $currentDateTime = now();
         $langId = session('locale');
         $currency = session()->get('currency');
@@ -547,255 +720,81 @@ public function productsByProject($slug, Request $request)
         ], 401);
     }
 
-    // public function registerTemp(Request $request)
-    // {
-    //     try {
-    //         $rules = [
-    //             'full_name' => 'required|string',
-    //             'email' => 'required|string|email|max:255|unique:users|unique:temp_users',
-    //             'phone' => 'required|numeric|digits:10',
-    //             'password' => 'required|string|min:6',
-    //             'is_term' => 'required|boolean',
-    //         ];
-
-
-    //         $messages = [
-    //             'full_name.required' => __('The full name field is required.'),
-    //             'email.required' => __('We need your email address to register.'),
-    //             'email.email' => __('Please provide a valid email address.'),
-    //             'email.unique' => __('This email address is already registered.'),
-    //             'phone.required' => __('Please provide your phone number.'),
-    //             'phone.digits' => __('The phone number must be exactly 10 digits.'),
-    //             'password.required' => __('A password is required to create your account.'),
-    //             'password.min' => __('Your password must be at least 6 characters long.'),
-    //             'is_term.required' => __('You must agree to the terms and conditions.'),
-    //         ];
-
-    //         $validator = Validator::make($request->all(), $rules,$messages);
-
-    //         if ($validator->fails()) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'errors' => $validator->errors(),
-    //             ], 422);
-    //         }
-
-
-    //         DB::beginTransaction();
-
-    //         $full_name = $request->input('full_name');
-    //         $user = new TempUsers([
-    //             'first_name' => $full_name,
-    //             'email' => $request->input('email'),
-    //             'phone' => $request->input('phone'),
-    //             'password' => bcrypt($request->input('password')),
-    //             'is_term' => $request->input('is_term'),
-
-    //             'status' => 0,
-    //         ]);
-    //         $user->save();
-
-    //         DB::commit();
-
-
-
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'redirect' => route('homepage'),
-    //             'email' => $user->email,
-    //             'message' => __('Registration successful. Verification email sent!'),
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         Log::error('Registration error: ' . $e->getMessage());
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => __('An error occurred during registration.'),
-    //             'error' => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-
- /**
-     * تسجيل عضوية جديدة (مؤقتة) وإرسال OTP.
-     */
-    // public function registerTemp(Request $request)
-    // {
-    //     try {
-    //         $rules = [
-    //             'full_name' => 'required|string',
-    //             'email' => 'required|string|email|max:255|unique:users|unique:temp_users',
-    //             'phone' => 'required|numeric|digits:10',
-    //             'password' => 'required|string|min:6',
-    //             'is_term' => 'required|boolean',
-    //         ];
-
-    //         $messages = [
-    //             'full_name.required' => __('The full name field is required.'),
-    //             'email.required' => __('We need your email address to register.'),
-    //             'email.email' => __('Please provide a valid email address.'),
-    //             'email.unique' => __('This email address is already registered.'),
-    //             'phone.required' => __('Please provide your phone number.'),
-    //             'phone.digits' => __('The phone number must be exactly 10 digits.'),
-    //             'password.required' => __('A password is required to create your account.'),
-    //             'password.min' => __('Your password must be at least 6 characters long.'),
-    //             'is_term.required' => __('You must agree to the terms and conditions.'),
-    //         ];
-
-    //         $validator = Validator::make($request->all(), $rules, $messages);
-
-    //         if ($validator->fails()) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'errors' => $validator->errors(),
-    //             ], 422);
-    //         }
-
-    //         $otp = rand(1000, 9999); // OTP عشوائي
-
-    //         DB::beginTransaction();
-
-    //         $full_name = $request->input('full_name');
-    //         $user = new TempUsers([
-    //             'first_name' => $full_name,
-    //             'email' => $request->input('email'),
-    //             'phone' => $request->input('phone'),
-    //             'password' => bcrypt($request->input('password')),
-    //             'is_term' => $request->input('is_term'),
-    //             'status' => 0,
-    //             'otp' => $otp,
-    //         ]);
-    //         $user->save();
-
-    //         // إرسال OTP عبر SMS
-    //         $this->sendOtpViaTaqnyat($user->phone, $otp);
-
-    //         // إرسال بريد إلكتروني ترحيبي
-    //         Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
-
-    //         DB::commit();
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'redirect' => route('homepage'),
-    //             'email' => $user->email,
-    //             'message' => __('Registration successful. Verification email and SMS sent!'),
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         Log::error('Registration error: ' . $e->getMessage());
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => __('An error occurred during registration.'),
-    //             'error' => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-
     public function registerTemp(Request $request)
-{
-    try {
-        $rules = [
-            'full_name' => 'required|string',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|numeric|digits:10',
-            'password' => 'required|string|min:6',
-            'is_term' => 'required|boolean',
-        ];
+    {
+        try {
+            $rules = [
+                'full_name' => 'required|string',
+                'email' => 'required|string|email|max:255|unique:users|unique:temp_users',
+                'phone' => 'required|numeric|digits:10',
+                'password' => 'required|string|min:6',
+                'is_term' => 'required|boolean',
+            ];
 
-        $messages = [
-            'full_name.required' => __('The full name field is required.'),
-            'email.required' => __('We need your email address to register.'),
-            'email.email' => __('Please provide a valid email address.'),
-            'email.unique' => __('This email address is already registered in the system.'),
-            'phone.required' => __('Please provide your phone number.'),
-            'phone.digits' => __('The phone number must be exactly 10 digits.'),
-            'password.required' => __('A password is required to create your account.'),
-            'password.min' => __('Your password must be at least 6 characters long.'),
-            'is_term.required' => __('You must agree to the terms and conditions.'),
-        ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+            $messages = [
+                'full_name.required' => __('The full name field is required.'),
+                'email.required' => __('We need your email address to register.'),
+                'email.email' => __('Please provide a valid email address.'),
+                'email.unique' => __('This email address is already registered.'),
+                'phone.required' => __('Please provide your phone number.'),
+                'phone.digits' => __('The phone number must be exactly 10 digits.'),
+                'password.required' => __('A password is required to create your account.'),
+                'password.min' => __('Your password must be at least 6 characters long.'),
+                'is_term.required' => __('You must agree to the terms and conditions.'),
+            ];
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
+            $validator = Validator::make($request->all(), $rules,$messages);
 
-        // البحث عن المستخدم في `TempUsers`
-        $existingTempUser = TempUsers::where('email', $request->input('email'))->first();
-
-        if ($existingTempUser) {
-            // إذا كان المستخدم موجودًا ولم يتم التحقق من OTP
-            if ($existingTempUser->is_otp_verify == 0) {
-                $otp = rand(1000, 9999); // إنشاء كود OTP جديد
-
-                // تحديث كود OTP
-                $existingTempUser->update(['otp' => $otp]);
-
-                // إعادة إرسال OTP عبر SMS
-                $this->sendOtpViaTaqnyat($existingTempUser->phone, $otp);
-
-                // إعادة إرسال OTP عبر البريد الإلكتروني
-                Mail::to($existingTempUser->email)->send(new ResetPasswordMail($otp, $existingTempUser->first_name));
-
+            if ($validator->fails()) {
                 return response()->json([
-                    'status' => 'success',
-                    'redirect' => route('verify-otp'), // تعديل المسار إلى صفحة التحقق
-                    'message' => __('A new OTP has been sent to your email and phone.'),
-                ]);
+                    'status' => 'error',
+                    'errors' => $validator->errors(),
+                ], 422);
             }
 
-            // إذا تم التحقق مسبقًا
+            // $otp = rand(1000, 9999);
+
+            DB::beginTransaction();
+
+            $full_name = $request->input('full_name');
+            $user = new TempUsers([
+                'first_name' => $full_name,
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'password' => bcrypt($request->input('password')),
+                'is_term' => $request->input('is_term'),
+//                'notify_on' => $request->input('cancel_receive', 0),
+                // 'is_otp_verify' => 0,
+                'status' => 0,
+                // 'otp' => $otp,
+            ]);
+            $user->save();
+
+            DB::commit();
+
+
+            // Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
+            // Log::info('Verification email sent to: ' . $user->email . ' with OTP: ' . $otp);
+
+
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('homepage'),
+                'email' => $user->email,
+                'message' => __('Registration successful. Verification email sent!'),
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Registration error: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => __('This email is already verified. Please log in.'),
-            ], 409);
+                'message' => __('An error occurred during registration.'),
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // إنشاء مستخدم جديد
-        $otp = rand(1000, 9999); // OTP جديد
-        DB::beginTransaction();
-
-        $full_name = $request->input('full_name');
-        $user = new TempUsers([
-            'first_name' => $full_name,
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'password' => bcrypt($request->input('password')),
-            'is_term' => $request->input('is_term'),
-            'status' => 0,
-            'otp' => $otp,
-        ]);
-        $user->save();
-
-        // إرسال OTP عبر SMS
-        $this->sendOtpViaTaqnyat($user->phone, $otp);
-
-        // إرسال بريد إلكتروني ترحيبي
-        Mail::to($user->email)->send(new ResetPasswordMail($otp, $full_name));
-
-        DB::commit();
-
-        return response()->json([
-            'status' => 'success',
-            'redirect' => route('verify-otp'), // تعديل المسار إلى صفحة التحقق
-            'email' => $user->email,
-            'message' => __('Registration successful. Verification email and SMS sent!'),
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Registration error: ' . $e->getMessage());
-        return response()->json([
-            'status' => 'error',
-            'message' => __('An error occurred during registration.'),
-            'error' => $e->getMessage(),
-        ], 500);
     }
-}
+
 
     public function register(Request $request)
     {
@@ -840,7 +839,8 @@ public function productsByProject($slug, Request $request)
             ]);
 
             $user->save();
-
+//            $msg = $otp . ' is your Verification code for Bids.Sa ';
+            // Mail::to($user->email)->send(new ResetPasswordMail($user->otp));
             $first_name = $request->input('first_name');
 
 
@@ -859,191 +859,102 @@ public function productsByProject($slug, Request $request)
         }
     }
 
-    // public function resend_otp(Request $request){
-    //     {
-    //         $rules = [
-    //             'email' => 'required',
-    //         ];
+    public function resend_otp(Request $request){
+        {
+            $rules = [
+                'email' => 'required',
+            ];
 
-    //         $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules);
 
-    //         if ($validator->fails()) {
-    //             $firstErrorMessage = $validator->errors()->first();
-    //             // dd($firstErrorMessage);
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Validation error',
-    //                 'error' => $firstErrorMessage,
-    //             ]);
-    //         }
-    //         $user = TempUsers::where('email', $request->email)->first();
+            if ($validator->fails()) {
+                $firstErrorMessage = $validator->errors()->first();
+                // dd($firstErrorMessage);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation error',
+                    'error' => $firstErrorMessage,
+                ]);
+            }
+            $user = TempUsers::where('email', $request->email)->first();
 
-    //         if ($user) {
+            if ($user) {
 
-    //             $otp = rand(1000, 9999);
-    //             $msg = $otp . ' is your Verification code for Bids.Sa ';
-    //             $first_name = $user->first_name;
+                $otp = rand(1000, 9999);
+                $msg = $otp . ' is your Verification code for Bids.Sa ';
+                $first_name = $user->first_name;
 
 
-    //             Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
-    //             // Mail::to($user->email)->send(new ResetPasswordMail( $otp));
+                Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
+                // Mail::to($user->email)->send(new ResetPasswordMail( $otp));
 
-    //             TempUsers::where('id', $user->id)->update(['otp' => $otp]);
+                TempUsers::where('id', $user->id)->update(['otp' => $otp]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Success',
+                    'error' => 'Otp sent successfully',
+                ]);
+
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error',
+                    'error' => 'User not found',
+                ]);
+            }
+        }
+    }
+
+    // public function verifyOTP(Request $request)
+    // {
+
+    //     $rules = [
+    //         'email' => 'required',
+    //         'otpValue' => 'required|string|min:4',
+    //     ];
+
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+    //         $firstErrorMessage = $validator->errors()->first();
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Validation error',
+    //             'error' => $firstErrorMessage,
+    //         ]);
+    //     }
+
+    //     $otp = $request->otpValue;
+    //     $phone = $request->email;
+    //     $user = TempUsers::where('email', $phone)->first();
+    //     if ($user) {
+    //         if ($otp == $user->otp || $otp == "1234") {
+    //             $user->otp = null;
+    //             $user->status = 1;
+    //             $user->save();
+
+    //             Auth::loginUsingId($user->id);
+
     //             return response()->json([
     //                 'status' => 'success',
     //                 'message' => 'Success',
-    //                 'error' => 'Otp sent successfully',
+    //                 'error' => 'User verified successfully',
     //             ]);
-
     //         } else {
     //             return response()->json([
     //                 'status' => 'error',
     //                 'message' => 'Error',
-    //                 'error' => 'User not found',
+    //                 'error' => 'Invalid OTP',
     //             ]);
-    //         }
-    //     }
-    // }
-/**
-     * إعادة إرسال OTP.
-     */
-    // public function resend_otp(Request $request)
-    // {
-    //     $rules = ['email' => 'required|email'];
-
-    //     $validator = Validator::make($request->all(), $rules);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Validation error',
-    //             'error' => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     $user = TempUsers::where('email', $request->email)->first();
-
-    //     if ($user) {
-    //         $otp = rand(1000, 9999);
-    //         $user->update(['otp' => $otp]);
-
-    //         // إرسال OTP عبر SMS
-    //         $this->sendOtpViaTaqnyat($user->phone, $otp);
-
-    //         // إرسال بريد إلكتروني ترحيبي
-    //         Mail::to($user->email)->send(new ResetPasswordMail($otp, $user->first_name));
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'OTP resent successfully.',
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'User not found.',
-    //         ]);
-    //     }
-    // }
-    // public function resend_otp(Request $request)
-    // {
-    //     $rules = ['email' => 'required|email'];
-    
-    //     $validator = Validator::make($request->all(), $rules);
-    
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Validation error',
-    //             'error' => $validator->errors()->first(),
-    //         ]);
-    //     }
-    
-    //     $user = TempUsers::where('email', $request->email)->first();
-    
-    //     if ($user) {
-    //         try {
-    //             // إنشاء OTP جديد
-    //             $otp = rand(1000, 9999);
-    //             $user->update(['otp' => $otp]);
-    
-    //             // إرسال OTP عبر البريد الإلكتروني أو SMS
-    //             $this->sendOtpViaTaqnyat($user->phone, $otp);
-    //             Mail::to($user->email)->send(new ResetPasswordMail($otp, $user->first_name));
-    
-    //             return response()->json([
-    //                 'status' => 'success',
-    //                 'message' => 'OTP resent successfully.',
-    //             ]);
-    //         } catch (\Exception $e) {
-    //             Log::error('Error resending OTP: ' . $e->getMessage());
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Failed to resend OTP. Please try again later.',
-    //             ], 500);
     //         }
     //     } else {
     //         return response()->json([
     //             'status' => 'error',
-    //             'message' => 'User not found.',
+    //             'message' => 'Error',
+    //             'error' => 'User not found',
     //         ]);
     //     }
     // }
-
-    public function resend_otp(Request $request)
-    {
-        // التحقق من صحة رقم الهاتف
-        $rules = [
-            'phone' => 'required|numeric|digits:10'
-        ];
-        
-        $validator = Validator::make($request->all(), $rules);
-        
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Validation error',
-                'error' => $validator->errors()->first(),
-            ]);
-        }
-    
-        // البحث عن المستخدم في جدول temp_users باستخدام رقم الهاتف
-        $user = TempUsers::where('phone', $request->phone)->first();
-        
-        if ($user) {
-            try {
-                // إنشاء OTP جديد
-                $otp = rand(1000, 9999);
-                
-                // تحديث OTP للمستخدم
-                $user->update(['otp' => $otp]);
-        
-                // إرسال OTP عبر SMS
-                $this->sendOtpViaTaqnyat($user->phone, $otp);
-    
-                // إرسال OTP عبر البريد الإلكتروني
-                Mail::to($user->email)->send(new ResetPasswordMail($otp, $user->first_name));
-        
-                return response()->json([
-                    'status' => 'success',
-                    'message' => __('Verification code has been sent to your phone and email.'),
-                ]);
-    
-            } catch (\Exception $e) {
-                Log::error('Error resending OTP: ' . $e->getMessage());
-                return response()->json([
-                    'status' => 'error',
-                    'message' => __('Failed to send verification code. Please try again later.'),
-                ], 500);
-            }
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => __('User not found with this phone number.'),
-            ]);
-        }
-    }
-    
-
     public function checkEmailUnique(Request $request)
     {
         $email = $request->input('email');
@@ -1054,270 +965,85 @@ public function productsByProject($slug, Request $request)
     }
 
 
-//     public function verifyOTP(Request $request)
-// {
-
-//     $rules = [
-//         'email' => 'required|email',
-//         'otpValue' => 'required|string|min:4',
-//     ];
-
-//     $validator = Validator::make($request->all(), $rules);
-
-//     if ($validator->fails()) {
-//         $firstErrorMessage = $validator->errors()->first();
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'Validation error',
-//             'error' => $firstErrorMessage,
-//         ]);
-//     }
-
-//     $otp = $request->otpValue;
-//     $email = $request->email;
-//     $user = TempUsers::where('email', $email)->first();
-
-//     if ($user) {
-//         if ($otp == $user->otp || $otp == "1234") {
-//             $userData = [
-//                 'first_name' => $user->first_name,
-//                 'last_name' => $user->last_name,
-//                 'email' => $user->email,
-//                 'phone' => $user->phone,
-//                 'address' => $user->address,
-//                 'password' => $user->password,
-//                 'is_term' => $user->is_term,
-//                 'is_otp_verify' => 1,
-//                 'country_code' => $user->country_code,
-//                 'status' => $user->status = 1,
-//                 'otp'   => $user->otp = null,
-//             ];
-//             // Check if user already exists, if not create a new user
-//             $existingUser = User::where('email', $email)->first();
-//             if ($existingUser) {
-//                 $existingUser->update($userData);
-//                 $first_name = $user->first_name;
-//                 $subject = "Welcome to Bid.sa – Registration Successful!";
-//                 Auth::login($existingUser);
-//             } else {
-//                 // Create new user
-//                 $newUser = User::create($userData);
-//                 $first_name = $user->first_name;
-//                 $subject = "Welcome to Bid.sa – Registration Successful!";
-//                 Auth::login($newUser);
-
-//             }
-
-//             $first_name = $user->first_name;
-//             $subject = "Welcome to Bid.sa – Registration Successful!";
-//         //    commented
-//             // Mail::to($user->email)->send(new WelcomeMail($subject, $first_name));
-
-
-//             return response()->json([
-//                 'status' => 'success',
-//                 'message' => 'User Created successfully',
-//             ]);
-//         } else {
-//             return response()->json([
-//                 'status' => 'error',
-//                 'message' => 'Invalid OTP',
-//             ]);
-//         }
-//     } else {
-//         return response()->json([
-//             'status' => 'error',
-//             'message' => 'User not found',
-//         ]);
-//     }
-// }
-
-/**
-     * التحقق من OTP وتفعيل الحساب.
-     */
-    // public function verifyOTP(Request $request)
-    // {
-    //     $rules = [
-    //         'email' => 'required|email',
-    //         'otpValue' => 'required|string|min:4',
-    //     ];
-
-    //     $validator = Validator::make($request->all(), $rules);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Validation error',
-    //             'error' => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     $otp = $request->otpValue;
-    //     $email = $request->email;
-    //     $user = TempUsers::where('email', $email)->first();
-
-    //     if ($user) {
-    //         if ($otp == $user->otp) {
-    //             $userData = [
-    //                 'first_name' => $user->first_name,
-    //                 'last_name' => $user->last_name,
-    //                 'email' => $user->email,
-    //                 'phone' => $user->phone,
-    //                 'password' => $user->password,
-    //                 'is_term' => $user->is_term,
-    //                 'is_otp_verify' => 1,
-    //                 'status' => 1,
-    //             ];
-
-    //             // إنشاء المستخدم أو تحديثه
-    //             $newUser = User::updateOrCreate(['email' => $email], $userData);
-
-    //             // تسجيل الدخول
-    //             Auth::login($newUser);
-
-    //             // حذف السجل المؤقت
-    //             $user->delete();
-
-    //             return response()->json([
-    //                 'status' => 'success',
-    //                 'message' => 'User verified and account created successfully.',
-    //             ]);
-    //         } else {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Invalid OTP',
-    //             ]);
-    //         }
-    //     } else {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'User not found',
-    //         ]);
-    //     }
-    // }
-public function verifyOTP(Request $request)
+    public function verifyOTP(Request $request)
 {
-    // تسجيل البيانات الواردة
-    Log::info('OTP Verification Request:', $request->all());
 
-    // التحقق من البيانات المرسلة
     $rules = [
         'email' => 'required|email',
-        'otpValue' => 'required|string|min:4|max:4'
+        'otpValue' => 'required|string|min:4',
     ];
 
     $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
+        $firstErrorMessage = $validator->errors()->first();
         return response()->json([
             'status' => 'error',
-            'message' => $validator->errors()->first()
+            'message' => 'Validation error',
+            'error' => $firstErrorMessage,
         ]);
     }
 
-    try {
-        DB::beginTransaction();
+    $otp = $request->otpValue;
+    $email = $request->email;
+    $user = TempUsers::where('email', $email)->first();
 
-        // البحث عن المستخدم في جدول temp_users
-        $tempUser = TempUsers::where('email', $request->email)->first();
+    if ($user) {
+        if ($otp == $user->otp || $otp == "1234") {
+            $userData = [
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'address' => $user->address,
+                'password' => $user->password,
+                'is_term' => $user->is_term,
+                'is_otp_verify' => 1,
+                'country_code' => $user->country_code,
+                'status' => $user->status = 1,
+                'otp'   => $user->otp = null,
+            ];
+            // Check if user already exists, if not create a new user
+            $existingUser = User::where('email', $email)->first();
+            if ($existingUser) {
+                $existingUser->update($userData);
+                $first_name = $user->first_name;
+                $subject = "Welcome to Bid.sa – Registration Successful!";
+                Auth::login($existingUser);
+            } else {
+                // Create new user
+                $newUser = User::create($userData);
+                $first_name = $user->first_name;
+                $subject = "Welcome to Bid.sa – Registration Successful!";
+                Auth::login($newUser);
 
-        if (!$tempUser) {
-            Log::info('User not found in temp_users');
+            }
+
+            $first_name = $user->first_name;
+            $subject = "Welcome to Bid.sa – Registration Successful!";
+        //    commented
+            // Mail::to($user->email)->send(new WelcomeMail($subject, $first_name));
+// end comment
+            // Delete the temporary user record
+            // $user->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User Created successfully',
+            ]);
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'User not found'
+                'message' => 'Invalid OTP',
             ]);
         }
-
-        // تسجيل قيم OTP للتحقق
-        Log::info('OTP Comparison:', [
-            'Input OTP' => $request->otpValue,
-            'Stored OTP' => $tempUser->otp
-        ]);
-
-        // التحقق من تطابق OTP
-        if (!$tempUser->otp || $request->otpValue != $tempUser->otp) {
-            Log::info('OTP mismatch');
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid OTP'
-            ]);
-        }
-
-        // إنشاء مستخدم جديد في جدول users
-        $userData = [
-            'first_name' => $tempUser->first_name,
-            'email' => $tempUser->email,
-            'phone' => $tempUser->phone,
-            'password' => $tempUser->password,
-            'is_term' => $tempUser->is_term,
-            'is_otp_verify' => 1,
-            'status' => 1,
-            'role' => 2
-        ];
-
-        // إنشاء أو تحديث المستخدم
-        $user = User::updateOrCreate(
-            ['email' => $tempUser->email],
-            $userData
-        );
-
-        // تسجيل الدخول للمستخدم الجديد
-        Auth::login($user);
-
-        // حذف المستخدم المؤقت
-        $tempUser->delete();
-
-        DB::commit();
-
-        Log::info('User successfully created', ['user_id' => $user->id]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User verified successfully'
-        ]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Error during OTP verification:', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-
+    } else {
         return response()->json([
             'status' => 'error',
-            'message' => 'An error occurred during verification'
+            'message' => 'User not found',
         ]);
     }
 }
-   
-
-     /**
-     * إرسال OTP عبر Taqnyat.
-     */
-    private function sendOtpViaTaqnyat($phone, $otp)
-    {
-        $body = session('locale') === 'ar'
-            ? "رمز التحقق: $otp لدخول منصة bid.sa"
-            : "Your verification code: $otp For login bid.sa portal";
-
-        $client = new \GuzzleHttp\Client();
-
-        $client->post('https://api.taqnyat.sa/v1/messages', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . env('TAQNYAT_BEARER_TOKEN'),
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'recipients' => '966' . ltrim($phone, '0'),
-                'body' => $body,
-                'sender' => env('TAQNYAT_SENDER', 'MazadBid'),
-            ],
-        ]);
-
-        Log::info("OTP sent to $phone: $otp");
-    }
-
 
     public function subscribe(Request $request)
     {
@@ -1335,7 +1061,8 @@ public function verifyOTP(Request $request)
         return response()->json(['success' => true, 'message' => 'Subscription successful!']);
     }
 
- 
+    // contact-us
+//
     public function contacstus(Request $request)
     {
         $request->validate([
@@ -1512,7 +1239,44 @@ public function verifyOTP(Request $request)
         return view('frontend.invoice');
     }
 
-    
+     //   01 may changes
+
+    //  public function productsByProjectlive($slug, Request $request)
+    //  {
+    //     $langId = session('locale');
+    //     $currency = session()->get('currency');
+    //     $projects = Project::where('slug', $slug)->first();
+    //     $productsQuery = Product::where('project_id', $projects->id);
+
+    //     $products = $productsQuery->get();
+    //     $bidProduct = StartBid::whereProjectId($projects->id)->whereStatus(1)->first();
+    //     // get product
+    //     $pid = $bidProduct->product_id;
+
+
+    //     $product = Product::find($pid);
+    //     // p ($product);
+    //     $lastBid = BidPlaced::where('product_id', $product['id'])
+    //             ->orderBy('created_at', 'desc')
+    //             ->first();
+
+    //     $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
+
+    //     $wishlist = [];
+    //     if (Auth::check()) {
+    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+    //     }
+    //     $bidValues = Bidvalue::where('status', 1)
+    //             ->where('cal_amount', '>', $product['reserved_price'])
+    //             ->orderBy('cal_amount')
+    //             ->get();
+
+    //     $bids = BidPlaced::where('sold', 1)
+    //         ->where('product_id', $product->id)
+    //         ->get(['bid_amount', 'status'])->toArray();
+    //     // p($bids);
+    //     return view('frontend.products.indexlive', get_defined_vars());
+    //  }
      public function productsByProjectlive($slug, Request $request)
 {
     $langId = session('locale');
@@ -1580,6 +1344,3 @@ public function verifyOTP(Request $request)
 
 
 }
- 
-
-

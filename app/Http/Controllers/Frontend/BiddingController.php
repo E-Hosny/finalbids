@@ -469,7 +469,8 @@ class BiddingController extends Controller
     
             TempAddress::updateOrCreate(['bid_placed_id' => $bidPlacedId], $addressData);
     
-            $adminEmail = 'elkhouly@gmail.com';
+            // $adminEmail = 'elkhouly@gmail.com';
+            $adminEmail = env('ADMIN_EMAIL'); // جلب الإيميل من .env
             $product = Product::find($validatedData['product_id']);
             $project = Project::find($validatedData['project_id']);
     

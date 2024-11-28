@@ -44,61 +44,6 @@ class HomepageController extends Controller
 {
 
 
-    public function liveSearch(Request $request)
-    {
-        try {
-            $query = $request->get('query');
-            \Log::info('Search query:', ['query' => $query]);
-            
-            $results = [];
-            
-            if ($query && strlen($query) >= 2) {
-                // البحث في المنتجات
-                $products = Product::where(function($q) use ($query) {
-                    $q->where('title', 'like', "%{$query}%")
-                      ->orWhere('title_ar', 'like', "%{$query}%");
-                })
-                ->where('is_published', 1)
-                ->with('project')
-                ->take(10)
-                ->get();
-    
-                foreach ($products as $product) {
-                    if ($product->project) {
-                        $results[] = [
-                            'id' => $product->id,
-                            'title' => session('locale') === 'ar' ? 
-                                ($product->title_ar ?: $product->title) : 
-                                ($product->title ?: $product->title_ar),
-                            // تغيير المسار ليتطابق مع دالة عرض تفاصيل المنتج
-                            'url' => url('productsdetail/'.$product->slug),
-                            'price' => $product->reserved_price,
-                            'project_name' => session('locale') === 'ar' ? 
-                                $product->project->name_ar : 
-                                $product->project->name
-                        ];
-                    }
-                }
-            }
-            
-            return response()->json([
-                'status' => 'success',
-                'results' => $results
-            ]);
-            
-        } catch (\Exception $e) {
-            \Log::error('Search error:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while searching'
-            ], 500);
-        }
-    }
-
     public function markAsRead($notificationId)
     {
         $notification = Appnotification::find($notificationId);
