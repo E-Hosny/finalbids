@@ -189,6 +189,12 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::delete('admin/news/{id}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
     Route::resource('bidrequests', BidrequestController::class);
     Route::post('update-status', [BidrequestController::class, 'updateStatus'])->name('bidrequests.updateStatus');
+    
+    Route::post('bid-placed/update-status', [\App\Http\Controllers\Admin\BidPlacedController::class, 'updateStatus'])
+    ->name('bid-placed.update-status');
+
+    Route::resource('bid-placed', \App\Http\Controllers\Admin\BidPlacedController::class);
+
     Route::resource('language', LanguageController::class);
     Route::get('/profilesetting', [HomeController::class, 'profilesetting'])->name('profilesetting');
     Route::get('/profilesettingupdate', [HomeController::class, 'profilesettingupdate'])->name('profilesettingupdate');
