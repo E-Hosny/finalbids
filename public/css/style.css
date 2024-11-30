@@ -1,0 +1,157 @@
+.btnnew{
+ color: #0D3858;
+}
+
+
+
+.error {
+    color: red;
+}
+
+td {
+    white-space: normal !important;
+}
+
+table {
+    width: 100% !important;
+}
+
+.navbar-vertical.navbar-expand-xs .navbar-collapse {
+    height: unset;
+}
+
+
+.pagination li:last-child a.page-link{
+    display: block;
+    padding: 0;
+    margin: 0 3px;
+    border-radius: 50% !important;
+    width: 36px;
+    height: 36px;
+    font-size: 0;
+    background-image: url(https://icons.veryicon.com/png/o/miscellaneous/test-2/next-28.png);
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.pagination li:first-child a.page-link{
+    display: block;
+    padding: 0;
+    margin: 0 3px;
+    border-radius: 50% !important;
+    width: 36px;
+    height: 36px;
+    font-size: 0;
+    background-image: url(https://icons.veryicon.com/png/o/miscellaneous/test-2/next-28.png);
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(180deg);
+}
+
+
+.menu-icon svg{
+        width: 20px;
+    height: 20px;
+}
+.menu-icon{
+    display: none;
+}
+.text-sm {
+    line-height: unset;
+}
+.error_message {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: #f00;
+    margin-top: 9px;
+}
+.login_s {
+    padding: 0;
+}
+.nav_admin a {
+    padding: 0 !important;
+    display: flex;
+    margin-left: 20px;
+}
+@media only screen and (max-width: 1200px){
+.menu-icon {
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+}
+.nav_admin a {
+    margin-left: 15px;
+}
+.nav_right {
+    position: absolute;
+    right: 62px;
+}
+    .navbar-vertical.navbar-expand-xs.fixed-start {
+    left: -400px;
+}
+   .navbar-vertical.navbar-expand-xs.fixed-start.menu_open{
+    left: 0;
+   }
+}
+table.dataTable>tbody>tr.odd.selected>* {
+    box-shadow: none;
+}
+
+table.dataTable>tbody>tr.even.selected>* {
+    box-shadow: none;
+}
+
+table.dataTable>tbody>tr.selected>* {
+    color: #67748e;
+}
+
+table.dataTable.table-striped>tbody>tr.odd.selected>* {
+    box-shadow: none;
+}
+
+table.dataTable.table-striped>tbody>tr.even.selected>* {
+    box-shadow: none;
+}
+
+
+
+@media(max-width: 991.98px){
+
+}
+.image-preview .image-container {
+    width: 110px;
+    height: 110px;
+    overflow: hidden;
+    position: relative;
+    margin-right: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+.image-preview .image-container img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    max-width: 100%;
+    max-height: unset;
+}
+.image-preview .image-container i.fa.fa-remove {
+    position: absolute;
+    right: 5px;
+    background: #fff;
+    padding: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    font-size: 15px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    top: 5px;
+    padding-top: 7px;
+}
+.image-preview {
+    margin: 0 !important;
+}
