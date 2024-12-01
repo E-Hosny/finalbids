@@ -438,16 +438,17 @@ class DashboardController extends Controller
 
      public function bidplaced(Request $request)
      {
+       
          $validatedData = $request->validate([
              'user_id' => 'required',
              'project_id' => 'required',
-             'auction_type_id' => 'required',
+            //  'auction_type_id' => 'required',
              'bid_amount' => 'required',
              'product_id' => 'required'
          ]);
      
          try {
-             
+            $validatedData['status'] = 0;
             $bid= BidPlaced::create($validatedData);
      
              return response()->json(['message' => 'Bid request stored successfully','bid'=>$bid]);

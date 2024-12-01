@@ -159,6 +159,7 @@ public function store(Request $request)
     $lastLotNumber = $lastProduct ? intval(substr($lastProduct->lot_no, 4)) : 0;
     $newLotNumber = $lastLotNumber + 1;
     $lotNo = 'Lot-' . sprintf('%03d', $newLotNumber);
+    $slug = $this->getUniqueSlug($data['title']);
 
     $product = Product::create([
         'title' => $data['title'],
@@ -167,6 +168,7 @@ public function store(Request $request)
         'description' => $data['description'],
         'description_ar' => $data['description_ar'],
         'lot_no' => $lotNo,
+        'slug' => $slug,
         'user_id' => auth()->id(),
         'status' => 'new',
     ]);

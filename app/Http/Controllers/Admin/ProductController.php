@@ -138,7 +138,7 @@ class ProductController extends Controller
         //         $filename = date('YmdHi') . "-" . uniqid() . "." . $file->extension();
         //         $filePath = public_path('product/gallery') . '/' . $filename;
 
-        //         // Resize the image
+        //         // Resize the image  
         //         list($width, $height) = getimagesize($file);
         //         $newWidth = 728;
         //         $newHeight = 521;
@@ -405,6 +405,7 @@ class ProductController extends Controller
         // تعيين القيم الافتراضية
         $data['is_popular'] = $request->get('is_popular', 0) ? 1 : 0;
         $data['is_published'] = $request->input('is_published', 0); // القيمة الافتراضية
+
     
         // تحديث المنتج
         $product->update($data);

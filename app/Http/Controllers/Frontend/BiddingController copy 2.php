@@ -44,6 +44,7 @@ class BiddingController extends Controller
 
     public function checkout(Request $request)
     {
+        dd("here");
         $currency = session()->get('currency');
         $bidPlacedId = $request->input('bid_placed_id');
         $productId = $request->input('product_id');
@@ -241,6 +242,8 @@ class BiddingController extends Controller
                 'zipcode' => '',
                 'phone' => '',
             ]);
+            
+
 
             $bidPlacedId = $request->input('bid_placed_id');
 
