@@ -36,94 +36,48 @@ class DashboardController extends Controller
         return view('frontend.dashboard.myaccount', compact('users'));
     }
     
-    // public function auction(){
+    public function auction(){
 
-    //     $currency = session()->get('currency');
-    //     $user_id = Auth::id();
-      
-    //     $bids = BidPlaced::with(['product.project.auctionType'])
-    //                         ->where('sold', 1)
-    //                         ->whereIn('product_id', function($query) use ($user_id) {
-    //                             $query->select('product_id')
-    //                                 ->from('bid_placed')
-    //                                 ->where('user_id', $user_id);
-    //                         })
-    //                         ->orderBy('created_at', 'desc')
-    //                         ->get();
-
-    //     $groupedBids = $bids->groupBy('product_id');
-    //     $bidsCountByUserAndProduct = BidPlaced::where('status', 1)
-    //                             ->where('sold',1)
-    //                             ->where('user_id', $user_id)
-    //                             ->groupBy('product_id')
-    //                             ->selectRaw('product_id, count(distinct user_id) as count')
-    //                             ->get();
-
-    //     // for past bids
-    //     $bidspast = BidPlaced::with(['product.project.auctionType'])
-    //                             ->where('sold',2)
-    //                             ->whereIn('product_id', function($query) use ($user_id) {
-    //                                 $query->select('product_id')
-    //                                     ->from('bid_placed')
-    //                                     ->where('user_id', $user_id);
-    //                             })
-    //                             ->orderBy('created_at', 'desc')
-    //                             ->get();
-    //     $groupedBidspast = $bidspast->groupBy('product_id');
-    //     $bidsCountByUserAndProductPast = BidPlaced::where('status', 1)
-    //                             ->where('user_id', $user_id)
-    //                             ->where('sold',2)
-    //                             ->groupBy('product_id')
-    //                             ->selectRaw('product_id, count(distinct user_id) as count')
-    //                             ->get();
-    //     return view('frontend.auction',compact('groupedBids','bidsCountByUserAndProduct','currency','groupedBidspast','bidsCountByUserAndProductPast'));
-    // }
-    public function auction()
-    {
         $currency = session()->get('currency');
         $user_id = Auth::id();
-    
-        // استرجاع العطاءات التي تم قبولها أو فاز بها المستخدم
+      
         $bids = BidPlaced::with(['product.project.auctionType'])
-            ->where('sold', 1) // تم بيع المزاد أو فاز به
-            ->whereIn('product_id', function ($query) use ($user_id) {
-                $query->select('product_id')
-                    ->from('bid_placed')
-                    ->where('user_id', $user_id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
-    
-        // تجميع العطاءات حسب product_id
+                            ->where('sold', 1)
+                            ->whereIn('product_id', function($query) use ($user_id) {
+                                $query->select('product_id')
+                                    ->from('bid_placed')
+                                    ->where('user_id', $user_id);
+                            })
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
         $groupedBids = $bids->groupBy('product_id');
-    
-        // عد العطاءات المعتمدة حسب المستخدم و product_id
         $bidsCountByUserAndProduct = BidPlaced::where('status', 1)
-            ->where('sold', 1) // تم بيع المزاد أو فاز به
-            ->where('user_id', $user_id)
-            ->groupBy('product_id')
-            ->selectRaw('product_id, count(distinct user_id) as count')
-            ->get();
-    
-        // العطاءات التي تم فوزها (حيث sold = 2)
+                                ->where('sold',1)
+                                ->where('user_id', $user_id)
+                                ->groupBy('product_id')
+                                ->selectRaw('product_id, count(distinct user_id) as count')
+                                ->get();
+
+        // for past bids
         $bidspast = BidPlaced::with(['product.project.auctionType'])
-            ->where('sold', 2) // المزادات المغلقة
-            ->whereIn('product_id', function ($query) use ($user_id) {
-                $query->select('product_id')
-                    ->from('bid_placed')
-                    ->where('user_id', $user_id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
-    
-        // تجميع العطاءات السابقة حسب product_id
+                                ->where('sold',2)
+                                ->whereIn('product_id', function($query) use ($user_id) {
+                                    $query->select('product_id')
+                                        ->from('bid_placed')
+                                        ->where('user_id', $user_id);
+                                })
+                                ->orderBy('created_at', 'desc')
+                                ->get();
         $groupedBidspast = $bidspast->groupBy('product_id');
-    
-        return view('frontend.auction', compact('groupedBids', 'bidsCountByUserAndProduct', 'currency', 'groupedBidspast'));
+        $bidsCountByUserAndProductPast = BidPlaced::where('status', 1)
+                                ->where('user_id', $user_id)
+                                ->where('sold',2)
+                                ->groupBy('product_id')
+                                ->selectRaw('product_id, count(distinct user_id) as count')
+                                ->get();
+        return view('frontend.auction',compact('groupedBids','bidsCountByUserAndProduct','currency','groupedBidspast','bidsCountByUserAndProductPast'));
     }
-    
-    
-    
     // pdf generate
     public function generatePdf($view, $data, $filename) {
         $options = new Options();

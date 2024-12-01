@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\DataTables\BidPlacedDataTable;
 use App\Models\BidPlaced;
+use Illuminate\Support\Facades\Mail;
+
 
 
 class BidPlacedController extends Controller
@@ -73,7 +75,40 @@ class BidPlacedController extends Controller
     //     return response()->json(['success' => true, 'message' => $message]);
     // }
     
-    public function updateStatus(Request $request)
+//     public function updateStatus(Request $request)
+// {
+//     $bidPlacedId = $request->input('bid_request_id');
+//     $status = $request->input('status');
+
+//     $bidPlaced = BidPlaced::find($bidPlacedId);
+
+//     if (!$bidPlaced) {
+//         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
+//     }
+
+//     // التحقق من صحة قيمة الحالة
+//     if (!in_array($status, [0, 1, 2])) {
+//         return response()->json(['success' => false, 'message' => 'Invalid status value.']);
+//     }
+
+//     $bidPlaced->status = $status;
+//     $bidPlaced->save();
+
+//     // تعيين الرسالة بناءً على الحالة
+//     if ($status == 1) {
+//         $message = 'Bid request approved successfully.';
+//     } elseif ($status == 2) {
+//         $message = 'Bid request rejected successfully.';
+//     } else {
+//         $message = 'Bid request set to pending.';
+//     }
+
+//     return response()->json(['success' => true, 'message' => $message]);
+// }
+
+
+
+public function updateStatus(Request $request)
 {
     $bidPlacedId = $request->input('bid_request_id');
     $status = $request->input('status');
@@ -95,10 +130,16 @@ class BidPlacedController extends Controller
     // تعيين الرسالة بناءً على الحالة
     if ($status == 1) {
         $message = 'Bid request approved successfully.';
+        // إرسال إيميل للعميل عند القبول
+        Mail::to($bidPlaced->user->email)->send(new BidStatusMail($bidPlaced, 'approved'));
     } elseif ($status == 2) {
         $message = 'Bid request rejected successfully.';
+        // إرسال إيميل للعميل عند الرفض
+        Mail::to($bidPlaced->user->email)->send(new BidStatusMail($bidPlaced, 'rejected'));
     } else {
         $message = 'Bid request set to pending.';
+        // إرسال إيميل للعميل عند التغيير إلى حالة الانتظار (اختياري)
+        Mail::to($bidPlaced->user->email)->send(new BidStatusMail($bidPlaced, 'pending'));
     }
 
     return response()->json(['success' => true, 'message' => $message]);
