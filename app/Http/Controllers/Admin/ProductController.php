@@ -101,59 +101,114 @@ class ProductController extends Controller
 
     //     return response()->json(['message' => 'Product rejected successfully.']);
     // }
-    public function reject(Request $request, Product $product)
-    {
-        $request->validate([
-            'rejection_reason' => 'required|string|max:255',
-        ]);
+    // public function reject(Request $request, Product $product)
+    // {
+    //     $request->validate([
+    //         'rejection_reason' => 'required|string|max:255',
+    //     ]);
     
-        try {
-            // بدء معاملة قاعدة البيانات
-            \DB::beginTransaction();
+    //     try {
+    //         // بدء معاملة قاعدة البيانات
+    //         \DB::beginTransaction();
     
-            $product->approval_status = 'rejected';
-            $product->rejection_reason = $request->input('rejection_reason');
-            $product->save();
+    //         $product->approval_status = 'rejected';
+    //         $product->rejection_reason = $request->input('rejection_reason');
+    //         $product->save();
     
-            // التحقق من وجود مستخدم مرتبط بالمنتج
-            if ($product->user && $product->user->email) {
-                // إرسال البريد الإلكتروني باستخدام الطوابير
-                Mail::to($product->user->email)->queue(new ProductRejected($product));
+    //         // التحقق من وجود مستخدم مرتبط بالمنتج
+    //         if ($product->user && $product->user->email) {
+    //             // إرسال البريد الإلكتروني باستخدام الطوابير
+    //             Mail::to($product->user->email)->queue(new ProductRejected($product));
                 
-            } else {
-                // تسجيل تحذير في السجلات
-                Log::warning('Product does not have an associated user or user email is missing.', [
-                    'product_id' => $product->id,
-                ]);
-            }
+    //         } else {
+    //             // تسجيل تحذير في السجلات
+    //             Log::warning('Product does not have an associated user or user email is missing.', [
+    //                 'product_id' => $product->id,
+    //             ]);
+    //         }
     
-            // إنهاء المعاملة
-            \DB::commit();
+    //         // إنهاء المعاملة
+    //         \DB::commit();
     
-            // تحميل العلاقات اللازمة لعرض المنتج في DataTable
-            $product->load('user', 'auctiontype', 'project');
+    //         // تحميل العلاقات اللازمة لعرض المنتج في DataTable
+    //         $product->load('user', 'auctiontype', 'project');
     
-            // إعداد حالة الموافقة بتنسيق HTML
-            $product->approval_status_badge = '<span class="badge badge-danger">Rejected</span>';
+    //         // إعداد حالة الموافقة بتنسيق HTML
+    //         $product->approval_status_badge = '<span class="badge badge-danger">Rejected</span>';
     
-            return response()->json([
-                'message' => 'Product rejected successfully.',
-                'updatedProduct' => $product,
-            ]);
-        } catch (\Exception $e) {
-            // إلغاء المعاملة في حالة حدوث خطأ
-            \DB::rollBack();
+    //         return response()->json([
+    //             'message' => 'Product rejected successfully.',
+    //             'updatedProduct' => $product,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         // إلغاء المعاملة في حالة حدوث خطأ
+    //         \DB::rollBack();
     
-            Log::error('Error rejecting product.', [
+    //         Log::error('Error rejecting product.', [
+    //             'product_id' => $product->id,
+    //             'error' => $e->getMessage(),
+    //         ]);
+    
+    //         return response()->json(['message' => 'An error occurred while rejecting the product.'], 500);
+    //     }
+    // }
+    
+    public function reject(Request $request, Product $product)
+{
+    $request->validate([
+        'rejection_reason' => 'required|string|max:255',
+    ]);
+
+    try {
+        // بدء معاملة قاعدة البيانات
+        \DB::beginTransaction();
+
+        $product->approval_status = 'rejected';
+        $product->rejection_reason = $request->input('rejection_reason');
+        $product->save();
+
+        // التحقق من وجود مستخدم مرتبط بالمنتج
+        if ($product->user && $product->user->email) {
+            // إرسال البريد الإلكتروني باستخدام الطوابير
+            Mail::to($product->user->email)->queue(new ProductRejected($product));
+        } else {
+            // تسجيل تحذير في السجلات
+            Log::warning('Product does not have an associated user or user email is missing.', [
                 'product_id' => $product->id,
-                'error' => $e->getMessage(),
             ]);
-    
-            return response()->json(['message' => 'An error occurred while rejecting the product.'], 500);
         }
+
+        // إنهاء المعاملة
+        \DB::commit();
+
+        // تحميل العلاقات اللازمة لعرض المنتج في DataTable
+        $product->load('user', 'auctiontype', 'project');
+
+        // إعداد البيانات المحدثة لإرجاعها إلى الواجهة الأمامية
+        $updatedProduct = $product->toArray();
+        $updatedProduct['approval_status'] = '<span class="badge badge-danger">Rejected</span>';
+        $updatedProduct['action'] = view('admin.products.action', [
+            'id' => $product->id,
+            'approval_status' => $product->approval_status,
+        ])->render();
+
+        return response()->json([
+            'message' => 'Product rejected successfully.',
+            'updatedProduct' => $updatedProduct,
+        ]);
+    } catch (\Exception $e) {
+        // إلغاء المعاملة في حالة حدوث خطأ
+        \DB::rollBack();
+
+        Log::error('Error rejecting product.', [
+            'product_id' => $product->id,
+            'error' => $e->getMessage(),
+        ]);
+
+        return response()->json(['message' => 'An error occurred while rejecting the product.'], 500);
     }
-    
-    
+}
+
     
     /**
      * Show the form for creating a new resource.
