@@ -179,6 +179,9 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::resource('auctiontypes', AuctiontypeController::class);
     Route::resource('brands', BrandController::class);
     Route::resource('products', ProductController::class);
+    Route::post('/products/{product}/approve', [ProductController::class, 'approve'])->name('products.approve');
+    Route::post('/products/{product}/reject', [ProductController::class, 'reject'])->name('products.reject');
+
     Route::get('products/get-project/{auction}', [ProductController::class,'getprojects'])->name('products/get-project');
     Route::get('products/remove/{id}', [ProductController::class, 'deleteImage'])->name('admin.deleteImage');
 

@@ -3,6 +3,7 @@
     $langId =\App\Models\Language::where('status',1)->get();
 
 @endphp
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <x-admin-layout>
     <main class="main-content position-relative border-radius-lg ">
@@ -56,5 +57,64 @@
     });
 });
 </script>
+
+<script>
+    $(document).on('click', '.approve-btn', function() {
+        var productId = $(this).data('id');
+        $.ajax({
+            url: '/admin/products/' + productId + '/approve',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $('#product-table').DataTable().ajax.reload(null, false);
+                alert(response.message);
+            },
+            error: function(xhr) {
+                alert('Error: ' + xhr.responseText);
+            }
+        });
+    });
+    
+    $(document).on('click', '.reject-btn', function() {
+        var productId = $(this).data('id');
+        Swal.fire({
+            title: 'Enter Rejection Reason',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Reject',
+            showLoaderOnConfirm: true,
+            preConfirm: (reason) => {
+                if (!reason) {
+                    Swal.showValidationMessage('Reason is required');
+                } else {
+                    return $.ajax({
+                        url: '/admin/products/' + productId + '/reject',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            rejection_reason: reason
+                        }
+                    });
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#product-table').DataTable().ajax.reload(null, false);
+                Swal.fire(
+                    'Rejected!',
+                    'Product has been rejected.',
+                    'success'
+                );
+            }
+        });
+    });
+    </script>
+    
 @endpush
 </x-admin-layout>

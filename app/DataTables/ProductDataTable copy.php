@@ -28,29 +28,9 @@ class ProductDataTable extends DataTable
                  $count++;
                     return $count + ($currentPage - 1) * request()->input('length');
              })
-             // إضافة أعمدة المستخدم
-            ->addColumn('user_name', function($product) {
-                return $product->user ? $product->user->first_name : 'N/A';
-            })
-            ->addColumn('user_email', function($product) {
-                return $product->user ? $product->user->email : 'N/A';
-            })
-            ->addColumn('user_phone', function($product) {
-                return $product->user ? $product->user->phone : 'N/A';
-            })
-
-            ->addColumn('action', function ($product) {
-                return view('admin.products.action', [
-                    'id' => $product->id,
-                    'approval_status' => $product->approval_status,
-                ])->render();
-            })
-            
             
             ->addColumn('action', 'admin.products.action')
             ->setRowId('id');
-
-            
     }
 
     /**
@@ -66,7 +46,7 @@ class ProductDataTable extends DataTable
         // }
     
         $query = $query->orderBy('created_at', 'desc')
-        ->with('category','subcategory','auctiontype','project','user');
+        ->with('category','subcategory','auctiontype','project');
         return $query;
     }
 
@@ -102,19 +82,6 @@ class ProductDataTable extends DataTable
             Column::make('#'),
             Column::make('lot_no')->title('Lot No'),
             Column::make('title')->title('Title'),
-            // أعمدة المستخدم
-            Column::computed('user_name')
-                ->title('User Name')
-                ->searchable(true)
-                ->orderable(true),
-            Column::computed('user_email')
-                ->title('User Email')
-                ->searchable(true)
-                ->orderable(true),
-            Column::computed('user_phone')
-                ->title('User Phone')
-                ->searchable(true)
-                ->orderable(true),
             Column::computed('auctiontype')
                    ->data('auctiontype.name') 
                    ->title('Auctiontype'),
@@ -125,10 +92,7 @@ class ProductDataTable extends DataTable
             Column::make('reserved_price')->title('Reserved Price'),
             Column::make('minsellingprice')->title('Min Selling Price'),
             Column::make('created_at')->render('new Date(full[\'created_at\']).toLocaleString()' ),
-            
             Column::make('is_popular')->render('full[\'is_popular\'] ? \'Yes\' : \'No\'')->addClass('text-center'),
-            Column::make('status')->title('Status'),
-            Column::make('approval_status')->title('Approval Status'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

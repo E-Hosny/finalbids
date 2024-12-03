@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Validator;
 use Imagecow\Libs\ImageCompressor;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
 use Illuminate\Support\Facades\Image;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProductApproved;
+use App\Mail\ProductRejected;
 
 
 
@@ -33,6 +36,40 @@ class ProductController extends Controller
     public function index(ProductDataTable $dataTable)
     {
         return $dataTable->render('admin.products.index');
+    }
+
+  /**
+     * الموافقة على المنتج.
+     */
+    public function approve(Product $product)
+    {
+        $product->approval_status = 'approved';
+        $product->rejection_reason = null;
+        $product->save();
+
+        // إرسال بريد إلكتروني للعميل
+        Mail::to($product->user->email)->send(new ProductApproved($product));
+
+        return response()->json(['message' => 'Product approved successfully.']);
+    }
+
+    /**
+     * رفض المنتج مع سبب الرفض.
+     */
+    public function reject(Request $request, Product $product)
+    {
+        $request->validate([
+            'rejection_reason' => 'required|string|max:255',
+        ]);
+
+        $product->approval_status = 'rejected';
+        $product->rejection_reason = $request->input('rejection_reason');
+        $product->save();
+
+        // إرسال بريد إلكتروني للعميل
+        Mail::to($product->user->email)->send(new ProductRejected($product));
+
+        return response()->json(['message' => 'Product rejected successfully.']);
     }
 
     /**
@@ -94,6 +131,7 @@ class ProductController extends Controller
             'minsellingprice' => '',
             'status' => 'required|in:new,open,suspended,closed',
              'is_published' => 'boolean',
+             
         ]);
           // Check if any files are present
           if (!$request->hasFile('image_path')) {
