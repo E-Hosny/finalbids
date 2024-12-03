@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\DataTables\BidPlacedDataTable;
+use App\Http\Controllers\Controller;
+use App\Mail\BidStatusMail;
 use App\Models\BidPlaced;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -41,40 +42,40 @@ class BidPlacedController extends Controller
     // {
     //     $bidPlacedId = $request->input('bid_request_id');
     //     $status = $request->input('status');
-    
+
     //     $bidPlaced = BidPlaced::find($bidPlacedId);
-    
+
     //     if (!$bidPlaced) {
     //         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
     //     }
-    
+
     //     $bidPlaced->status = $status;
     //     $bidPlaced->save();
-    
+
     //     $message = $status == 1 ? 'Bid request approved successfully.' : 'Bid request declined successfully.';
-    
+
     //     return response()->json(['success' => true, 'message' => $message]);
     // }
-    
+
     // public function updateStatus(Request $request)
     // {
     //     $bidPlacedId = $request->input('bid_request_id');
     //     $status = $request->input('status');
-    
+
     //     $bidPlaced = BidPlaced::find($bidPlacedId);
-    
+
     //     if (!$bidPlaced) {
     //         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
     //     }
-    
+
     //     $bidPlaced->status = $status;
     //     $bidPlaced->save();
-    
+
     //     $message = $status == 1 ? 'Bid request approved successfully.' : 'Bid request Reject successfully.';
-    
+
     //     return response()->json(['success' => true, 'message' => $message]);
     // }
-    
+
 //     public function updateStatus(Request $request)
 // {
 //     $bidPlacedId = $request->input('bid_request_id');
