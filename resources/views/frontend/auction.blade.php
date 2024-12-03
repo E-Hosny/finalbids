@@ -436,12 +436,18 @@ td {
                         <td>{{ formatPrice($bid->bid_amount, session()->get('currency')) }} {{ $currency }}</td>
                         <td>{{ formatPrice($bid->total_amount, session()->get('currency')) }} {{ $currency }}</td>
                         <td>
-                            @if($bid->status == 1)  <!-- Accepted -->
+                            @if($bid->status == 0)  <!-- Accepted -->
+                                @if(session('locale') === 'en')
+                                pending
+                                @elseif(session('locale') === 'ar')
+                            انتظار  
+                                @endif
+                          @elseif($bid->status == 1)  <!-- Accepted -->
                                 @if(session('locale') === 'en')
                                 approved
                                 @elseif(session('locale') === 'ar')
                                     قبلت
-                                @endif
+                                @endif     
                             @elseif($bid->status == 2)  <!-- Rejected -->
                                 @if(session('locale') === 'en')
                                     Rejected
