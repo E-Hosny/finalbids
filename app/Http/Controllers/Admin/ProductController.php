@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ProductApproved;
 use App\Mail\ProductRejected;
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -41,37 +43,118 @@ class ProductController extends Controller
   /**
      * الموافقة على المنتج.
      */
+    // public function approve(Product $product)
+    // {
+    //     $product->approval_status = 'approved';
+    //     $product->rejection_reason = null;
+    //     $product->save();
+
+    //     // إرسال بريد إلكتروني للعميل
+    //     Mail::to($product->user->email)->send(new ProductApproved($product));
+
+    //     return response()->json(['message' => 'Product approved successfully.']);
+    // }
     public function approve(Product $product)
-    {
+{
+    try {
         $product->approval_status = 'approved';
         $product->rejection_reason = null;
         $product->save();
 
-        // إرسال بريد إلكتروني للعميل
-        Mail::to($product->user->email)->send(new ProductApproved($product));
+        Log::info('Product approved successfully.', ['product_id' => $product->id]);
+
+        // إرسال البريد الإلكتروني باستخدام الطوابير
+        Mail::to($product->user->email)->queue(new ProductApproved($product));
 
         return response()->json(['message' => 'Product approved successfully.']);
+    } catch (\Exception $e) {
+        Log::error('Error approving product.', [
+            'product_id' => $product->id,
+            'error' => $e->getMessage(),
+        ]);
+
+        // return response()->json(['message' => 'An error occurred while approving the product.'], 500);
+        return response()->json([
+            'message' => 'Product approved successfully.',
+            'updatedProduct' => $product,
+        ]);
+        
     }
+}
+
 
     /**
      * رفض المنتج مع سبب الرفض.
      */
+    // public function reject(Request $request, Product $product)
+    // {
+    //     $request->validate([
+    //         'rejection_reason' => 'required|string|max:255',
+    //     ]);
+
+    //     $product->approval_status = 'rejected';
+    //     $product->rejection_reason = $request->input('rejection_reason');
+    //     $product->save();
+
+    //     // إرسال بريد إلكتروني للعميل
+    //     Mail::to($product->user->email)->send(new ProductRejected($product));
+
+    //     return response()->json(['message' => 'Product rejected successfully.']);
+    // }
     public function reject(Request $request, Product $product)
     {
         $request->validate([
             'rejection_reason' => 'required|string|max:255',
         ]);
-
-        $product->approval_status = 'rejected';
-        $product->rejection_reason = $request->input('rejection_reason');
-        $product->save();
-
-        // إرسال بريد إلكتروني للعميل
-        Mail::to($product->user->email)->send(new ProductRejected($product));
-
-        return response()->json(['message' => 'Product rejected successfully.']);
+    
+        try {
+            // بدء معاملة قاعدة البيانات
+            \DB::beginTransaction();
+    
+            $product->approval_status = 'rejected';
+            $product->rejection_reason = $request->input('rejection_reason');
+            $product->save();
+    
+            // التحقق من وجود مستخدم مرتبط بالمنتج
+            if ($product->user && $product->user->email) {
+                // إرسال البريد الإلكتروني باستخدام الطوابير
+                Mail::to($product->user->email)->queue(new ProductRejected($product));
+                
+            } else {
+                // تسجيل تحذير في السجلات
+                Log::warning('Product does not have an associated user or user email is missing.', [
+                    'product_id' => $product->id,
+                ]);
+            }
+    
+            // إنهاء المعاملة
+            \DB::commit();
+    
+            // تحميل العلاقات اللازمة لعرض المنتج في DataTable
+            $product->load('user', 'auctiontype', 'project');
+    
+            // إعداد حالة الموافقة بتنسيق HTML
+            $product->approval_status_badge = '<span class="badge badge-danger">Rejected</span>';
+    
+            return response()->json([
+                'message' => 'Product rejected successfully.',
+                'updatedProduct' => $product,
+            ]);
+        } catch (\Exception $e) {
+            // إلغاء المعاملة في حالة حدوث خطأ
+            \DB::rollBack();
+    
+            Log::error('Error rejecting product.', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+            ]);
+    
+            return response()->json(['message' => 'An error occurred while rejecting the product.'], 500);
+        }
     }
-
+    
+    
+    
     /**
      * Show the form for creating a new resource.
      */

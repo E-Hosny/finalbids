@@ -57,7 +57,7 @@
     });
 });
 </script>
-
+{{-- 
 <script>
     $(document).on('click', '.approve-btn', function() {
         var productId = $(this).data('id');
@@ -105,7 +105,10 @@
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                $('#product-table').DataTable().ajax.reload(null, false);
+                // $('#product-table').DataTable().ajax.reload(null, false);
+                var table = $('#product-table').DataTable();
+                table.row($(this).parents('tr')).data(response.updatedProduct).draw(false);
+
                 Swal.fire(
                     'Rejected!',
                     'Product has been rejected.',
@@ -114,6 +117,82 @@
             }
         });
     });
+    </script> --}}
+    <script>
+        $(document).on('click', '.approve-btn', function() {
+            var productId = $(this).data('id');
+            $.ajax({
+                url: '/admin/products/' + productId + '/approve',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    $('#product-table').DataTable().ajax.reload(null, false);
+                    alert(response.message);
+                },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        });
+        
+        $(document).on('click', '.reject-btn', function() {
+            var productId = $(this).data('id');
+            var $button = $(this); // حفظ مرجع للزر
+            Swal.fire({
+                title: 'Enter Rejection Reason',
+                input: 'text',
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Reject',
+                showLoaderOnConfirm: true,
+                preConfirm: (reason) => {
+                    if (!reason) {
+                        Swal.showValidationMessage('Reason is required');
+                    } else {
+                        return $.ajax({
+                            url: '/admin/products/' + productId + '/reject',
+                            method: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                rejection_reason: reason
+                            }
+                        }).then(function(response) {
+                            return response;
+                        }).catch(function(error) {
+                            Swal.showValidationMessage('An error occurred: ' + error.responseText);
+                        });
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var table = $('#product-table').DataTable();
+                    var row = $button.closest('tr'); // استخدام مرجع الزر لتحديد الصف
+                    var rowData = table.row(row).data();
+    
+                    // الحصول على البيانات المحدثة من الاستجابة
+                    var updatedProduct = result.value.updatedProduct;
+    
+                    // تحديث البيانات في الصف
+                    rowData.approval_status = updatedProduct.approval_status; // يجب أن تحتوي على HTML للبادج
+                    rowData.rejection_reason = updatedProduct.rejection_reason; // يجب أن تحتوي على HTML للبادج
+                    rowData.action = updatedProduct.action; // يجب أن تحتوي على HTML للأزرار
+    
+                    // تحديث الصف في DataTable
+                    table.row(row).data(rowData).draw(false);
+    
+                    Swal.fire(
+                        'Rejected!',
+                        result.value.message,
+                        'success'
+                    );
+                }
+            });
+        });
     </script>
     
 @endpush

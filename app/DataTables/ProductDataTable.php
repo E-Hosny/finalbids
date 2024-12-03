@@ -45,7 +45,7 @@ class ProductDataTable extends DataTable
                     'approval_status' => $product->approval_status,
                 ])->render();
             })
-            
+            ->rawColumns(['approval_status', 'action'])
             
             ->addColumn('action', 'admin.products.action')
             ->setRowId('id');
@@ -128,7 +128,7 @@ class ProductDataTable extends DataTable
             
             Column::make('is_popular')->render('full[\'is_popular\'] ? \'Yes\' : \'No\'')->addClass('text-center'),
             Column::make('status')->title('Status'),
-            Column::make('approval_status')->title('Approval Status'),
+            
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
