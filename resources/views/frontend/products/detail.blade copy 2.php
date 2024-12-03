@@ -194,26 +194,6 @@
 
 <body>
     @if($product)
-    @php
-        $currentDateTime = now();
-        $endDateTime = $product->project->end_date_time;
-        $isClosed = $currentDateTime > $endDateTime;
-
-        // تحديد ما إذا كان المنتج قد تم بيعه
-        $isSold = \App\Models\BidPlaced::where('product_id', $product->id)
-                        ->where('status', 1) // عدّل القيمة وفقًا لمنطق تطبيقك
-                        ->exists();
-
-        // جلب أعلى سعر مزايدة
-        $highestBid = \App\Models\BidPlaced::where('product_id', $product->id)
-                            ->orderBy('bid_amount', 'desc')
-                            ->first();
-
-        $highestBidAmount = $highestBid ? $highestBid->bid_amount : null;
-
-        $currency = session()->get('currency');
-    @endphp
-
         <div class="product-container">
             <div class="row">
                 <!-- Gallery Section -->
@@ -251,78 +231,50 @@
 
                     <div class="product-description">
                         <p>{{ session('locale') === 'en' ? 'Description' : 'الوصف' }}: <span class="bid-amount">{!! strip_tags(session('locale') === 'en' ? $product->description : $product->description_ar) !!}</span></p>
-                        <p>{{ session('locale') === 'en' ? 'Auction ending' : 'انتهاء المزاد' }} : {{ $product->project->end_date_time }}</p>
+                        <p>{{ session('locale') === 'en' ? 'Auction ending' : 'انتهاء المزاد' }} : {{ $product->auction_end_date }}</p>
                         <p>{{ session('locale') === 'en' ? 'Estimated Price Range' : 'النطاق السعري المقدر' }} : ${{ $product->start_price }} - ${{ $product->end_price }}</p>
                     </div>
 
-                    <!-- قسم المزايدة -->
-                    @if(!$isClosed)
-                        <!-- المزاد مفتوح -->
-                        <div class="bid-section">
-                            <!-- عرض أعلى مزايدة -->
-                            <div class="starting-bid">
-                                <strong>{{ session('locale') === 'en' ? 'Highest Bid' : 'أعلى مزايدة' }}:</strong>
-                                @php
-                                    $currentBidAmount = $highestBidAmount ?? $product->start_price;
-                                @endphp
-                                <span class="bid-amount">{{ formatPrice($currentBidAmount, session()->get('currency')) }} {{ $currency }}</span>
-                            </div>
-
-                            @if(Auth::check())
-                                <!-- نموذج تقديم المزايدة -->
-                                <form id="bidForm">
-                                    @csrf
-                                    <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-                                    <input type="hidden" name="project_id" value="{{ $product->project->id }}">
-                                    <input type="hidden" name="auction_type_id" value="{{ $product->auction_type_id }}">
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                                    <div class="form-group">
-                                        <label for="bidValue">{{ session('locale') === 'en' ? 'Enter Your Bid' : 'أدخل قيمة المزايدة' }}:</label>
-                                        <select name="bid_amount" id="bidValue" class="form-control">
-                                            @php
-                                                // تحديد آخر مزايدة حالية
-                                                $lastBidAmount = $highestBidAmount ?? $product->start_price;
-                                            @endphp
-                                            @foreach ($calculatedBids as $bidValue)
-                                                @if($bidValue->cal_amount > $lastBidAmount)
-                                                    <option value="{{ $bidValue->cal_amount }}">
-                                                        {{ formatPrice($bidValue->cal_amount, session()->get('currency')) }} {{ $currency }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <button type="button" class="btn-bid" id="placeBidButton">
-                                        {{ session('locale') === 'en' ? 'Place Bid' : 'وضع مزايدة' }}
-                                    </button>
-                                </form>
-                            @else
-                                <a class="btn-bid" data-bs-toggle="modal" data-bs-target="#LoginModal">
-                                    {{ session('locale') === 'en' ? 'LOGIN TO BID' : 'تسجيل الدخول للمزايدة' }}
-                                </a>
-                            @endif
+                    <div class="bid-section">
+                        <div class="starting-bid">
+                            {{ session('locale') === 'en' ? 'STARTING BID' : 'بداية المزاد' }} <span class="bid-amount">${{ $product->start_price }}</span>
                         </div>
-                    @else
-                        <!-- المزاد مغلق -->
-                        @if($isSold)
-                            <!-- المنتج تم بيعه -->
-                            <div class="bid-section">
-                                <div class="starting-bid">
-                                    <strong>{{ session('locale') === 'en' ? 'Sale Price' : 'سعر البيع' }}:</strong>
-                                    <span class="bid-amount">{{ formatPrice($highestBidAmount, session()->get('currency')) }} {{ $currency }}</span>
+
+                        @if(Auth::check())
+                            <form id="bidForm">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                                <input type="hidden" name="project_id" value="{{ $product->project->id }}">
+                                <input type="hidden" name="auction_type_id" value="{{ $product->auctionType->id }}">
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                                <div class="form-group">
+                                    <label for="bidValue">{{ session('locale') === 'en' ? 'Enter Your Bid' : 'أدخل قيمة المزايدة' }}:</label>
+                                    <select name="bid_amount" id="bidValue" class="form-control">
+                                        @php
+                                            // تحديد آخر مزايدة حالية
+                                            $lastBidAmount = $lastBid ? $lastBid->bid_amount : $product->start_price;
+                                        @endphp
+                                        @foreach ($calculatedBids as $bidValue)
+                                            @if($bidValue->cal_amount > $lastBidAmount)
+                                                <option value="{{ $bidValue->cal_amount }}">
+                                                    {{ formatPrice($bidValue->cal_amount, session()->get('currency')) }} {{ $currency }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
                                 </div>
-                            </div>
+
+                                <button type="button" class="btn-bid" id="placeBidButton">
+                                    {{ session('locale') === 'en' ? 'Place Bid' : (session('locale') === 'ar' ? 'وضع مزايدة' : 'Place Bid') }}
+                                </button>
+                            </form>
                         @else
-                            <!-- المنتج لم يتم بيعه -->
-                            <div class="bid-section">
-                                <p style="color: red;">
-                                    {{ session('locale') === 'en' ? 'This lot is closed and was not sold.' : 'هذا المنتج مغلق ولم يتم بيعه.' }}
-                                </p>
-                            </div>
+                            <a class="btn-bid" data-bs-toggle="modal" data-bs-target="#LoginModal">
+                                {{ session('locale') === 'en' ? 'LOGIN TO BID' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}
+                            </a>
                         @endif
-                    @endif
+                    </div>
 
                     <div class="share-section">
                         <span class="share-text">{{ session('locale') === 'en' ? 'Share' : 'مشاركة' }}</span>
@@ -376,40 +328,34 @@
             showSlide(currentSlide);
         }, 5000);
 
-        var placeBidButton = document.getElementById('placeBidButton');
-        if (placeBidButton) {
-            placeBidButton.addEventListener('click', function() {
-                const bidValue = document.getElementById('bidValue').value;
-                const projectId = '{{ $product->project->id }}';
-                const auctionTypeId = '{{ $product->auction_type_id }}';
-                const productId = '{{ $product->id }}';
+        document.getElementById('placeBidButton').addEventListener('click', function() {
+            const bidValue = document.getElementById('bidValue').value;
+            const projectId = '{{ $product->project->id }}';
+            const auctionTypeId = '{{ $product->auctionType->id }}';
+            const productId = '{{ $product->id }}';
 
-                axios.post('{{ route("bidplaced") }}', {
-                    user_id: '{{ Auth::id() }}',
-                    project_id: projectId,
-                    auction_type_id: auctionTypeId,
-                    bid_amount: bidValue,
-                    product_id: productId,
-                })
-                .then((response) => {
-                    console.log(response);
-                    const bidPlacedId = response.data.bid.id;
-                    window.location.href = '{{ route("checkout") }}?bid_placed_id=' + bidPlacedId + '&product_id=' + productId;
-                })
-                .catch(function(error) {
-                    console.error(error);
-                    let errorMessage = 'Something went wrong!';
-                    if (error.response && error.response.data && error.response.data.message) {
-                        errorMessage = error.response.data.message;
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: errorMessage,
-                    });
+            axios.post('{{ route("bidplaced") }}', {
+                user_id: '{{ Auth::id() }}',
+                project_id: projectId,
+                auction_type_id: auctionTypeId,
+                bid_amount: bidValue,
+                product_id: productId,
+            })
+            .then((response) => {
+                console.log(response);
+                const bidPlacedId = response.data.bid.id;
+                // الانتقال إلى صفحة checkout بعد تقديم المزايدة
+                window.location.href = '{{ route("checkout") }}?bid_placed_id=' + bidPlacedId + '&product_id=' + productId;
+            })
+            .catch(function(error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
                 });
             });
-        }
+        });
     </script>
 
 @include('frontend.layouts.footer')

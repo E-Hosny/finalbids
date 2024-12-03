@@ -278,399 +278,147 @@ class HomepageController extends Controller
         return view('frontend.pastauctionlist', compact('projects', 'currency'));
     }
 
-    // public function productsByProject($slug, Request $request)
-    // {
-    //     $langId = session('locale');
-    //     $currency = session()->get('currency');
-    //     $projects = Project::where('slug', $slug)->first();
-    //     $productsQuery = Product::where('project_id', $projects->id);
-    //     // p($mostRecentBids);
-    //     if ($request->has('search') && !empty($request->search)) {
-    //         $searchTerm = $request->search;
-    //         $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
-    //     }
-
-    //     if ($request->has('sort')) {
-    //         $sortOrder = $request->sort;
-
-    //         if ($sortOrder === 'price_high_low') {
-    //             $productsQuery->orderBy('reserved_price', 'desc');
-    //         } elseif ($sortOrder === 'price_low_high') {
-    //             $productsQuery->orderBy('reserved_price', 'asc');
-    //         }
-    //     } else {
-
-    //         $productsQuery->orderBy('reserved_price', 'asc');
-    //     }
-
-    //     $products = $productsQuery->paginate(10);
-
-    //     $totalItems = $products->total();
-
-    //     $wishlist = [];
-    //     if (Auth::check()) {
-    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-    //     }
-
-    //     $wishlist = [];
-    //     if (Auth::check()) {
-    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-    //     }
-    //     $userBidRequests = [];
-    //     if (Auth::check()) {
-    //         $userBidRequests = BidRequest::where('user_id', Auth::id())
-    //             ->pluck('status', 'project_id')
-    //             ->toArray();
-    //     }
-
-    //     return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
-    // }
     public function productsByProject($slug, Request $request)
-{
-    $langId = session('locale');
-    $currency = session()->get('currency');
-    $projects = Project::where('slug', $slug)->first();
-    $currentDateTime = now();
+    {
+        $langId = session('locale');
+        $currency = session()->get('currency');
+        $projects = Project::where('slug', $slug)->first();
+        $productsQuery = Product::where('project_id', $projects->id);
+        // p($mostRecentBids);
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+        }
 
-    $productsQuery = Product::where('project_id', $projects->id);
+        if ($request->has('sort')) {
+            $sortOrder = $request->sort;
 
-    // تطبيق عمليات البحث والفرز إذا وجدت
-    if ($request->has('search') && !empty($request->search)) {
-        $searchTerm = $request->search;
-        $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
-    }
+            if ($sortOrder === 'price_high_low') {
+                $productsQuery->orderBy('reserved_price', 'desc');
+            } elseif ($sortOrder === 'price_low_high') {
+                $productsQuery->orderBy('reserved_price', 'asc');
+            }
+        } else {
 
-    if ($request->has('sort')) {
-        $sortOrder = $request->sort;
-
-        if ($sortOrder === 'price_high_low') {
-            $productsQuery->orderBy('reserved_price', 'desc');
-        } elseif ($sortOrder === 'price_low_high') {
             $productsQuery->orderBy('reserved_price', 'asc');
         }
-    } else {
-        $productsQuery->orderBy('reserved_price', 'asc');
+
+        $products = $productsQuery->paginate(10);
+
+        $totalItems = $products->total();
+
+        $wishlist = [];
+        if (Auth::check()) {
+            $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+        }
+
+        $wishlist = [];
+        if (Auth::check()) {
+            $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+        }
+        $userBidRequests = [];
+        if (Auth::check()) {
+            $userBidRequests = BidRequest::where('user_id', Auth::id())
+                ->pluck('status', 'project_id')
+                ->toArray();
+        }
+
+        return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
     }
-
-    // الحصول على المنتجات مع تحميل المشروع المرتبط
-    $products = $productsQuery->with('project')->paginate(10);
-
-    // إضافة مؤشر حالة المنتج (مغلق أو مفتوح)
-    foreach ($products as $product) {
-        $product->is_closed = $product->project->end_date_time < $currentDateTime;
-    }
-
-    $totalItems = $products->total();
-
-    $wishlist = [];
-    if (Auth::check()) {
-        $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-    }
-
-    $userBidRequests = [];
-    if (Auth::check()) {
-        $userBidRequests = BidRequest::where('user_id', Auth::id())
-            ->pluck('status', 'project_id')
-            ->toArray();
-    }
-
-    return view('frontend.products.index', [
-        'products' => $products,
-        'projects' => $projects,
-        'wishlist' => $wishlist,
-        'totalItems' => $totalItems,
-        'userBidRequests' => $userBidRequests,
-        'currency' => $currency,
-    ]);
-}
-
 //
-    // public function productsdetail($slug)
-    // {
-    //     $currency = session()->get('currency');
-    //     $product = Product::where('slug', $slug)->first();
-    //     $project = Project::where('id', $product->project_id)->first();
-    //     $project = Project::where('id', $product->project_id)->first();
-    //     $bidRequest = BidRequest::where('project_id', $product->project_id)
-    //                 ->where('status', 1)
-    //                 ->first();
-    //     // $bidValues = Bidvalue::where('status', 1)
-    //     //             ->where('cal_amount', '>', $product->reserved_price)
-    //     //             ->orderBy('cal_amount')
-    //     //             ->get();
+    public function productsdetail($slug)
+    {
+        $currency = session()->get('currency');
+        $product = Product::where('slug', $slug)->first();
+        $project = Project::where('id', $product->project_id)->first();
+        $project = Project::where('id', $product->project_id)->first();
+        $bidRequest = BidRequest::where('project_id', $product->project_id)
+                    ->where('status', 1)
+                    ->first();
+        // $bidValues = Bidvalue::where('status', 1)
+        //             ->where('cal_amount', '>', $product->reserved_price)
+        //             ->orderBy('cal_amount')
+        //             ->get();
 
-    //     // $closestBid = $bidValues->sortBy(function ($bid) use ($product) {
-    //     //     return abs($bid->cal_amount <= $product->reserved_price);
-    //     //   })->first();
+        // $closestBid = $bidValues->sortBy(function ($bid) use ($product) {
+        //     return abs($bid->cal_amount <= $product->reserved_price);
+        //   })->first();
 
-    //     $bidValues = Bidvalue::where('status', 1)
-    //             ->where('cal_amount', '>', $product->reserved_price)
-    //             ->orderBy('cal_amount')
-    //             ->get();
+        $bidValues = Bidvalue::where('status', 1)
+                ->where('cal_amount', '>', $product->reserved_price)
+                ->orderBy('cal_amount')
+                ->get();
 
-    //         $lastBid = BidPlaced::where('product_id', $product->id)
-    //             ->orderBy('created_at', 'desc')
-    //             ->first();
+            $lastBid = BidPlaced::where('product_id', $product->id)
+                ->orderBy('created_at', 'desc')
+                ->first();
 
-    //         $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
-    //         // return  $lastBid->bid_amount ;
+            $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
+            // return  $lastBid->bid_amount ;
 
-    //         $filteredBidValues = $bidValues->filter(function ($bid) use ($lastBidAmount) {
-    //             return $bid->cal_amount > $lastBidAmount;
-    //         });
+            $filteredBidValues = $bidValues->filter(function ($bid) use ($lastBidAmount) {
+                return $bid->cal_amount > $lastBidAmount;
+            });
 
-    //         $closestBid = $filteredBidValues->sortBy(function ($bid) use ($product) {
-    //             return abs($bid->cal_amount - $product->reserved_price);
-    //         })->first();
+            $closestBid = $filteredBidValues->sortBy(function ($bid) use ($product) {
+                return abs($bid->cal_amount - $product->reserved_price);
+            })->first();
 
-    //     $lastBid = null;
-    //     $lastBidAmount = null;
-    //      $lastBid = BidPlaced::where('product_id', $product->id)
-    //                         ->where('project_id', $product->project_id)
-    //                         ->orderBy('created_at', 'desc')
-    //                         ->where('status', '!=', 0)
-    //                         ->first();
-    //     $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
-
-    //     //  p($lastBidAmount);
-    //     $countries = Country::all();
-    //     $states = State::all();
-    //     $cities = City::all();
-    //     $userAddresses = [];
-    //     $selectedAddress = null;
-
-    //     if (Auth::check()) {
-    //         $userAddresses = UserAddress::where('user_id', auth()->user()->id)->get();
-
-    //         $selectedCountryId = $userAddresses->pluck('country')->first();
-    //         $selectedAddress = $userAddresses->where('country', $selectedCountryId)->first();
-    //         $selectedStateId = $userAddresses->pluck('state')->first();
-    //         $selectedAddress = $userAddresses->where('state',  $selectedStateId)->first();
-    //         $selectedCityId = $userAddresses->pluck('city')->first();
-    //         $selectedAddress = $userAddresses->where('city', $selectedCityId)->first();
-    //     }
-
-    //     if ($selectedAddress === null) {
-    //         $defaultCountryId = 1;
-    //         $defaultCountry = Country::find($defaultCountryId);
-
-    //         $defaultAddress = new UserAddress();
-    //         $defaultAddress->country = $defaultCountryId;
-
-    //         $selectedAddress = $defaultAddress;
-    //     }
-    //     $user_id = Auth::id();
-    //     $product_id = $product->id;
-
-    //     $bidPlacedId = BidPlaced::where('user_id', $user_id)
-    //             ->where('product_id', $product_id)
-    //             ->where('status',1)
-    //             ->first();
-
-    //     if (!$product) {
-    //         abort(404);
-    //     }
-    //     $wishlist = [];
-    //     if (Auth::check()) {
-    //         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-    //     }
-    //     $currentBid = $product->reserved_price;
-
-    //     return view('frontend.products.detail', ['product' => $product,'bidPlacedId'=>$bidPlacedId,'selectedAddress'=>$selectedAddress,'userAddresses'=>$userAddresses, 'countries' => $countries, 'states' => $states, 'cities' => $cities, 'lastBidAmount' => $lastBidAmount, 'wishlist' => $wishlist, 'closestBid' => $closestBid, 'calculatedBids' => $bidValues, 'project' => $project, 'bidRequest' => $bidRequest,'currency'=>$currency,'lastBid'=>$lastBid]);
-    // }
-
-// public function productsdetail($slug)
-// {
-//     $currency = session()->get('currency');
-//     $product = Product::where('slug', $slug)->with('project')->first();
-
-//     if (!$product) {
-//         abort(404);
-//     }
-
-//     $currentDateTime = now();
-
-//     // تحديد ما إذا كان المنتج مغلقًا
-//     $isClosed = $product->project->end_date_time < $currentDateTime;
-
-//     // جلب طلبات العطاءات
-//     $bidRequest = BidRequest::where('project_id', $product->project_id)
-//                 ->where('status', 1)
-//                 ->first();
-
-//     // جلب قيم العطاءات
-//     $bidValues = Bidvalue::where('status', 1)
-//             ->where('cal_amount', '>', $product->reserved_price)
-//             ->orderBy('cal_amount')
-//             ->get();
-
-//     // جلب آخر عطاء
-//     $lastBid = BidPlaced::where('product_id', $product->id)
-//         ->orderBy('created_at', 'desc')
-//         ->first();
-
-//     $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
-
-//     // تصفية قيم العطاءات بناءً على آخر عطاء
-//     $filteredBidValues = $bidValues->filter(function ($bid) use ($lastBidAmount) {
-//         return $bid->cal_amount > $lastBidAmount;
-//     });
-
-//     // العثور على أقرب عطاء
-//     $closestBid = $filteredBidValues->sortBy(function ($bid) use ($product) {
-//         return abs($bid->cal_amount - $product->reserved_price);
-//     })->first();
-
-//     // جلب آخر عطاء مرة أخرى (ربما زائدة عن الحاجة ويمكن تحسينها)
-//     $lastBid = BidPlaced::where('product_id', $product->id)
-//                         ->where('project_id', $product->project_id)
-//                         ->orderBy('created_at', 'desc')
-//                         ->where('status', '!=', 0)
-//                         ->first();
-
-//     $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
-
-//     // جلب البيانات الجغرافية
-//     $countries = Country::all();
-//     $states = State::all();
-//     $cities = City::all();
-//     $userAddresses = [];
-//     $selectedAddress = null;
-
-//     if (Auth::check()) {
-//         $userAddresses = UserAddress::where('user_id', auth()->user()->id)->get();
-
-//         $selectedCountryId = $userAddresses->pluck('country')->first();
-//         $selectedAddress = $userAddresses->where('country', $selectedCountryId)->first();
-//         $selectedStateId = $userAddresses->pluck('state')->first();
-//         $selectedAddress = $userAddresses->where('state',  $selectedStateId)->first();
-//         $selectedCityId = $userAddresses->pluck('city')->first();
-//         $selectedAddress = $userAddresses->where('city', $selectedCityId)->first();
-//     }
-
-//     if ($selectedAddress === null) {
-//         $defaultCountryId = 1;
-//         $defaultCountry = Country::find($defaultCountryId);
-
-//         $defaultAddress = new UserAddress();
-//         $defaultAddress->country = $defaultCountryId;
-
-//         $selectedAddress = $defaultAddress;
-//     }
-
-//     $user_id = Auth::id();
-//     $product_id = $product->id;
-
-//     $bidPlacedId = BidPlaced::where('user_id', $user_id)
-//             ->where('product_id', $product_id)
-//             ->where('status',1)
-//             ->first();
-
-//     $wishlist = [];
-//     if (Auth::check()) {
-//         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
-//     }
-
-//     $currentBid = $product->reserved_price;
-
-//     return view('frontend.products.detail', [
-//         'product' => $product,
-//         'bidPlacedId' => $bidPlacedId,
-//         'selectedAddress' => $selectedAddress,
-//         'userAddresses' => $userAddresses,
-//         'countries' => $countries,
-//         'states' => $states,
-//         'cities' => $cities,
-//         'lastBidAmount' => $lastBidAmount,
-//         'wishlist' => $wishlist,
-//         'closestBid' => $closestBid,
-//         'calculatedBids' => $bidValues,
-//         'project' => $product->project, // تم تحميل المشروع مع المنتج
-//         'bidRequest' => $bidRequest,
-//         'currency' => $currency,
-//         'lastBid' => $lastBid,
-//         'isClosed' => $isClosed, // تمرير مؤشر حالة المنتج إلى العرض
-//     ]);
-// }
-// public function productsdetail($slug)
-// {
-//     $currency = session()->get('currency');
-//     $product = Product::where('slug', $slug)->with('project')->first();
-
-//     if (!$product) {
-//         abort(404);
-//     }
-
-//     $currentDateTime = now();
-
-//     // تحديد ما إذا كان المنتج مغلقًا
-//     $isClosed = $currentDateTime > $product->project->end_date_time;
-
-//     // جلب أعلى سعر مزايدة
-//     $highestBid = BidPlaced::where('product_id', $product->id)
-//                             ->orderBy('bid_amount', 'desc')
-//                             ->first();
-
-//     $highestBidAmount = $highestBid ? $highestBid->bid_amount : null;
-
-//     // تحديد ما إذا كان المنتج قد تم بيعه
-//     $isSold = BidPlaced::where('product_id', $product->id)
-//                         ->where('status', 1) // عدّل القيمة وفقًا لمنطق تطبيقك
-//                         ->exists();
-
-//     // تمرير هذه المتغيرات إلى العرض
-//     return view('frontend.products.detail', [
-//         'product' => $product,
-//         'highestBidAmount' => $highestBidAmount,
-//         'isClosed' => $isClosed,
-//         'isSold' => $isSold,
-//         'currency' => $currency,
-//         // ... متغيرات أخرى
-//     ]);
-// }
-public function productsdetail($slug)
-{
-    $currency = session()->get('currency');
-    $product = Product::where('slug', $slug)->with(['project', 'productGalleries'])->first();
-
-    if (!$product) {
-        abort(404);
-    }
-
-    $currentDateTime = now();
-    $endDateTime = $product->project->end_date_time;
-    $isClosed = $currentDateTime > $endDateTime;
-
-    // تحديد ما إذا كان المنتج قد تم بيعه
-    $isSold = BidPlaced::where('product_id', $product->id)
-                        ->where('status', 1) // عدّل القيمة وفقًا لمنطق تطبيقك
-                        ->exists();
-
-    // جلب أعلى سعر مزايدة
-    $highestBid = BidPlaced::where('product_id', $product->id)
-                            ->orderBy('bid_amount', 'desc')
+        $lastBid = null;
+        $lastBidAmount = null;
+         $lastBid = BidPlaced::where('product_id', $product->id)
+                            ->where('project_id', $product->project_id)
+                            ->orderBy('created_at', 'desc')
+                            ->where('status', '!=', 0)
                             ->first();
+        $lastBidAmount = $lastBid ? $lastBid->bid_amount : null;
 
-    $highestBidAmount = $highestBid ? $highestBid->bid_amount : null;
+        //  p($lastBidAmount);
+        $countries = Country::all();
+        $states = State::all();
+        $cities = City::all();
+        $userAddresses = [];
+        $selectedAddress = null;
 
-    // جلب قيم المزايدات المحتسبة
-    $calculatedBids = Bidvalue::where('status', 1)
-                    ->where('cal_amount', '>', $product->start_price)
-                    ->orderBy('cal_amount')
-                    ->get();
+        if (Auth::check()) {
+            $userAddresses = UserAddress::where('user_id', auth()->user()->id)->get();
 
-    return view('frontend.products.detail', [
-        'product' => $product,
-        'highestBidAmount' => $highestBidAmount,
-        'isClosed' => $isClosed,
-        'isSold' => $isSold,
-        'currency' => $currency,
-        'calculatedBids' => $calculatedBids,
-    ]);
-}
+            $selectedCountryId = $userAddresses->pluck('country')->first();
+            $selectedAddress = $userAddresses->where('country', $selectedCountryId)->first();
+            $selectedStateId = $userAddresses->pluck('state')->first();
+            $selectedAddress = $userAddresses->where('state',  $selectedStateId)->first();
+            $selectedCityId = $userAddresses->pluck('city')->first();
+            $selectedAddress = $userAddresses->where('city', $selectedCityId)->first();
+        }
 
+        if ($selectedAddress === null) {
+            $defaultCountryId = 1;
+            $defaultCountry = Country::find($defaultCountryId);
 
+            $defaultAddress = new UserAddress();
+            $defaultAddress->country = $defaultCountryId;
 
+            $selectedAddress = $defaultAddress;
+        }
+        $user_id = Auth::id();
+        $product_id = $product->id;
+
+        $bidPlacedId = BidPlaced::where('user_id', $user_id)
+                ->where('product_id', $product_id)
+                ->where('status',1)
+                ->first();
+
+        if (!$product) {
+            abort(404);
+        }
+        $wishlist = [];
+        if (Auth::check()) {
+            $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+        }
+        $currentBid = $product->reserved_price;
+
+        return view('frontend.products.detail', ['product' => $product,'bidPlacedId'=>$bidPlacedId,'selectedAddress'=>$selectedAddress,'userAddresses'=>$userAddresses, 'countries' => $countries, 'states' => $states, 'cities' => $cities, 'lastBidAmount' => $lastBidAmount, 'wishlist' => $wishlist, 'closestBid' => $closestBid, 'calculatedBids' => $bidValues, 'project' => $project, 'bidRequest' => $bidRequest,'currency'=>$currency,'lastBid'=>$lastBid]);
+    }
     // /based on category redirect to
 
     public function projectByCategory($slug)

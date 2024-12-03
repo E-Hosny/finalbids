@@ -100,4 +100,8 @@ class Product extends Model
         // منطق التحويل إذا لزم الأمر
         $this->attributes['reserved_price'] = $value;
     }
+    public function productGalleries()
+    {
+        return $this->hasMany(Gallery::class, 'product_id', 'id');
+    }
 }
