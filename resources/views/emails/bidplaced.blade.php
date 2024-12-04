@@ -98,8 +98,8 @@
     <div class="container">
 
         <div class="header">
-            <img src="https://bid.sa/img/settings/1705055836image.jpg" alt="Logo">
-            <h1>Your Bid has been Successfully Placed</h1>
+            {{-- <img src="{{ asset('logo.png') }}" alt="Logo"> --}}
+            <h1>Bid request has been Successfully Placed</h1>
         </div>
 
         <p>Hello {{ $first_name }},</p>

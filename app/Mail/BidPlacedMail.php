@@ -19,7 +19,7 @@ class BidPlacedMail extends Mailable
     public $bid_amount;
     public $auction_end_time;
 
- 
+
     public function __construct($first_name,$product_name,$product_image,$bid_amount,$auction_end_time)
     {
         $this->first_name = $first_name;
@@ -29,8 +29,8 @@ class BidPlacedMail extends Mailable
         $this->auction_end_time = $auction_end_time;
 
     }
-    
-    
+
+
         public function build()
         {
             return $this->markdown('emails.bidplaced')
