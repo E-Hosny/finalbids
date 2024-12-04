@@ -304,10 +304,12 @@
     @if($acceptedBids->isNotEmpty())
         <div class="bid-history mt-4">
             <h4>{{ session('locale') === 'en' ? 'Bid History' : 'تاريخ المزايدات' }}</h4>
+            
+            @if(session('locale')=='en')
             <div class="bid-list">
                 @foreach($acceptedBids as $bid)
                     <div class="bid-item">
-                        <span class="bid-amount">
+                        <span class="bid-amount px-2">
                             {{ formatPrice($bid->bid_amount, $currency) }} {{ $currency }}
                         </span>
                         <span class="bid-date">
@@ -316,6 +318,22 @@
                     </div>
                 @endforeach
             </div>
+            @else
+            <div class="bid-list">
+                @foreach($acceptedBids as $bid)
+                <div class="bid-item" style="text-align: right; direction: rtl;">
+                    <span class="bid-amount px-2" style=" font-weight: bold;">
+                        {{ formatPrice($bid->bid_amount, $currency) }} <span> ريال </span>
+                    </span>
+                    <span class="bid-date" style= color: #666; font-size: 0.9em;">
+                        {{ $bid->created_at->format('Y-m-d H:i') }}
+                    </span>
+                </div>
+                
+                @endforeach
+            </div>
+
+            @endif
         </div>
     @endif
 </div>
