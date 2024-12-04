@@ -250,12 +250,12 @@
 @if($canPlaceBid)
 <!-- المزاد مفتوح للمزايدة -->
 <div class="bid-section">
-    <div class="starting-bid">
+    {{-- <div class="starting-bid">
         <strong>{{ session('locale') === 'en' ? 'Highest Bid' : 'أعلى مزايدة' }}:</strong>
         <span class="bid-amount">
             {{ formatPrice($highestBidAmount, $currency) }} {{ $currency }}
         </span>
-    </div>
+    </div> --}}
 
     @if(Auth::check())
         <form id="bidForm">
