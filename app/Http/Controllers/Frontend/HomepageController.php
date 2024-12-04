@@ -1137,12 +1137,14 @@ public function productsdetail($slug)
             if ($user) {
 
                 $otp = rand(1000, 9999);
-                $msg = $otp . ' is your Verification code for Bids.Sa ';
-                $first_name = $user->first_name;
+                // $msg = $otp . ' is your Verification code for Bids.Sa ';
+                // $first_name = $user->first_name;
 
 
-                Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
+                // Mail::to($user->email)->send(new ResetPasswordMail($otp, $first_name));
                 // Mail::to($user->email)->send(new ResetPasswordMail( $otp));
+                $this->sendOtpViaTaqnyat($user->phone, $otp);
+
 
                 TempUsers::where('id', $user->id)->update(['otp' => $otp]);
                 return response()->json([
