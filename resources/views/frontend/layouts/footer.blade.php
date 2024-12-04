@@ -205,7 +205,7 @@ $('.home_slider .owl-carousel').owlCarousel({
     dots: true,
     loop: true,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 300,
     autoplayHoverPause: false,
     nav: false,
     items: 1,
