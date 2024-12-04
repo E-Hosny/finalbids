@@ -648,70 +648,6 @@ class HomepageController extends Controller
 //         'acceptedBids' => $acceptedBids, // إذا كنت ترغب في عرض تاريخ المزايدات المقبولة
 //     ]);
 // }
-// public function productsdetail($slug)
-// {
-//     $currency = session()->get('currency');
-//     $product = Product::where('slug', $slug)->with(['project', 'productGalleries'])->first();
-
-//     if (!$product) {
-//         abort(404);
-//     }
-
-//     $currentDateTime = now();
-//     $endDateTime = $product->auction_end_date; // استخدام الحقل auction_end_date مباشرةً
-
-//     $isClosed = $currentDateTime > $endDateTime;
-
-//     // جلب أعلى مزايدة مقبولة فقط (حيث status = 1)
-//     $highestAcceptedBid = BidPlaced::where('product_id', $product->id)
-//                             ->where('status', 1) // نجلب فقط المزايدات المقبولة
-//                             ->where('bid_amount', '>', 0) // للتأكد من أن المبلغ أكبر من صفر
-//                             ->orderBy('bid_amount', 'desc')
-//                             ->first();
-
-//     // تعيين القيمة الافتراضية إلى السعر الابتدائي إذا لم تكن هناك مزايدات مقبولة
-//     $highestBidAmount = $highestAcceptedBid ? $highestAcceptedBid->bid_amount : $product->start_price;
-
-//     // تحديد ما إذا كان المنتج قد تم بيعه (وجود مزايدة مقبولة)
-//     $isSold = $highestAcceptedBid !== null;
-
-//     // جلب قيم المزايدات المحتسبة للمزادات المفتوحة فقط
-//     $calculatedBids = [];
-//     if (!$isClosed) {
-//         $calculatedBids = Bidvalue::where('status', 1)
-//                                 ->where('cal_amount', '>', $highestBidAmount)
-//                                 ->orderBy('cal_amount')
-//                                 ->get();
-//     }
-
-//     // جلب المزايدات المقبولة لعرضها (اختياري)
-//     $acceptedBids = BidPlaced::where('product_id', $product->id)
-//                             ->where('status', 1)
-//                             ->orderBy('bid_amount', 'desc')
-//                             ->get();
-
-//     // إذا كان المزاد مغلقًا، قم بتحديد الرسالة المناسبة
-//     $auctionStatusMessage = null;
-//     if ($isClosed) {
-//         if ($isSold) {
-//             $auctionStatusMessage = __('This lot is closed and was sold for :price.', ['price' => $highestBidAmount . ' ' . $currency]);
-//         } else {
-//             $auctionStatusMessage = __('This lot is closed and was not sold.');
-//         }
-//     }
-
-//     return view('frontend.products.detail', [
-//         'product' => $product,
-//         'highestBidAmount' => $highestBidAmount,
-//         'isClosed' => $isClosed,
-//         'isSold' => $isSold,
-//         'currency' => $currency,
-//         'calculatedBids' => $calculatedBids,
-//         'acceptedBids' => $acceptedBids, // إذا كنت ترغب في عرض تاريخ المزايدات المقبولة
-//         'auctionStatusMessage' => $auctionStatusMessage, // الرسالة الخاصة بحالة المزاد
-//     ]);
-// }
-
 public function productsdetail($slug)
 {
     $currency = session()->get('currency');
@@ -722,64 +658,61 @@ public function productsdetail($slug)
     }
 
     $currentDateTime = now();
-    
-    // التحقق فقط من انتهاء المزاد وحالته
-    $isAuctionEnded = $currentDateTime > $product->auction_end_date;
-    $isProductClosed = $product->status === 'closed';
-    $isClosed = $isAuctionEnded || $isProductClosed;
+    $endDateTime = $product->auction_end_date; // استخدام الحقل auction_end_date مباشرةً
 
-    // جلب أعلى مزايدة مقبولة
+    $isClosed = $currentDateTime > $endDateTime;
+
+    // جلب أعلى مزايدة مقبولة فقط (حيث status = 1)
     $highestAcceptedBid = BidPlaced::where('product_id', $product->id)
-                            ->where('status', 1)
+                            ->where('status', 1) // نجلب فقط المزايدات المقبولة
+                            ->where('bid_amount', '>', 0) // للتأكد من أن المبلغ أكبر من صفر
                             ->orderBy('bid_amount', 'desc')
                             ->first();
 
+    // تعيين القيمة الافتراضية إلى السعر الابتدائي إذا لم تكن هناك مزايدات مقبولة
     $highestBidAmount = $highestAcceptedBid ? $highestAcceptedBid->bid_amount : $product->start_price;
 
-    // تحديد ما إذا كان المنتج قد تم بيعه
-    $isSold = $highestAcceptedBid !== null && $isClosed;
+    // تحديد ما إذا كان المنتج قد تم بيعه (وجود مزايدة مقبولة)
+    $isSold = $highestAcceptedBid !== null;
 
-    // يمكن المزايدة طالما المنتج غير مغلق وغير منتهي
-    $canPlaceBid = !$isAuctionEnded && $product->status !== 'closed';
-
-    // جلب قيم المزايدات المحتسبة إذا كان يمكن المزايدة
+    // جلب قيم المزايدات المحتسبة للمزادات المفتوحة فقط
     $calculatedBids = [];
-    if ($canPlaceBid) {
+    if (!$isClosed) {
         $calculatedBids = Bidvalue::where('status', 1)
                                 ->where('cal_amount', '>', $highestBidAmount)
                                 ->orderBy('cal_amount')
                                 ->get();
     }
 
-    // جلب المزايدات المقبولة
+    // جلب المزايدات المقبولة لعرضها (اختياري)
     $acceptedBids = BidPlaced::where('product_id', $product->id)
                             ->where('status', 1)
-                            ->orderBy('created_at', 'desc')
+                            ->orderBy('bid_amount', 'desc')
                             ->get();
 
-    // تحديد رسالة حالة المزاد
+    // إذا كان المزاد مغلقًا، قم بتحديد الرسالة المناسبة
     $auctionStatusMessage = null;
     if ($isClosed) {
         if ($isSold) {
-            $auctionStatusMessage = __('This lot is closed and was sold for :price.', 
-                ['price' => formatPrice($highestBidAmount, $currency) . ' ' . $currency]);
+            $auctionStatusMessage = __('This lot is closed and was sold for :price.', ['price' => $highestBidAmount . ' ' . $currency]);
         } else {
             $auctionStatusMessage = __('This lot is closed and was not sold.');
         }
     }
 
-    return view('frontend.products.detail', compact(
-        'product',
-        'highestBidAmount',
-        'isClosed',
-        'isSold',
-        'canPlaceBid',
-        'currency',
-        'calculatedBids',
-        'acceptedBids',
-        'auctionStatusMessage'
-    ));
+    return view('frontend.products.detail', [
+        'product' => $product,
+        'highestBidAmount' => $highestBidAmount,
+        'isClosed' => $isClosed,
+        'isSold' => $isSold,
+        'currency' => $currency,
+        'calculatedBids' => $calculatedBids,
+        'acceptedBids' => $acceptedBids, // إذا كنت ترغب في عرض تاريخ المزايدات المقبولة
+        'auctionStatusMessage' => $auctionStatusMessage, // الرسالة الخاصة بحالة المزاد
+    ]);
 }
+
+
     // /based on category redirect to
 
     public function projectByCategory($slug)
