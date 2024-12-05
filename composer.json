@@ -17,6 +17,8 @@
         "psy/psysh": "^0.11.21",
         "spatie/image-optimizer": "^1.7",
         "stichoza/google-translate-php": "^5.1",
+        "symfony/http-client": "^6.4",
+        "symfony/mailgun-mailer": "^6.4",
         "tinymce/tinymce": "^6.6",
         "tymon/jwt-auth": "^2.0",
         "yajra/laravel-datatables": "^10.1",

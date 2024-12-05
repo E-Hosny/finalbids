@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ContactUsSubjectController;
 use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Mail\MailgunTest;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\SocialController;
@@ -50,6 +51,11 @@ use App\Http\Controllers\Frontend\ProductController as FrontendProductController
 // Route::get('/', function () {
 //     return view('frontend.homepage');
 // });
+
+Route::get('/send-test',function(){
+    Mail::to('ebrahimhosny511@gmail.com')->send(new MailgunTest('hi this is test message from laravel app'));
+    return 'message sent succefully';
+});
 Route::get('/refer', [HomepageController::class, 'deeplink'])->name('refer');
 Route::get('/paymentSuccess', [HomepageController::class,'paymentSuccess'])->name('paymentSuccess');
 Route::get('/', [HomepageController::class,'homepage'])->name('homepage');
@@ -138,7 +144,7 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('/bidplaced', [DashboardController::class, 'bidplaced'])->name('bidplaced');
     Route::post('/bidingplaced', [BiddingController::class, 'bidingplaced'])->name('bidingplaced');
     Route::get('checkout', [BiddingController::class,'checkout'])->name('checkout');
-    Route::post('/bidingplaced', [BiddingController::class, 'bidingplaced'])->name('bidingplaced');
+    // Route::post('/bidingplaced', [BiddingController::class, 'bidingplaced'])->name('bidingplaced');
     Route::post('/paynow', [DashboardController::class, 'paynow'])->name('paynow');
     // 02 may
     Route::post('/bidingplacedlive', [BiddingController::class, 'bidingplacedlive'])->name('bidingplacedlive');
