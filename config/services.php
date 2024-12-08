@@ -36,6 +36,10 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
-    
+'myfatoorah' => [ // إضافة إعدادات MyFatoorah ضمن مجموعة خاصة
+        'api_key'      => env('MYFATOORAH_API_KEY'),
+        'test_mode'    => env('MYFATOORAH_TEST_MODE', true),
+        'country_iso'  => env('MYFATOORAH_COUNTRY_ISO', 'KWT'),
+    ],
 
 ];

@@ -32,6 +32,10 @@ use App\Http\Controllers\Frontend\LangController;
 use App\Http\Controllers\Frontend\BiddingController;
 use App\Http\Controllers\Frontend\UserCategoryController;
 use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
+use App\Http\Controllers\Frontend\PaymentController;
+use App\Http\Controllers\MyFatoorahController;
+
+
 
 
 
@@ -145,8 +149,14 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('/bidingplaced', [BiddingController::class, 'bidingplaced'])->name('bidingplaced');
     Route::get('checkout', [BiddingController::class,'checkout'])->name('checkout');
     // Route::post('/bidingplaced', [BiddingController::class, 'bidingplaced'])->name('bidingplaced');
-    Route::post('/paynow', [DashboardController::class, 'paynow'])->name('paynow');
+    // Route::post('/paynow', [DashboardController::class, 'paynow'])->name('paynow');
+    // Route::post('/myfatoorah/pay', [MyFatoorahController::class, 'index'])->name('myfatoorah.pay');        Route::post('/myfatoorah/callback', [MyFatoorahController::class, 'callback'])->name('myfatoorah.callback');
     // 02 may
+    // مسار لإنشاء الفاتورة والدفع
+Route::post('/myfatoorah/pay', [MyFatoorahController::class, 'index'])->name('myfatoorah.pay');
+
+// مسار لمعالجة الرد (callback) من MyFatoorah
+Route::get('/myfatoorah/callback', [MyFatoorahController::class, 'callback'])->name('myfatoorah.callback');
     Route::post('/bidingplacedlive', [BiddingController::class, 'bidingplacedlive'])->name('bidingplacedlive');
 
 });

@@ -18,7 +18,6 @@ use Auth;
 use Illuminate\Validation\Rules;
 use GoogleTranslate;
 use App\Models\Language;
-use App\Models\BidPlaced;
 use Illuminate\Support\Facades\Validator;
 use Imagecow\Libs\ImageCompressor;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
@@ -27,8 +26,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ProductApproved;
 use App\Mail\ProductRejected;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-
 
 
 
@@ -538,198 +535,78 @@ class ProductController extends Controller
         
     //     return redirect()->route('admin.products.index')->with('success', 'Product Updated Successfully!');
     // }
-    // public function update(Request $request, Product $product)
-    // {
-    //     $data = $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'title_ar' => 'required|string|max:255',
-    //         'auction_type_id' => 'required',
-    //         'auction_end_date' => [
-    //             '',
-    //             function ($attribute, $value, $fail) use ($request) {
-    //                 $auctionTypeId = $request->input('auction_type_id');
-    //                 if ($auctionTypeId == 2) {
-    //                     return;
-    //                 }
-    //                 $projectId = $request->input('project_id');
-    
-    //                 $project = Project::find($projectId);
-    
-    //                 if (!$project) {
-    //                     $fail('Invalid project selected.');
-    //                     return;
-    //                 }
-    
-    //                 $startDate = $project->start_date_time;
-    //                 $endDate = $project->end_date_time;
-    
-    //                 if ($value < $startDate) {
-    //                     $fail("The $attribute must not be less than the project start date and time ($startDate).");
-    //                 } elseif ($value > $endDate) {
-    //                     $fail("The $attribute must not be greater than the project end date and time ($endDate).");
-    //                 }
-    //             },
-    //         ],
-    //         'project_id' => 'required',
-    //         'reserved_price' => 'required',
-    //         'description' => 'required',
-    //         'description_ar' => 'required',
-    //         'is_popular' => 'boolean',
-    //         'end_price' => 'required',
-    //         'start_price' => 'required',
-    //         'minsellingprice' => 'nullable',
-    //         'status' => 'required|in:new,open,suspended,closed',
-    //         'is_published' => 'boolean', // التحقق من القيم
-    //         'image_path.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //     ]);
-    
-    //     // تعيين القيم الافتراضية
-    //     $data['is_popular'] = $request->get('is_popular', 0) ? 1 : 0;
-    //     $data['is_published'] = $request->input('is_published', 0); // القيمة الافتراضية
-
-    
-    //     // تحديث المنتج
-    //     $product->update($data);
-    
-    //     // إذا تم تحميل صور جديدة
-    //     if ($request->hasFile('image_path')) {
-    //         foreach ($request->file('image_path') as $file) {
-    //             $filename = date('YmdHi') . "-" . uniqid() . "." . $file->extension();
-    //             $filePath = $file->move(public_path('product/gallery'), $filename);
-    //             $url = asset('product/gallery/' . $filename);
-    
-    //             Gallery::create([
-    //                 'product_id' => $product->id,
-    //                 'image_path' => $url,
-    //                 'lot_no' => $product->lot_no,
-    //             ]);
-    //         }
-    //     }
-    
-    //     return redirect()->route('admin.products.index')->with('success', 'Product Updated Successfully!');
-    // }
     public function update(Request $request, Product $product)
-{
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'title_ar' => 'required|string|max:255',
-        'auction_type_id' => 'required',
-        'auction_end_date' => [
-            '',
-            function ($attribute, $value, $fail) use ($request) {
-                $auctionTypeId = $request->input('auction_type_id');
-                if ($auctionTypeId == 2) {
-                    return;
-                }
-                $projectId = $request->input('project_id');
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'title_ar' => 'required|string|max:255',
+            'auction_type_id' => 'required',
+            'auction_end_date' => [
+                '',
+                function ($attribute, $value, $fail) use ($request) {
+                    $auctionTypeId = $request->input('auction_type_id');
+                    if ($auctionTypeId == 2) {
+                        return;
+                    }
+                    $projectId = $request->input('project_id');
+    
+                    $project = Project::find($projectId);
+    
+                    if (!$project) {
+                        $fail('Invalid project selected.');
+                        return;
+                    }
+    
+                    $startDate = $project->start_date_time;
+                    $endDate = $project->end_date_time;
+    
+                    if ($value < $startDate) {
+                        $fail("The $attribute must not be less than the project start date and time ($startDate).");
+                    } elseif ($value > $endDate) {
+                        $fail("The $attribute must not be greater than the project end date and time ($endDate).");
+                    }
+                },
+            ],
+            'project_id' => 'required',
+            'reserved_price' => 'required',
+            'description' => 'required',
+            'description_ar' => 'required',
+            'is_popular' => 'boolean',
+            'end_price' => 'required',
+            'start_price' => 'required',
+            'minsellingprice' => 'nullable',
+            'status' => 'required|in:new,open,suspended,closed',
+            'is_published' => 'boolean', // التحقق من القيم
+            'image_path.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+    
+        // تعيين القيم الافتراضية
+        $data['is_popular'] = $request->get('is_popular', 0) ? 1 : 0;
+        $data['is_published'] = $request->input('is_published', 0); // القيمة الافتراضية
 
-                $project = Project::find($projectId);
-
-                if (!$project) {
-                    $fail('Invalid project selected.');
-                    return;
-                }
-
-                $startDate = $project->start_date_time;
-                $endDate = $project->end_date_time;
-
-                if ($value < $startDate) {
-                    $fail("The $attribute must not be less than the project start date and time ($startDate).");
-                } elseif ($value > $endDate) {
-                    $fail("The $attribute must not be greater than the project end date and time ($endDate).");
-                }
-            },
-        ],
-        'project_id' => 'required',
-        'reserved_price' => 'required',
-        'description' => 'required',
-        'description_ar' => 'required',
-        'is_popular' => 'boolean',
-        'end_price' => 'required',
-        'start_price' => 'required',
-        'minsellingprice' => 'nullable',
-        'status' => 'required|in:new,open,suspended,closed',
-        'is_published' => 'boolean',
-        'image_path.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
-
-    // تعيين القيم الافتراضية
-    $data['is_popular'] = $request->get('is_popular', 0) ? 1 : 0;
-    $data['is_published'] = $request->input('is_published', 0);
-
-    // تحديث المنتج
-    $product->update($data);
-
-    // تحقق من حالة المنتج الجديدة
-    if ($data['status'] === 'closed') {
-        $this->handleAuctionClosure($product);
-    }
-
-    // إذا تم تحميل صور جديدة
-    if ($request->hasFile('image_path')) {
-        foreach ($request->file('image_path') as $file) {
-            $filename = date('YmdHi') . "-" . uniqid() . "." . $file->extension();
-            $filePath = $file->move(public_path('product/gallery'), $filename);
-            $url = asset('product/gallery/' . $filename);
-
-            Gallery::create([
-                'product_id' => $product->id,
-                'image_path' => $url,
-                'lot_no' => $product->lot_no,
-            ]);
+    
+        // تحديث المنتج
+        $product->update($data);
+    
+        // إذا تم تحميل صور جديدة
+        if ($request->hasFile('image_path')) {
+            foreach ($request->file('image_path') as $file) {
+                $filename = date('YmdHi') . "-" . uniqid() . "." . $file->extension();
+                $filePath = $file->move(public_path('product/gallery'), $filename);
+                $url = asset('product/gallery/' . $filename);
+    
+                Gallery::create([
+                    'product_id' => $product->id,
+                    'image_path' => $url,
+                    'lot_no' => $product->lot_no,
+                ]);
+            }
         }
+    
+        return redirect()->route('admin.products.index')->with('success', 'Product Updated Successfully!');
     }
+    
 
-    return redirect()->route('admin.products.index')->with('success', 'Product Updated Successfully!');
-}
-
-/**
- * معالجة إغلاق المنتج.
- */
-private function handleAuctionClosure(Product $product)
-{
-    try {
-        DB::transaction(function () use ($product) {
-            // الحصول على جميع المزايدات المقبولة للمنتج
-            $bids = BidPlaced::where('product_id', $product->id)
-                ->where('status', 1) // نأخذ فقط المزايدات المقبولة
-                ->get();
-
-            if ($bids->isEmpty()) {
-                return; // لا توجد مزايدات مقبولة
-            }
-
-            // الحصول على أعلى قيمة مزايدة
-            $highestBidAmount = $bids->max('bid_amount');
-
-            // تحديد المزايدة الفائزة (أعلى قيمة)
-            $winningBids = $bids->where('bid_amount', $highestBidAmount);
-
-            // تعيين الفائز
-            foreach ($winningBids as $bid) {
-                $bid->update(['status' => 3]); // تعيين حالة الفائز
-            }
-
-            // تعيين باقي المزايدات كخاسرة
-            BidPlaced::where('product_id', $product->id)
-                ->where('status', 1)
-                ->where('bid_amount', '<', $highestBidAmount)
-                ->update(['status' => 4]); // تعيين حالة الخاسر
-
-        });
-
-        Log::info('تم معالجة إغلاق المزاد بنجاح', [
-            'product_id' => $product->id
-        ]);
-
-    } catch (\Exception $e) {
-        Log::error('خطأ في معالجة إغلاق المزاد', [
-            'product_id' => $product->id,
-            'error' => $e->getMessage()
-        ]);
-        throw $e;
-    }
-}
 
     /**
      * Remove the specified resource from storage.

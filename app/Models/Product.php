@@ -104,4 +104,12 @@ class Product extends Model
     {
         return $this->hasMany(Gallery::class, 'product_id', 'id');
     }
+
+    // علاقة مع BidPlaced
+    public function bidPlaced()
+    {
+        return $this->hasMany(BidPlaced::class);
+    }
+
+
 }
