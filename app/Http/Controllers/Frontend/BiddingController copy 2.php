@@ -298,7 +298,9 @@ class BiddingController extends Controller
                         //     Mail::to($adminEmail)->send(new AdminBidPlacedNotification($bidDetails));
                         // }
 
-                        $adminEmail = 'elkhouly@gmail.com';
+                        // $adminEmail = 'elkhouly@gmail.com';
+                        $adminEmail = env('ADMIN_EMAIL', 'ebrahimhosny511@gmail.com');
+
                         $product = Product::find($validatedData['product_id']);
                         $project = Project::find($validatedData['project_id']);
                         $bidDetails = [
