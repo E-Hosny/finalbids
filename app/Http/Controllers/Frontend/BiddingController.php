@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\OutbidNotification;
 use App\Models\Gallery;
 use App\Mail\BidPlacedMail;
+use App\Mail\AdminBidPlacedMail;
 use App\Models\Notification;
 use App\Models\Appnotification;
 use App\Mail\AdminBidPlacedNotification; // إضافة كلاس البريد للإدمن
@@ -479,16 +480,37 @@ class BiddingController extends Controller
 
             $productImage = Gallery::where('lot_no', $product->lot_no)->orderBy('id')->value('image_path');
 
-            // إرسال البريد للإدمن
-            Mail::to($adminEmail)->send(new BidPlacedMail(
+            // // إرسال البريد للإدمن
+            // Mail::to($adminEmail)->send(new BidPlacedMail(
+            //     $user->first_name,
+            //     $product->title,
+            //     $productImage ?? 'No Image',
+            //     $bidPlaced->bid_amount,
+            //     $project->end_date_time
+            // ));
+
+            // // إرسال البريد للمستخدم
+            // Mail::to($user->email)->send(new BidPlacedMail(
+            //     $user->first_name,
+            //     $product->title,
+            //     $productImage ?? 'No Image',
+            //     $bidPlaced->bid_amount,
+            //     $project->end_date_time
+            // ));
+
+            // Send admin notification
+            Mail::to($adminEmail)->send(new AdminBidPlacedMail(
                 $user->first_name,
                 $product->title,
                 $productImage ?? 'No Image',
                 $bidPlaced->bid_amount,
-                $project->end_date_time
+                $project->end_date_time,
+                $user->email,
+                $validatedData['total_amount'],
+                $validatedData['buyers_premium']
             ));
 
-            // إرسال البريد للمستخدم
+            // Send user notification
             Mail::to($user->email)->send(new BidPlacedMail(
                 $user->first_name,
                 $product->title,
@@ -496,7 +518,6 @@ class BiddingController extends Controller
                 $bidPlaced->bid_amount,
                 $project->end_date_time
             ));
-
             Log::info('Emails sent successfully', [
                 'Admin Email' => $adminEmail,
                 'User Email' => $user->email,
