@@ -281,7 +281,7 @@ td {
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'نوع المزاد' : 'Auction Type' }}</th>
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'تاريخ/وقت المناقصة' : 'Bid Date/Time' }}</th>
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'مبلغ' : 'Bidding Amount' }}</th>
-                                                                    {{-- <th scope="col">{{ session('locale') === 'ar' ? 'المبلغ الإجمالي' : 'Total Amount' }}</th> --}}
+                                                                    <th scope="col">{{ session('locale') === 'ar' ? 'المبلغ الإجمالي' : 'Total Amount' }}</th>
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'حالة' : 'Status' }}</th>
                                                                 </tr>
                                                             </thead>
@@ -292,7 +292,7 @@ td {
                                                                         <td>{{ session('locale') === 'ar' ? $bid->product->project->auctionType->name_ar : $bid->product->project->auctionType->name }}</td>
                                                                         <td>{{ $bid->created_at }}</td>
                                                                         <td>{{ formatPrice($bid->bid_amount, session()->get('currency')) }} {{ $currency }}</td>
-                                                                        {{-- <td>{{ formatPrice($bid->total_amount, session()->get('currency')) }} {{ $currency }}</td> --}}
+                                                                        <td>{{ formatPrice($bid->total_amount, session()->get('currency')) }} {{ $currency }}</td>
                                                                         <td>
                                                                             @php
                                                                                 $statusText = '';

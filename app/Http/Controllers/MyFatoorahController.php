@@ -194,7 +194,7 @@ private function getPayLoadData($bidPlaceId)
 
     return [
         'CustomerName'       => $bidPlaced->user->first_name . ' ' . $bidPlaced->user->last_name,
-        'InvoiceValue'       => $bidPlaced->total_amount,
+        'InvoiceValue'       => $bidPlaced->bid_amount,
         'DisplayCurrencyIso' => config('myfatoorah.currency'),
         'CustomerEmail'      => $bidPlaced->user->email,
         'CallBackUrl'        => $callbackURL,

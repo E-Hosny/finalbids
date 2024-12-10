@@ -203,15 +203,18 @@ td {
                                     <div class="col-md-3 mt-3">
                                         <div class="item-img">
                                             @php
+                                            $galleries = null;
+                                            if ($productBids->isNotEmpty() && $productBids->first() && $productBids->first()->product) {
                                                 $galleries = \App\Models\Gallery::where('product_id', $productBids->first()->product->id)->get();
+                                            }
                                             @endphp
 
-                                            @if ($galleries->isNotEmpty())
-                                                <a href="{{ url('productsdetail', $productBids->first()->product->slug) }}" class="prd-link">
-                                                    <img src="{{ asset($galleries->first()->image_path) }}" alt="">
-                                                </a>
+                                            @if ($galleries && $galleries->isNotEmpty())
+                                            <a href="{{ url('productsdetail', $productBids->first()->product->slug ?? '') }}" class="prd-link">
+                                                <img src="{{ asset($galleries->first()->image_path ?? 'frontend/images/default-product-image.png') }}" alt="">
+                                            </a>
                                             @else
-                                                <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image">
+                                            <img src="{{ asset('frontend/images/default-product-image.png') }}" alt="Default Image">
                                             @endif
                                         </div>
                                     </div>
@@ -219,26 +222,42 @@ td {
                                     <div class="col-md-9 mt-3">
                                         <div class="item-data">
                                             @if(session('locale') === 'en')
-                                                <a href="{{ url('productsdetail', $productBids->first()->product->slug) }}" class="prd-link">
-                                                    <h5>{{ $productBids->first()->product->lot_no }} : {{ $productBids->first()->product->title }}</h5>
+                                            @if($productBids->isNotEmpty() && $productBids->first() && $productBids->first()->product)
+                                                <a href="{{ url('productsdetail', $productBids->first()->product->slug ?? '') }}" class="prd-link">
+                                                    <h5>{{ $productBids->first()->product->lot_no ?? '' }} : {{ $productBids->first()->product->title ?? 'Unknown' }}</h5>
                                                 </a>
                                                 <h6>
-                                                    Est : {{ formatPrice($productBids->first()->product->start_price, session()->get('currency')) }} {{$currency}} -
-                                                    {{ formatPrice($productBids->first()->product->end_price, session()->get('currency')) }} {{$currency}}
-                                                </h6>
-                                            @elseif(session('locale') === 'ar')
-                                                <h5>{{ $productBids->first()->product->lot_no }} : {{ $productBids->first()->product->title_ar }}</h5>
-                                                <h6>
-                                                    مؤسسه :  {{ formatPrice($productBids->first()->product->start_price, session()->get('currency')) }} {{$currency}} -
-                                                    {{ formatPrice($productBids->first()->product->end_price, session()->get('currency')) }} {{$currency}}
+                                                    Est : {{ formatPrice($productBids->first()->product->start_price ?? 0, session()->get('currency')) }} {{$currency}} -
+                                                    {{ formatPrice($productBids->first()->product->end_price ?? 0, session()->get('currency')) }} {{$currency}}
                                                 </h6>
                                             @else
-                                                <h5>{{ $productBids->first()->product->lot_no }} : {{ $productBids->first()->product->title }}</h5>
-                                                <h6>
-                                                    Est : {{ formatPrice($productBids->first()->product->start_price, session()->get('currency')) }} {{$currency}} -
-                                                    {{ formatPrice($productBids->first()->product->end_price, session()->get('currency')) }} {{$currency}}
-                                                </h6>
+                                                <h5>Unknown Product</h5>
+                                                <h6>Est: {{ formatPrice(0, session()->get('currency')) }} {{$currency}} - {{ formatPrice(0, session()->get('currency')) }} {{$currency}}</h6>
                                             @endif
+                                        @elseif(session('locale') === 'ar')
+                                            @if($productBids->isNotEmpty() && $productBids->first() && $productBids->first()->product)
+                                                <h5>{{ $productBids->first()->product->lot_no ?? '' }} : {{ $productBids->first()->product->title_ar ?? 'غير معروف' }}</h5>
+                                                <h6>
+                                                    مؤسسه : {{ formatPrice($productBids->first()->product->start_price ?? 0, session()->get('currency')) }} {{$currency}} -
+                                                    {{ formatPrice($productBids->first()->product->end_price ?? 0, session()->get('currency')) }} {{$currency}}
+                                                </h6>
+                                            @else
+                                                <h5>منتج غير معروف</h5>
+                                                <h6>مؤسسه: {{ formatPrice(0, session()->get('currency')) }} {{$currency}} - {{ formatPrice(0, session()->get('currency')) }} {{$currency}}</h6>
+                                            @endif
+                                        @else
+                                            @if($productBids->isNotEmpty() && $productBids->first() && $productBids->first()->product)
+                                                <h5>{{ $productBids->first()->product->lot_no ?? '' }} : {{ $productBids->first()->product->title ?? 'Unknown' }}</h5>
+                                                <h6>
+                                                    Est : {{ formatPrice($productBids->first()->product->start_price ?? 0, session()->get('currency')) }} {{$currency}} -
+                                                    {{ formatPrice($productBids->first()->product->end_price ?? 0, session()->get('currency')) }} {{$currency}}
+                                                </h6>
+                                            @else
+                                                <h5>Unknown Product</h5>
+                                                <h6>Est: {{ formatPrice(0, session()->get('currency')) }} {{$currency}} - {{ formatPrice(0, session()->get('currency')) }} {{$currency}}</h6>
+                                            @endif
+                                        @endif
+                                        
 
                                             <div class="accordion" id="accordionExample">
                                                 <div class="accordion-item">
@@ -281,7 +300,7 @@ td {
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'نوع المزاد' : 'Auction Type' }}</th>
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'تاريخ/وقت المناقصة' : 'Bid Date/Time' }}</th>
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'مبلغ' : 'Bidding Amount' }}</th>
-                                                                    {{-- <th scope="col">{{ session('locale') === 'ar' ? 'المبلغ الإجمالي' : 'Total Amount' }}</th> --}}
+                                                                    <th scope="col">{{ session('locale') === 'ar' ? 'المبلغ الإجمالي' : 'Total Amount' }}</th>
                                                                     <th scope="col">{{ session('locale') === 'ar' ? 'حالة' : 'Status' }}</th>
                                                                 </tr>
                                                             </thead>
@@ -289,10 +308,14 @@ td {
                                                                 @foreach($productBids as $bid)
                                                                     <tr>
                                                                         <td>{{ $bid->user->first_name }}</td>
+                                                                        @if ($bid->product && $bid->product->project && $bid->product->project->auctionType)
                                                                         <td>{{ session('locale') === 'ar' ? $bid->product->project->auctionType->name_ar : $bid->product->project->auctionType->name }}</td>
-                                                                        <td>{{ $bid->created_at }}</td>
+                                                                    @else
+                                                                        <td>{{ session('locale') === 'ar'? 'زمني' : 'Timed' }}</td>
+                                                                    @endif
+
                                                                         <td>{{ formatPrice($bid->bid_amount, session()->get('currency')) }} {{ $currency }}</td>
-                                                                        {{-- <td>{{ formatPrice($bid->total_amount, session()->get('currency')) }} {{ $currency }}</td> --}}
+                                                                        <td>{{ formatPrice($bid->total_amount, session()->get('currency')) }} {{ $currency }}</td>
                                                                         <td>
                                                                             @php
                                                                                 $statusText = '';
