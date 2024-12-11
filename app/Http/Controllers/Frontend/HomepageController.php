@@ -401,8 +401,66 @@ class HomepageController extends Controller
     //     }
 
     //     return view('frontend.products.index', ['products' => $products], ['projects' => $projects, 'wishlist' => $wishlist, 'totalItems' => $totalItems, 'userBidRequests' => $userBidRequests,'currency'=>$currency,]);
-    // }
-    public function productsByProject($slug, Request $request)
+    //}
+//     public function productsByProject($slug, Request $request)
+// {
+//     $langId = session('locale');
+//     $currency = session()->get('currency');
+//     $projects = Project::where('slug', $slug)->first();
+//     $currentDateTime = now();
+
+//     $productsQuery = Product::where('project_id', $projects->id);
+
+//     // تطبيق عمليات البحث والفرز إذا وجدت
+//     if ($request->has('search') && !empty($request->search)) {
+//         $searchTerm = $request->search;
+//         $productsQuery->where('title', 'like', '%' . $searchTerm . '%');
+//     }
+
+//     if ($request->has('sort')) {
+//         $sortOrder = $request->sort;
+
+//         if ($sortOrder === 'price_high_low') {
+//             $productsQuery->orderBy('reserved_price', 'desc');
+//         } elseif ($sortOrder === 'price_low_high') {
+//             $productsQuery->orderBy('reserved_price', 'asc');
+//         }
+//     } else {
+//         $productsQuery->orderBy('reserved_price', 'asc');
+//     }
+
+//     // الحصول على المنتجات مع تحميل المشروع المرتبط
+//     $products = $productsQuery->with('project')->paginate(10);
+
+//     // إضافة مؤشر حالة المنتج (مغلق أو مفتوح)
+//     foreach ($products as $product) {
+//         $product->is_closed = $product->project->end_date_time < $currentDateTime;
+//     }
+
+//     $totalItems = $products->total();
+
+//     $wishlist = [];
+//     if (Auth::check()) {
+//         $wishlist = Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray();
+//     }
+
+//     $userBidRequests = [];
+//     if (Auth::check()) {
+//         $userBidRequests = BidRequest::where('user_id', Auth::id())
+//             ->pluck('status', 'project_id')
+//             ->toArray();
+//     }
+
+//     return view('frontend.products.index', [
+//         'products' => $products,
+//         'projects' => $projects,
+//         'wishlist' => $wishlist,
+//         'totalItems' => $totalItems,
+//         'userBidRequests' => $userBidRequests,
+//         'currency' => $currency,
+//     ]);
+// }
+public function productsByProject($slug, Request $request)
 {
     $langId = session('locale');
     $currency = session()->get('currency');
@@ -429,12 +487,17 @@ class HomepageController extends Controller
         $productsQuery->orderBy('reserved_price', 'asc');
     }
 
-    // الحصول على المنتجات مع تحميل المشروع المرتبط
-    $products = $productsQuery->with('project')->paginate(10);
+    // جلب المنتجات مع تحميل المشروع وأول صورة لكل منتج
+    $products = $productsQuery->with(['project', 'productGalleries' => function ($query) {
+        $query->orderBy('id', 'asc');
+    }])->paginate(10);
 
-    // إضافة مؤشر حالة المنتج (مغلق أو مفتوح)
+    // إضافة مؤشر حالة المنتج (مغلق أو مفتوح) وإحضار أول صورة
     foreach ($products as $product) {
         $product->is_closed = $product->project->end_date_time < $currentDateTime;
+
+        // جلب أول صورة من علاقة `productGalleries`
+        $product->first_image = $product->productGalleries->first() ? $product->productGalleries->first()->image_path : null;
     }
 
     $totalItems = $products->total();
@@ -460,6 +523,7 @@ class HomepageController extends Controller
         'currency' => $currency,
     ]);
 }
+
 
 //
     // public function productsdetail($slug)

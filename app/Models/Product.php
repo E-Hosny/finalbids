@@ -105,6 +105,8 @@ class Product extends Model
     //     return $this->hasMany(Gallery::class, 'product_id', 'id');
     // }
 
+
+
     // علاقة مع BidPlaced
     public function bidPlaced()
     {
@@ -112,9 +114,9 @@ class Product extends Model
     }
 
     public function productGalleries()
-{
-    return $this->hasMany(Gallery::class, 'product_id');
-}
+    {
+        return $this->hasMany(Gallery::class, 'product_id');
+    }
 
 
 

@@ -57,7 +57,7 @@ use App\Http\Controllers\MyFatoorahController;
 // });
 
 Route::get('/send-test',function(){
-    Mail::to('ebrahimhosny511@gmail.com')->send(new MailgunTest('hi this is test message from laravel app'));
+    Mail::to('elkhouly@gmail.com')->send(new MailgunTest('hi this is test message from laravel app'));
     return 'message sent succefully';
 });
 Route::get('/refer', [HomepageController::class, 'deeplink'])->name('refer');
@@ -153,7 +153,9 @@ Route::group(['middleware' => 'auth'],function(){
     // Route::post('/myfatoorah/pay', [MyFatoorahController::class, 'index'])->name('myfatoorah.pay');        Route::post('/myfatoorah/callback', [MyFatoorahController::class, 'callback'])->name('myfatoorah.callback');
     // 02 may
     // مسار لإنشاء الفاتورة والدفع
-Route::post('/myfatoorah/pay', [MyFatoorahController::class, 'index'])->name('myfatoorah.pay');
+// Route::post('/myfatoorah/pay', [MyFatoorahController::class, 'index'])->name('myfatoorah.pay');
+Route::match(['get', 'post'], '/myfatoorah/pay', [MyFatoorahController::class, 'index'])->name('myfatoorah.pay');
+
 
 // مسار لمعالجة الرد (callback) من MyFatoorah
 Route::get('/myfatoorah/callback', [MyFatoorahController::class, 'callback'])->name('myfatoorah.callback');

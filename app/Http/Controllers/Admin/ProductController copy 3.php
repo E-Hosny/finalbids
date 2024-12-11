@@ -10,7 +10,6 @@ use App\Models\Category;
 use App\Models\Gallery;
 use App\Models\Product;
 use App\Models\Project;
-use App\Models\User;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -29,12 +28,6 @@ use App\Mail\ProductApproved;
 use App\Mail\ProductRejected;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
-use App\Mail\AuctionWinnerAdminMail;
-use App\Mail\AuctionWinnerUserMail;
-use GuzzleHttp\Client;
-use Carbon\Carbon;
-
 
 
 
@@ -693,484 +686,50 @@ class ProductController extends Controller
 /**
  * معالجة إغلاق المنتج.
  */
-// private function handleAuctionClosure(Product $product)
-// {
-//     try {
-//         DB::transaction(function () use ($product) {
-//             // الحصول على جميع المزايدات المقبولة للمنتج
-//             $bids = BidPlaced::where('product_id', $product->id)
-//                 ->where('status', 1) // نأخذ فقط المزايدات المقبولة
-//                 ->get();
-
-//             if ($bids->isEmpty()) {
-//                 return; // لا توجد مزايدات مقبولة
-//             }
-
-//             // الحصول على أعلى قيمة مزايدة
-//             $highestBidAmount = $bids->max('bid_amount');
-
-//             // تحديد المزايدة الفائزة (أعلى قيمة)
-//             $winningBids = $bids->where('bid_amount', $highestBidAmount);
-
-//             // تعيين الفائز
-//             foreach ($winningBids as $bid) {
-//                 $bid->update(['status' => 3]); // تعيين حالة الفائز
-//             }
-
-//             // تعيين باقي المزايدات كخاسرة
-//             BidPlaced::where('product_id', $product->id)
-//                 ->where('status', 1)
-//                 ->where('bid_amount', '<', $highestBidAmount)
-//                 ->update(['status' => 4]); // تعيين حالة الخاسر
-
-//         });
-
-//         Log::info('تم معالجة إغلاق المزاد بنجاح', [
-//             'product_id' => $product->id
-//         ]);
-
-//     } catch (\Exception $e) {
-//         Log::error('خطأ في معالجة إغلاق المزاد', [
-//             'product_id' => $product->id,
-//             'error' => $e->getMessage()
-//         ]);
-//         throw $e;
-//     }
-// }
-
-// private function handleAuctionClosure(Product $product)
-// {
-//     try {
-//         DB::transaction(function () use ($product) {
-//             // الحصول على المزايدات المقبولة
-//             $bids = BidPlaced::where('product_id', $product->id)
-//                 ->where('status', 1)
-//                 ->get();
-
-//             if ($bids->isEmpty()) {
-//                 Log::info('No bids found for product', ['product_id' => $product->id]);
-//                 return; // لا توجد مزايدات
-//             }
-
-//             // أعلى مزايدة
-//             $highestBid = $bids->sortByDesc('bid_amount')->first();
-//             $winningUser = $highestBid->user;
-//             $winningAmount = $highestBid->bid_amount;
-
-//             // تحديث حالة الفائز
-//             $highestBid->update(['status' => 3]);
-
-//             // تحديث باقي المزايدات كخاسرة
-//             BidPlaced::where('product_id', $product->id)
-//                 ->where('status', 1)
-//                 ->where('id', '!=', $highestBid->id)
-//                 ->update(['status' => 4]);
-
-//             // تحديث تاريخ المنتج
-//             $product->updated_at = now();
-//             $product->save();
-
-//             // إعداد رابط الدفع
-//             $paymentLink = "https://example-payment-link.com";
-
-//             // إرسال بريد للإدارة
-//             try {
-//                 $adminEmail = 'elkhouly@gmail.com'; // استبدل بالإيميل الفعلي
-//                 Mail::to($adminEmail)->send(new AuctionWinnerAdminMail(
-//                     $winningUser->first_name,
-//                     $product->title,
-//                     $product->image_path ?? 'No Image',
-//                     $winningAmount,
-//                     $product->auction_end_date,
-//                     $winningUser->email
-//                 ));
-//                 Log::info('Email sent to admin', ['admin_email' => $adminEmail]);
-//             } catch (\Exception $e) {
-//                 Log::error('Error sending email to admin', [
-//                     'product_id' => $product->id,
-//                     'error' => $e->getMessage(),
-//                 ]);
-//             }
-
-//             // إرسال بريد للمستخدم الفائز
-//             try {
-//                 Mail::to($winningUser->email)->send(new AuctionWinnerUserMail(
-//                     $winningUser->first_name,
-//                     $product->title,
-//                     $product->image_path ?? 'No Image',
-//                     $winningAmount,
-//                     $product->auction_end_date,
-//                     $paymentLink
-//                 ));
-//                 Log::info('Email sent to user', ['user_email' => $winningUser->email]);
-//             } catch (\Exception $e) {
-//                 Log::error('Error sending email to user', [
-//                     'product_id' => $product->id,
-//                     'error' => $e->getMessage(),
-//                 ]);
-//             }
-
-//             // إرسال رسالة SMS
-//             try {
-//                 $client = new \GuzzleHttp\Client();
-//                 $body = "تهانينا! لقد فزت بمزاد {$product->title}. تحقق من بريدك لمزيد من التفاصيل.";
-//                 $response = $client->post('https://api.taqnyat.sa/v1/messages', [
-//                     'headers' => [
-//                         'Authorization' => 'Bearer c933affa6c2314484d105c45a0e1adc7',
-//                         'Content-Type' => 'application/json',
-//                     ],
-//                     'json' => [
-//                         'recipients' => '966' . ltrim($winningUser->phone, '0'),
-//                         'body' => $body,
-//                         'sender' => "MazadBid",
-//                     ],
-//                 ]);
-
-//                 if ($response->getStatusCode() == 200) {
-//                     Log::info('SMS sent to user', ['phone' => $winningUser->phone]);
-//                 } else {
-//                     Log::warning('Failed to send SMS', [
-//                         'phone' => $winningUser->phone,
-//                         'response' => $response->getBody()->getContents(),
-//                     ]);
-//                 }
-//             } catch (\Exception $e) {
-//                 Log::error('Error sending SMS to user', [
-//                     'product_id' => $product->id,
-//                     'error' => $e->getMessage(),
-//                 ]);
-//             }
-//         });
-//     } catch (\Exception $e) {
-//         Log::error('Error in auction closure', [
-//             'product_id' => $product->id,
-//             'error' => $e->getMessage(),
-//         ]);
-//         throw $e;
-//     }
-// }
-
-// private function handleAuctionClosure(Product $product)
-// {
-//     $processId = (string) Str::uuid();
-    
-//     try {
-//         DB::transaction(function () use ($product, $processId) {
-//             Log::info("[Auction Closure] Starting auction closure process", [
-//                 'process_id' => $processId,
-//                 'product_id' => $product->id,
-//                 'product_title' => $product->title
-//             ]);
-
-//             // تحديث حالة المنتج
-//             $product->status = 'closed';
-//             $product->auction_end_date = now();
-//             $product->save();
-
-//             // الحصول على المزايدات المقبولة
-//             $bids = BidPlaced::where('product_id', $product->id)
-//                 ->where('status', 1)
-//                 ->get();
-
-//             if ($bids->isEmpty()) {
-//                 Log::info("[Auction Closure] No bids found", [
-//                     'process_id' => $processId,
-//                     'product_id' => $product->id
-//                 ]);
-//                 return;
-//             }
-
-//             // تحديد أعلى مزايدة
-//             $highestBid = $bids->sortByDesc('bid_amount')->first();
-//             $winningUser = User::findOrFail($highestBid->user_id); // التأكد من وجود المستخدم
-//             $winningAmount = $highestBid->bid_amount;
-
-//             // تحديث حالة المزايدة الفائزة
-//             $highestBid->update([
-//                 'status' => 3,
-//                 'won_at' => now()
-//             ]);
-
-//             Log::info("[Auction Closure] Winner determined", [
-//                 'process_id' => $processId,
-//                 'bid_id' => $highestBid->id,
-//                 'user_id' => $winningUser->id,
-//                 'amount' => $winningAmount
-//             ]);
-
-//             // تحديث المزايدات الخاسرة
-//             $losingBidsCount = BidPlaced::where('product_id', $product->id)
-//                 ->where('status', 1)
-//                 ->where('id', '!=', $highestBid->id)
-//                 ->update(['status' => 4]);
-
-//             Log::info("[Auction Closure] Losing bids updated", [
-//                 'process_id' => $processId,
-//                 'losing_bids_count' => $losingBidsCount
-//             ]);
-
-//             // إعداد رابط الدفع
-//             $paymentLink = $this->generatePaymentLink($highestBid);
-
-//             // إرسال البريد للإدارة
-//             try {
-//                 $adminEmail = config('mail.admin_address', 'admin@mazadbid.com');
-//                 Mail::to($adminEmail)->queue(new AuctionWinnerAdminMail([
-//                     'winner_name' => $winningUser->first_name,
-//                     'winner_email' => $winningUser->email,
-//                     'winner_phone' => $winningUser->phone,
-//                     'product_title' => $product->title,
-//                     'product_image' => $product->image_path ?? null,
-//                     'winning_amount' => $winningAmount,
-//                     'auction_end_date' => $product->auction_end_date
-//                 ]));
-
-//                 Log::info("[Email] Admin notification sent", [
-//                     'process_id' => $processId,
-//                     'admin_email' => $adminEmail
-//                 ]);
-//             } catch (\Exception $e) {
-//                 Log::error("[Email] Failed to send admin notification", [
-//                     'process_id' => $processId,
-//                     'error' => $e->getMessage(),
-//                     'trace' => $e->getTraceAsString()
-//                 ]);
-//             }
-
-//             // إرسال البريد للمستخدم الفائز
-//             try {
-//                 Mail::to($winningUser->email)->queue(new AuctionWinnerUserMail([
-//                     'name' => $winningUser->first_name,
-//                     'product_title' => $product->title,
-//                     'product_image' => $product->image_path ?? null,
-//                     'winning_amount' => $winningAmount,
-//                     'auction_end_date' => $product->auction_end_date,
-//                     'payment_link' => $paymentLink
-//                 ]));
-
-//                 Log::info("[Email] Winner notification sent", [
-//                     'process_id' => $processId,
-//                     'winner_email' => $winningUser->email
-//                 ]);
-//             } catch (\Exception $e) {
-//                 Log::error("[Email] Failed to send winner notification", [
-//                     'process_id' => $processId,
-//                     'error' => $e->getMessage(),
-//                     'trace' => $e->getTraceAsString()
-//                 ]);
-//             }
-
-//             // إرسال SMS
-//             try {
-//                 if ($winningUser->phone) {
-//                     $message = sprintf(
-//                         "مبروك! لقد فزت بمزاد %s بمبلغ %s ريال. يرجى مراجعة بريدك الإلكتروني للتفاصيل.",
-//                         $product->title,
-//                         number_format($winningAmount, 2)
-//                     );
-
-//                     $response = $this->sendSMS($winningUser->phone, $message);
-
-//                     Log::info("[SMS] Winner notification sent", [
-//                         'process_id' => $processId,
-//                         'phone' => $winningUser->phone,
-//                         'response' => $response
-//                     ]);
-//                 }
-//             } catch (\Exception $e) {
-//                 Log::error("[SMS] Failed to send SMS", [
-//                     'process_id' => $processId,
-//                     'error' => $e->getMessage(),
-//                     'trace' => $e->getTraceAsString()
-//                 ]);
-//             }
-
-//             Log::info("[Auction Closure] Process completed successfully", [
-//                 'process_id' => $processId,
-//                 'product_id' => $product->id
-//             ]);
-//         });
-//     } catch (\Exception $e) {
-//         Log::error("[Auction Closure] Critical error", [
-//             'process_id' => $processId,
-//             'product_id' => $product->id,
-//             'error' => $e->getMessage(),
-//             'trace' => $e->getTraceAsString()
-//         ]);
-//         throw $e;
-//     }
-// }
-
-// private function generatePaymentLink($bid)
-// {
-//     // يمكنك تعديل هذه الدالة حسب نظام الدفع الخاص بك
-//     return route('payment.show', ['bid' => $bid->id]);
-// }
-
-// private function sendSMS($phone, $message)
-// {
-//     $client = new \GuzzleHttp\Client();
-    
-//     $response = $client->post('https://api.taqnyat.sa/v1/messages', [
-//         'headers' => [
-//             'Authorization' => 'Bearer c933affa6c2314484d105c45a0e1adc7',
-//             'Content-Type' => 'application/json',
-//         ],
-//         'json' => [
-//             'recipients' => '966' . ltrim($phone, '0'),
-//             'body' => $message,
-//             'sender' => "MazadBid",
-//         ],
-//     ]);
-
-//     return json_decode($response->getBody(), true);
-// }
-// private function handleAuctionClosure(Product $product)
-// {
-//     try {
-//         DB::transaction(function () use ($product) {
-//             // الحصول على بريد الإدارة من .env
-//             $adminEmail = env('ADMIN_EMAIL', 'default-admin@example.com'); // قيمة افتراضية إذا لم تكن موجودة
-            
-//             // باقي الكود...
-//             Log::info('Auction closure details:', [
-//                 'admin_email' => $adminEmail,
-//                 // بيانات أخرى...
-//             ]);
-
-//             // إرسال بريد للإدارة
-//             // Mail::to($adminEmail)->send(new AuctionWinnerAdminMail(
-//             // ));
-//         });
-//     } catch (\Exception $e) {
-//         Log::error('Error in auction closure', [
-//             'product_id' => $product->id,
-//             'error' => $e->getMessage(),
-//         ]);
-//         throw $e;
-//     }
-// }
 private function handleAuctionClosure(Product $product)
 {
     try {
         DB::transaction(function () use ($product) {
-            // الحصول على المزايدات المقبولة
+            // الحصول على جميع المزايدات المقبولة للمنتج
             $bids = BidPlaced::where('product_id', $product->id)
-                ->where('status', 1)
+                ->where('status', 1) // نأخذ فقط المزايدات المقبولة
                 ->get();
 
             if ($bids->isEmpty()) {
-                Log::info('No bids found for product', [
-                    'product_id' => $product->id,
-                ]);
-                return; // لا توجد مزايدات
+                return; // لا توجد مزايدات مقبولة
             }
 
-            // أعلى مزايدة
-            $highestBid = $bids->sortByDesc('bid_amount')->first();
-            $winningUserId = $highestBid->user_id;
-            $winningAmount = $highestBid->bid_amount;
+            // الحصول على أعلى قيمة مزايدة
+            $highestBidAmount = $bids->max('bid_amount');
 
-            // جلب بيانات المستخدم الفائز باستخدام user_id
-            $winningUser = \App\Models\User::find($winningUserId);
+            // تحديد المزايدة الفائزة (أعلى قيمة)
+            $winningBids = $bids->where('bid_amount', $highestBidAmount);
 
-            if (!$winningUser) {
-                Log::error('Winning user not found', [
-                    'user_id' => $winningUserId,
-                ]);
-                return;
+            // تعيين الفائز
+            foreach ($winningBids as $bid) {
+                $bid->update(['status' => 3]); // تعيين حالة الفائز
             }
 
-            // جلب بريد الإدارة من .env
-            $adminEmail = env('ADMIN_EMAIL', 'default-admin@example.com'); // قيمة افتراضية
+            // تعيين باقي المزايدات كخاسرة
+            BidPlaced::where('product_id', $product->id)
+                ->where('status', 1)
+                ->where('bid_amount', '<', $highestBidAmount)
+                ->update(['status' => 4]); // تعيين حالة الخاسر
 
-            // إعداد البيانات للطباعة في ملف log
-            $logData = [
-                'product' => [
-                    'product_id' => $product->id,
-                    'product_title' => $product->title,
-                    'product_status' => $product->status,
-                    'auction_end_date' => $product->auction_end_date,
-                ],
-                'winning_user' => [
-                    'user_id' => $winningUser->id ?? 'N/A',
-                    'user_name' => $winningUser->first_name ?? 'N/A',
-                    'user_email' => $winningUser->email ?? 'N/A',
-                    'user_phone' => $winningUser->phone ?? 'N/A',
-                ],
-                'winning_bid' => [
-                    'amount' => $winningAmount,
-                ],
-                'admin_email' => $adminEmail,
-            ];
-
-            // طباعة البيانات في ملف log
-            Log::info('Auction closure details:', $logData);
-
-            // تحديث تاريخ المنتج
-            $product->auction_end_date = now();
-            $product->save();
-
-            // إرسال بريد للإدارة
-            Mail::to($adminEmail)->send(new AuctionWinnerAdminMail([
-                'winner_name' => $winningUser->first_name,
-                'product_title' => $product->title,
-                'product_image' => $product->image_path ?? 'No Image',
-                'winning_amount' => $winningAmount,
-                'auction_end_date' => $product->auction_end_date,
-                'winner_email' => $winningUser->email,
-                'winner_phone' => $winningUser->phone,
-            ]));
-
-           
-            // إرسال بريد للمستخدم الفائز
-            Mail::to($winningUser->email)->send(new AuctionWinnerUserMail([
-                'name' => $winningUser->first_name,
-                'product_title' => $product->title,
-                'product_image' => $product->image_path ?? 'No Image',
-                'winning_amount' => $winningAmount,
-                'auction_end_date' => $product->auction_end_date,
-                // 'payment_link' => "https://payment-link.com", // استبدل برابط الدفع الفعلي
-                'payment_link' => route('myfatoorah.pay', ['bid_place_id' => $highestBid->id]),
-
-            ]));
-
-            $this->sendSMS($highestBid->user->phone, 'تهانينا! لقد فزت بمزاد المنتج.');
-
-            
         });
+
+        Log::info('تم معالجة إغلاق المزاد بنجاح', [
+            'product_id' => $product->id
+        ]);
+
     } catch (\Exception $e) {
-        Log::error('Error in auction closure', [
+        Log::error('خطأ في معالجة إغلاق المزاد', [
             'product_id' => $product->id,
-            'error' => $e->getMessage(),
+            'error' => $e->getMessage()
         ]);
         throw $e;
     }
 }
-
-private function sendSMS($phone, $message)
-{
-    $client = new Client();
-    $url = 'https://api.taqnyat.sa/v1/messages';
-
-    $response = $client->post($url, [
-        'headers' => [
-            'Authorization' => 'Bearer c933affa6c2314484d105c45a0e1adc7',
-        ],
-        'json' => [
-            // 'recipients' => [$phone],
-            'recipients' => '966' . ltrim($phone, '0'),
-            // 'body' => $message,
-            'body' => "تهانينا! لقد فزت بمزاد . تحقق من بريدك لمزيد من التفاصيل.",
-            'sender' => 'MazadBid',
-        ],
-    ]);
-
-    return $response->getStatusCode() == 200;
-}
-
-
-
 
     /**
      * Remove the specified resource from storage.

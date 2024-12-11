@@ -44,6 +44,8 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
+            'admin_email' => env('ADMIN_EMAIL', 'admin@example.com'),
+
             
 
             'auth_mode'  => null,

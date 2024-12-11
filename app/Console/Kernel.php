@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use app\Http\Controllers\Admin\ProductController;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,6 +15,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('demo:cron')->everyMinute();
         $schedule->command('fetch:winner')->everyMinute();
+
+        $schedule->call([new ProductController, 'checkExpiredAuctions'])
+             ->daily()
+             ->at('00:00');
 
     }
 
