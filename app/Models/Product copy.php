@@ -100,22 +100,16 @@ class Product extends Model
         // منطق التحويل إذا لزم الأمر
         $this->attributes['reserved_price'] = $value;
     }
-    // public function productGalleries()
-    // {
-    //     return $this->hasMany(Gallery::class, 'product_id', 'id');
-    // }
+    public function productGalleries()
+    {
+        return $this->hasMany(Gallery::class, 'product_id', 'id');
+    }
 
     // علاقة مع BidPlaced
     public function bidPlaced()
     {
         return $this->hasMany(BidPlaced::class);
     }
-
-    public function productGalleries()
-{
-    return $this->hasMany(Gallery::class, 'product_id');
-}
-
 
 
 }
