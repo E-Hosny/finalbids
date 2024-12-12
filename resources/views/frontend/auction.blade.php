@@ -289,6 +289,7 @@ td {
                                                                 @foreach($productBids as $bid)
                                                                     <tr>
                                                                         <td>{{ $bid->user->first_name }}</td>
+                                                                        
                                                                         <td>{{ session('locale') === 'ar' ? $bid->product->project->auctionType->name_ar : $bid->product->project->auctionType->name }}</td>
                                                                         <td>{{ $bid->created_at }}</td>
                                                                         <td>{{ formatPrice($bid->bid_amount, session()->get('currency')) }} {{ $currency }}</td>
@@ -296,6 +297,7 @@ td {
                                                                         <td>
                                                                             @php
                                                                                 $statusText = '';
+                                                                                
                                                                                 if($bid->status == 0) {
                                                                                     $statusText = session('locale') === 'ar' ? 'قيد الانتظار' : 'Pending';
                                                                                 } elseif($bid->status == 1) {
@@ -326,19 +328,19 @@ td {
                                                                                 </form>
                                                                             @endif --}}
                                                                           @if($bid->payment_status == 'paid')
-    <!-- مدفوع -->
-    <span class="text-success">{{ session('locale') === 'ar' ? 'مدفوع' : 'Paid' }}</span>
-@elseif($bid->status == 3 && $bid->user_id == auth()->id() && $bid->payment_status == 'unpaid')
-    <!-- زر الدفع -->
-    <form action="{{ route('myfatoorah.pay') }}" method="POST" style="display:inline;">
-        @csrf
-        <input type="hidden" name="bid_place_id" value="{{ $bid->id }}">
-        <button type="submit" class="rounded-pill btn btn-secondary testp">
-            {{ session('locale') === 'ar' ? 'ادفع الآن' : 'Pay Now' }}
-        </button>
-    </form>
-    
-@endif
+                                                                            <!-- مدفوع -->
+                                                                            <span class="text-success">{{ session('locale') === 'ar' ? 'مدفوع' : 'Paid' }}</span>
+                                                                        @elseif($bid->status == 3 && $bid->user_id == auth()->id() && $bid->payment_status == 'unpaid')
+                                                                            <!-- زر الدفع -->
+                                                                            <form action="{{ route('myfatoorah.pay') }}" method="POST" style="display:inline;">
+                                                                                @csrf
+                                                                                <input type="hidden" name="bid_place_id" value="{{ $bid->id }}">
+                                                                                <button type="submit" class="rounded-pill btn btn-secondary testp">
+                                                                                    {{ session('locale') === 'ar' ? 'ادفع الآن' : 'Pay Now' }}
+                                                                                </button>
+                                                                            </form>
+                                                                            
+                                                                        @endif
 
 
 

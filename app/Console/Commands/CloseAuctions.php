@@ -31,76 +31,78 @@ class CloseAuctions extends Command
 
         foreach ($products as $product) {
             try {
-                DB::transaction(function () use ($product) {
-                    $bids = BidPlaced::where('product_id', $product->id)
-                        ->where('status', 1)
-                        ->get();
+                $bids = BidPlaced::where('product_id', $product->id)
+                    ->where('status', 1)
+                    ->get();
 
-                    if ($bids->isEmpty()) {
-                        Log::info('No bids found for product', [
-                            'product_id' => $product->id,
-                        ]);
-                        $product->status = 'closed';
-                        $product->save();
-                        return;
-                    }
-
-                    $highestBid = $bids->sortByDesc('bid_amount')->first();
-                    $winningUser = $highestBid->user;
-
-                    if (!$winningUser) {
-                        Log::error('Winning user not found', [
-                            'user_id' => $highestBid->user_id,
-                        ]);
-                        return;
-                    }
-
-                    $adminEmail = env('ADMIN_EMAIL', 'ebrahimhosny511@gmail.com');
-                    $logData = [
-                        'product' => [
-                            'product_id' => $product->id,
-                            'product_title' => $product->title,
-                            'product_status' => $product->status,
-                            'auction_end_date' => $product->auction_end_date,
-                        ],
-                        'winning_user' => [
-                            'user_id' => $winningUser->id,
-                            'user_name' => $winningUser->first_name,
-                            'user_email' => $winningUser->email,
-                            'user_phone' => $winningUser->phone,
-                        ],
-                        'winning_bid' => [
-                            'amount' => $highestBid->bid_amount,
-                        ],
-                        'admin_email' => $adminEmail,
-                    ];
-
-                    Log::info('Auction closure details:', $logData);
-
+                if ($bids->isEmpty()) {
+                    Log::info('No bids found for product', [
+                        'product_id' => $product->id,
+                    ]);
                     $product->status = 'closed';
                     $product->save();
+                    continue;
+                }
 
-                    Mail::to($adminEmail)->send(new AuctionWinnerAdminMail([
-                        'winner_name' => $winningUser->first_name,
+                $highestBid = $bids->sortByDesc('bid_amount')->first();
+                $highestBid->status = 3;
+                $highestBid->save();
+
+                $winningUser = $highestBid->user;
+
+                if (!$winningUser) {
+                    Log::error('Winning user not found', [
+                        'user_id' => $highestBid->user_id,
+                    ]);
+                    continue;
+                }
+
+                $adminEmail = env('ADMIN_EMAIL', 'ebrahimhosny511@gmail.com');
+                $logData = [
+                    'product' => [
+                        'product_id' => $product->id,
                         'product_title' => $product->title,
-                        'product_image' => $product->image_path ?? 'No Image',
-                        'winning_amount' => $highestBid->bid_amount,
+                        'product_status' => $product->status,
                         'auction_end_date' => $product->auction_end_date,
-                        'winner_email' => $winningUser->email,
-                        'winner_phone' => $winningUser->phone,
-                    ]));
+                    ],
+                    'winning_user' => [
+                        'user_id' => $winningUser->id,
+                        'user_name' => $winningUser->first_name,
+                        'user_email' => $winningUser->email,
+                        'user_phone' => $winningUser->phone,
+                    ],
+                    'winning_bid' => [
+                        'amount' => $highestBid->bid_amount,
+                    ],
+                    'admin_email' => $adminEmail,
+                ];
 
-                    Mail::to($winningUser->email)->send(new AuctionWinnerUserMail([
-                        'name' => $winningUser->first_name,
-                        'product_title' => $product->title,
-                        'product_image' => $product->image_path ?? 'No Image',
-                        'winning_amount' => $highestBid->bid_amount,
-                        'auction_end_date' => $product->auction_end_date,
-                        'payment_link' => route('myfatoorah.pay', ['bid_place_id' => $highestBid->id]),
-                    ]));
+                Log::info('Auction closure details:', $logData);
 
-                    $this->sendSMS($winningUser->phone, "تهانينا! لقد فزت بمزاد {$product->title}. تحقق من بريدك للمزيد.");
-                });
+                $product->status = 'closed';
+                $product->save();
+
+                Mail::to($adminEmail)->send(new AuctionWinnerAdminMail([
+                    'winner_name' => $winningUser->first_name,
+                    'product_title' => $product->title,
+                    'product_image' => $product->image_path ?? 'No Image',
+                    'winning_amount' => $highestBid->bid_amount,
+                    'auction_end_date' => $product->auction_end_date,
+                    'winner_email' => $winningUser->email,
+                    'winner_phone' => $winningUser->phone,
+                ]));
+
+                Mail::to($winningUser->email)->send(new AuctionWinnerUserMail([
+                    'name' => $winningUser->first_name,
+                    'product_title' => $product->title,
+                    'product_image' => $product->image_path ?? 'No Image',
+                    'winning_amount' => $highestBid->bid_amount,
+                    'auction_end_date' => $product->auction_end_date,
+                    'payment_link' => route('myfatoorah.pay', ['bid_place_id' => $highestBid->id]),
+                ]));
+
+                $this->sendSMS($winningUser->phone, "تهانينا! لقد فزت بمزاد {$product->title}. تحقق من بريدك للمزيد.");
+
             } catch (\Exception $e) {
                 Log::error('Error in auction closure', [
                     'product_id' => $product->id,
@@ -116,7 +118,8 @@ class CloseAuctions extends Command
             $client = new \GuzzleHttp\Client();
             $response = $client->post('https://api.taqnyat.sa/v1/messages', [
                 'headers' => [
-                    'Authorization' => 'Bearer c933affa6c2314484d105c45a0e1adc7',                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer c933affa6c2314484d105c45a0e1adc7',
+                    'Content-Type' => 'application/json',
                 ],
                 'json' => [
                     'recipients' => '966' . ltrim($phone, '0'),
