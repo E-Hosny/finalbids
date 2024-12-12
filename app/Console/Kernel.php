@@ -16,9 +16,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('demo:cron')->everyMinute();
         $schedule->command('fetch:winner')->everyMinute();
 
-        $schedule->call([new ProductController, 'checkExpiredAuctions'])
-             ->daily()
-             ->at('00:00');
+        $schedule->command('auctions:close')->everyMinute();
+
 
     }
 

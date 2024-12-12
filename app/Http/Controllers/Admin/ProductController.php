@@ -1082,7 +1082,7 @@ private function handleAuctionClosure(Product $product)
             }
 
             // جلب بريد الإدارة من .env
-            $adminEmail = env('ADMIN_EMAIL', 'default-admin@example.com'); // قيمة افتراضية
+            $adminEmail = env('ADMIN_EMAIL', 'ebrahimhosny511@gmail.com'); // قيمة افتراضية
 
             // إعداد البيانات للطباعة في ملف log
             $logData = [
@@ -1168,6 +1168,9 @@ private function sendSMS($phone, $message)
 
     return $response->getStatusCode() == 200;
 }
+
+
+
 
 
 
