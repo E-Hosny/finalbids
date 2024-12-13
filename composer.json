@@ -14,6 +14,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
+        "myfatoorah/laravel-package": "2.1",
         "psy/psysh": "^0.11.21",
         "spatie/image-optimizer": "^1.7",
         "stichoza/google-translate-php": "^5.1",
@@ -22,8 +23,7 @@
         "tinymce/tinymce": "^6.6",
         "tymon/jwt-auth": "^2.0",
         "yajra/laravel-datatables": "^10.1",
-        "yajra/laravel-datatables-oracle": "^10.8",
-        "myfatoorah/laravel-package": "2.1"
+        "yajra/laravel-datatables-oracle": "^10.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

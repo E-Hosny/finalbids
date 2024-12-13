@@ -249,8 +249,6 @@ button.text-btns {
             ->first();
 
         $sold = \App\Models\BidPlaced::where('product_id', $product->id)
-            ->where('sold', 2)
-            ->where('status', '!=', 0)
             ->orderBy('bid_amount', 'desc')
             ->first();
 
@@ -273,7 +271,7 @@ button.text-btns {
                 <div class="card-product-dtl px-1">
                     <!-- عرض اسم المنتج -->
                     <a href="{{ url('productsdetail', $product->slug) }}" class="prd-link">
-                        <h3 class="pt-2">{{ $product->lot_no }}: 
+                        <h3 class="pt-2">{{ $product->lot_no }}:
                             {{ session('locale') === 'ar' ? $product->title_ar : $product->title }}
                         </h3>
                     </a>
@@ -289,11 +287,11 @@ button.text-btns {
                     @if ($isClosed)
                         <!-- الحالة المغلقة: عرض سعر البيع -->
                         @if ($sold)
-                            <p>{{ session('locale') === 'en' ? 'Sold:' : 'مباع' }} 
+                            <p>{{ session('locale') === 'en' ? 'Sold:' : 'مباع' }}
                                 <span>{{ formatPrice($sold->bid_amount, session('currency')) }} {{ $currency }}</span>
                             </p>
                         @else
-                            <h5>{{ session('locale') === 'en' ? 'Sale Price:' : 'سعر البيع:' }} 
+                            <h5>{{ session('locale') === 'en' ? 'Sale Price:' : 'سعر البيع:' }}
                                 {{ formatPrice($product->reserved_price, session('currency')) }} {{ $currency }}</h5>
                         @endif
                         <button class="text-btn" style="color: red;">{{ session('locale') === 'en' ? 'Lot Closed' : 'المزاد مغلق' }}</button>
@@ -309,7 +307,7 @@ button.text-btns {
                         </div>
 
                         @if ($currentBid)
-                            <p>{{ session('locale') === 'en' ? 'Current Bid:' : 'المزايدة الحالية:' }} 
+                            <p>{{ session('locale') === 'en' ? 'Current Bid:' : 'المزايدة الحالية:' }}
                                 <span>{{ formatPrice($currentBid->bid_amount, session('currency')) }} {{ $currency }}</span>
                             </p>
                         @else
@@ -325,8 +323,8 @@ button.text-btns {
         </a>
     </div>
 @endforeach
-            
-    
+
+
 
        </div>
 

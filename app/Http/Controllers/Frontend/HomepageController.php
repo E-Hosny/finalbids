@@ -905,7 +905,7 @@ public function productsdetail($slug)
             $auctionStatusMessage = __('This lot is closed and was sold for :price.',
                 ['price' => formatPrice($highestBidAmount, $currency) . ' ' . $currency]);
         } else {
-            $auctionStatusMessage = __('This lot is closed and was not sold.');
+            $auctionStatusMessage = __('This lot is closed.');
         }
     }
 

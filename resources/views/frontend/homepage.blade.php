@@ -228,7 +228,9 @@
     @php
         // جلب المزايدات الحالية والمباعة
         $currentBid = $product->bids()->where('sold', 1)->where('status', '!=', 0)->orderBy('bid_amount', 'desc')->first();
-        $sold = $product->bids()->where('sold', 2)->where('status', '!=', 0)->orderBy('bid_amount', 'desc')->first();
+        // $sold = $product->bids()->where('sold', 2)->where('status', '!=', 0)->orderBy('bid_amount', 'desc')->first();
+        $sold=\App\Models\BidPlaced::where('product_id',$product->id)->orderBy('bid_amount','desc')->first();
+
 
         // التحقق من حالة الإغلاق
         $currentDateTime = now();

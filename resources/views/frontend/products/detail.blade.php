@@ -201,7 +201,7 @@
 
         // تم تحديد ما إذا كان المنتج قد تم بيعه في الـ Controller
         $currency = session()->get('currency');
-        
+
     @endphp
 
         <div class="product-container">
@@ -304,7 +304,7 @@
     @if($acceptedBids->isNotEmpty())
         <div class="bid-history mt-4">
             <h4>{{ session('locale') === 'en' ? 'Bid History' : 'تاريخ المزايدات' }}</h4>
-            
+
             @if(session('locale')=='en')
             <div class="bid-list">
                 @foreach($acceptedBids as $bid)
@@ -329,7 +329,7 @@
                         {{ $bid->created_at->format('Y-m-d H:i') }}
                     </span>
                 </div>
-                
+
                 @endforeach
             </div>
 

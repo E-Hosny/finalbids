@@ -189,26 +189,7 @@
         }
     }
 </style>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<body>
-    @if($product)
-    @php
-        $currentDateTime = now();
-        $endDateTime = $product->project->auction_end_date;
-        $isClosed = $currentDateTime > $endDateTime;
-
-        // تم تحديد ما إذا كان المنتج قد تم بيعه في الـ Controller
-        $currency = session()->get('currency');
-    @endphp
-
-        <div class="product-container">
-            <div class="row">
-                <!-- Gallery Section -->
-                <div class="col-md-6">
-                    <div class="gallery-section">
-                        <div class="main-image-container">
+age-container">
                             @if($product->productGalleries && $product->productGalleries->isNotEmpty())
                                 <img src="{{ asset($product->productGalleries->first()->image_path) }}" alt="{{ $product->title }}" class="main-image" id="mainImage">
                             @else
