@@ -25,6 +25,8 @@ class CloseAuctions extends Command
 
     public function handle()
     {
+        Log::info('Auctions:Close command executed at: ' . now());
+
         $products = Product::where('status', 'open')
             ->where('auction_end_date', '<=', Carbon::now())
             ->get();

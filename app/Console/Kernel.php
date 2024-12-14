@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('demo:cron')->everyMinute();
-        $schedule->command('fetch:winner')->everyMinute();
+        // $schedule->command('demo:cron')->everyMinute();
+        // $schedule->command('fetch:winner')->everyMinute();
 
         $schedule->command('auctions:close')->everyMinute();
 
