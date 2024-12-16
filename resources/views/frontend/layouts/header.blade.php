@@ -133,6 +133,7 @@ if (Auth::check()) {
     .sell-link {
         display: flex !important;
         align-items: center;
+        justify-content: center;
         background-color: #0D3858;
         color: white !important;
         padding: 8px 20px !important;
@@ -196,9 +197,9 @@ if (Auth::check()) {
 
           <div id="mainListDiv" class="main_list  w-100 d-flex px-4  ">
               <ul class="navlinks  px-2">
-              <li><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Auctions' : (session('locale') === 'ar' ? 'الرئيسية' : 'Auctions') }}</a></li>
+              <li class="text-center"><a href="{{ url('/') }}">{{ session('locale') === 'en' ? 'Auctions' : (session('locale') === 'ar' ? 'الرئيسية' : 'Auctions') }}</a></li>
 
-              <li class="category-menu">
+              <li class="category-menu text-center">
               <a href="/categories/index">{{ session('locale') === 'en' ? 'Departments' : (session('locale') === 'ar' ? 'الصنف' : 'Departments') }}</a>
                     <div class="category-list">
                         <ul>
@@ -231,9 +232,9 @@ if (Auth::check()) {
 
                    {{-- <li><a href="{{route('pastauction')}}">{{ session('locale') === 'en' ? 'Past Auction' : (session('locale') === 'ar' ? 'المزادات السابقة' : 'Past Auction') }}</a></li> --}}
 
-                    <li><a href="{{ route('about-us') }}">{{ session('locale') === 'en' ? 'About Us' : (session('locale') === 'ar' ? 'من نحن' : 'About Us') }}</a></li>
+                    <li class="text-center"><a href="{{ route('about-us') }}">{{ session('locale') === 'en' ? 'About Us' : (session('locale') === 'ar' ? 'من نحن' : 'About Us') }}</a></li>
 
-                    <li><a href="{{ route('contact-us') }}">{{ session('locale') === 'en' ? 'Contact Us' : (session('locale') === 'ar' ? 'تواصل معنا' : 'Contact Us') }}</a></li>
+                    <li class="text-center"><a href="{{ route('contact-us') }}">{{ session('locale') === 'en' ? 'Contact Us' : (session('locale') === 'ar' ? 'تواصل معنا' : 'Contact Us') }}</a></li>
 
 
                  @guest
@@ -244,16 +245,16 @@ if (Auth::check()) {
                         <a class=" " href="{{route('register')}}">{{ session('locale') === 'en' ? 'Sign Up' : (session('locale') === 'ar' ? 'التسجيل' : 'Sign Up') }}</a>
                     </li> --}}
 
-                    <li class="group-hidden">
+                    <li class="group-hidden text-center">
                         <a class=" " data-bs-toggle="modal" data-bs-target="#LoginModal" >{{ session('locale') === 'en' ? 'Login' : (session('locale') === 'ar' ? 'تسجيل الدخول' : 'Login') }}</a>
                     </li>
-                    <li class="group-hidden">
+                    <li class="group-hidden text-center">
                         <a class=" " data-bs-toggle="modal" data-bs-target="#registerModal">{{ session('locale') === 'en' ? 'Create Account' : (session('locale') === 'ar' ? 'تسجيل حساب جديد' : 'Create Account') }}</a>
                     </li>
                  @endguest
 
 
-                    <li class="group-hidden">
+                    <li class="group-hidden text-center">
                         <select class="changeLang lang-select">
                             <option value="en" {{ session()->get('locale') == 'en' ? 'selected' : '' }}>English</option>
                             <option value="ar" {{ session()->get('locale') == 'ar' ? 'selected' : '' }}>عربي</option>
@@ -262,29 +263,33 @@ if (Auth::check()) {
                     </li>
                              {{-- sell --}}
                           {{-- أولاً: زر البيع في القائمة --}}
-                            <li>
+                            <li class="text-center">
                                 @auth
-                                    <a href="{{ url('/add-product') }}" class="sell-link">
-                                        <i class="fa fa-plus-circle me-1"></i>
+                                  <li class="text-center">
+                                    <a href="{{ url('/add-product') }}" class="sell-link text-center">
+                                        <i class="fa fa-plus-circle text-center"></i>
                                         {{ session('locale') === 'en' ? 'Sell' : (session('locale') === 'ar' ? 'بيع' : 'Sell') }}
                                     </a>
+                                </li>
                                 @else
-                                    <a href="javascript:void(0)" class="sell-link" data-bs-toggle="modal" data-bs-target="#LoginModal">
-                                        <i class="fa fa-plus-circle me-1"></i>
+                                <li class="text-center">
+                                    <a href="javascript:void(0)" class="sell-link text-center" data-bs-toggle="modal" data-bs-target="#LoginModal">
+                                        <i class="fa fa-plus-circle text-center"></i>
                                         {{ session('locale') === 'en' ? 'Sell' : (session('locale') === 'ar' ? 'بيع' : 'Sell') }}
                                     </a>
+                                </li>
                                 @endauth
                             </li>
                          {{-- sell --}}
 
 
                     @auth
-                       <div class="me-auto">
-                            <li class="group-hidden  "><a  class="profile-hdr" href="{{route('userdashboard')}}" >{{ Auth::user()->first_name }}<span class="header_nm">{{Auth::user()->first_name}}</span>
+                       <div class="mx-auto">
+                            <li class="group-hidden text-center"><a  class="profile-hdr" href="{{route('userdashboard')}}" >{{ Auth::user()->first_name }}<span class="header_nm">{{Auth::user()->first_name}}</span>
                             <img src="{{asset('frontend/images/dummyuser.png')}}" alt=""></a></li>
                        </div>
 
-                        <li class="group-hidden"><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
+                        <li class="group-hidden text-center"><a href="{{route('logouts')}}">{{ session('locale') === 'en' ? 'Logout' : (session('locale') === 'ar' ? 'تسجيل الخروج' : 'Logout') }}</a></li>
 
                     @endauth
 
