@@ -116,7 +116,7 @@ if (Auth::check()) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="{{asset('frontend/images/logo.svg')}}">
+    <link rel="icon" type="image/x-icon" href="{{asset('frontend/images/tap.png')}}">
     <title>Muzayadah</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
