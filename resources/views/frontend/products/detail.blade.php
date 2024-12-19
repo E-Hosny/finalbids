@@ -25,6 +25,39 @@
         margin-bottom: 20px;
     }
 
+
+
+
+
+.thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .thumbnails {
+        flex-wrap: wrap; 
+        justify-content: flex-start; 
+        gap: 8px; 
+    }
+
+    .thumbnails .thumb {
+        width: 30%; 
+        max-width: 100px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .thumbnails .thumb {
+        width: 45%; 
+    }
+}
+
+
+
+
+
     .main-image-container {
         width: 100%;
         background: var(--bg-light);
