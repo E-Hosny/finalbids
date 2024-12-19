@@ -40,7 +40,7 @@
                             <!-- Register Modal Trigger -->
                             <div class="form-group d-flex justify-content-center mt-3">
                                 <a class="switch-to-register" href="#">
-                                    <span class="btn-create-account">{{__('New to MOZAIDA?')}} {{__('Create Account')}}</span>
+                                    <span class="btn-create-account">{{__('New to Bid ?')}} {{__('Create Account')}}</span>
                                 </a>
                             </div>
                         </form>

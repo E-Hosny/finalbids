@@ -113,7 +113,7 @@
         </div>
         
         <div class="content">
-            <p class="intro">تم إضافة منتج جديد إلى المنصة. فيما يلي تفاصيل المنتج:</p>
+            <p class="intro">تم إرسال طلب لإضافة منتج للمزاد . فيما يلي تفاصيل المنتج:</p>
             
             <div class="product-details">
                 <div class="detail-item">
