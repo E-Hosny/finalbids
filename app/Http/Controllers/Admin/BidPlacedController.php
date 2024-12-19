@@ -16,8 +16,9 @@ class BidPlacedController extends Controller
 {
     public function index(BidPlacedDataTable $dataTable)
     {
-        // dd($dataTable->render('admin.bid_placed.index'));
 
+        // dd($dataTable->render('admin.bid_placed.index'));
+        Log::info("heree");
         return $dataTable->render('admin.bid_placed.index');
     }
 
@@ -112,13 +113,10 @@ class BidPlacedController extends Controller
 
 public function updateStatus(Request $request)
 {
-    Log::info('here 1');
     $bidPlacedId = $request->input('bid_request_id');
     $status = $request->input('status');
 
     $bidPlaced = BidPlaced::find($bidPlacedId);
-    Log::info('here 2');
-
 
     if (!$bidPlaced) {
         return response()->json(['success' => false, 'message' => 'Bid request not found.']);
@@ -129,14 +127,8 @@ public function updateStatus(Request $request)
         return response()->json(['success' => false, 'message' => 'Invalid status value.']);
     }
 
-    Log::info('here 3');
-
-
     $bidPlaced->status = $status;
     $bidPlaced->save();
-
-    Log::info('here 4');
-
 
     // تعيين الرسالة بناءً على الحالة
     if ($status == 1) {
@@ -152,8 +144,6 @@ public function updateStatus(Request $request)
         // إرسال إيميل للعميل عند التغيير إلى حالة الانتظار (اختياري)
         Mail::to($bidPlaced->user->email)->send(new BidStatusMail($bidPlaced, 'pending'));
     }
-    Log::info('here 5');
-
 
     return response()->json(['success' => true, 'message' => $message]);
 }
