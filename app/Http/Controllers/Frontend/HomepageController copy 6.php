@@ -926,6 +926,7 @@ public function productsdetail($slug)
                 'otp' => $otp,
             ]);
             $user->save();
+            dd("heere");
 
             DB::commit();
             $this->sendOtpViaTaqnyat($user->phone, $otp);

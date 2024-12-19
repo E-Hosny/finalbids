@@ -1109,6 +1109,7 @@ public function productsdetail($slug)
             ];
 
             $validator = Validator::make($request->all(), $rules,$messages);
+           
 
             if ($validator->fails()) {
                 return response()->json([
@@ -1385,7 +1386,7 @@ public function productsdetail($slug)
 
     $otp = $request->otpValue;
     $email = $request->email;
-    $user = TempUsers::where('email', $email)->first();
+    $user = TempUsers::where('email', $email)->latest()->first();
 
     if ($user) {
         if ($otp == $user->otp || $otp == "1234") {
