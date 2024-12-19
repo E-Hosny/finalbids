@@ -107,6 +107,8 @@
     </style>
 </head>
 <body>
+
+    
     <div class="container">
         <div class="header">
             <h1>تم إضافة منتج جديد</h1>
