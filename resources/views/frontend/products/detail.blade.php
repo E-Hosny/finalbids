@@ -29,27 +29,25 @@
 
 
 
-/* تحسين عرض الصور داخل thumbnails */
 .thumbnails .thumb img {
-    width: 100%; /* اجعل الصورة تأخذ عرض الحاوية */
-    height: auto; /* احفظ النسبة بين العرض والارتفاع */
-    object-fit: cover; /* ضمان عرض الصورة بشكل جيد داخل الإطار */
-    border-radius: 4px; /* زاوية مدورة قليلاً للمظهر */
+    width: 100%; 
+    height: auto;
+    object-fit: cover; 
+    border-radius: 4px; 
 }
 
-/* تحسين عرض thumbnails على شاشات الموبايل */
 @media (max-width: 768px) {
     .thumbnails {
-        flex-wrap: wrap; /* اجعل الصور تنتقل إلى أسطر */
-        justify-content: space-between; /* توزيع الصور بالتساوي */
-        gap: 8px; /* تقليل المسافات بين الصور */
+        flex-wrap: wrap; 
+        justify-content: space-between; 
+        gap: 8px; 
     }
 
     .thumbnails .thumb {
-        width: 30%; /* تخصيص عرض الصور */
-        max-width: 100px; /* الحد الأقصى لحجم الصورة */
-        aspect-ratio: 1 / 1; /* عرض وارتفاع متماثلان (مربع) */
-        overflow: hidden; /* منع ظهور الأجزاء الزائدة */
+        width: 30%; 
+        max-width: 100px; 
+        aspect-ratio: 1 / 1; 
+        overflow: hidden;
     }
 }
 
