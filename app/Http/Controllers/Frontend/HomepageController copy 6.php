@@ -1163,6 +1163,7 @@ public function productsdetail($slug)
     ];
 
     $validator = Validator::make($request->all(), $rules);
+    Log::info("we are here");
 
     if ($validator->fails()) {
         $firstErrorMessage = $validator->errors()->first();
@@ -1176,7 +1177,8 @@ public function productsdetail($slug)
     $otp = $request->otpValue;
     $email = $request->email;
     $user = TempUsers::where('email', $email)->latest()->first();
-    Log::info($user);
+    Log::info('user info...');
+    Log::info($user->otp);
 
     if ($user) {
         if ($otp == $user->otp || $otp == "1234") {
